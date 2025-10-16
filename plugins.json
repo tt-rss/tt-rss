@@ -1,0 +1,532 @@
+[
+  {
+    "name": "Af_Catchup_Old",
+    "description": "fox",
+    "topics": [
+      "af_catchup_old"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-catchup-old",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-catchup-old.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "Af_Enclosure_Fix_Type",
+    "description": "fox",
+    "topics": [
+      "af_enclosure_fix_type"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-enclosure-fix-type",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-enclosure-fix-type.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Af_Fontanka",
+    "description": "fox",
+    "topics": [
+      "af_fontanka"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-fontanka",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-fontanka.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "Af_Fsckportal",
+    "description": "fox",
+    "topics": [
+      "af_fsckportal"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-fsckportal",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-fsckportal.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Af_GoodShowSir",
+    "description": "fox",
+    "topics": [
+      "af_goodshowsir"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-goodshowsir",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-goodshowsir.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "Af_Img_Phash",
+    "description": "fox",
+    "topics": [
+      "af_img_phash"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-perceptual-image-hash",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-perceptual-image-hash.git",
+    "last_update": "2025-02-12T08:11:28Z"
+  },
+  {
+    "name": "Af_Img_PlaceHolders",
+    "description": "fox",
+    "topics": [
+      "af_img_placeholders"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-img-placeholders",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-img-placeholders.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "Af_Proxy_Http",
+    "description": "fox",
+    "topics": [
+      "af_proxy_http"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-proxy-http",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-proxy-http.git",
+    "last_update": "2024-07-17T11:52:27Z"
+  },
+  {
+    "name": "Af_Readability",
+    "description": "fox",
+    "topics": [
+      "af_readability"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-readability",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-readability.git",
+    "last_update": "2025-10-10T11:38:53Z"
+  },
+  {
+    "name": "Af_Readability_Legacy",
+    "description": "fox",
+    "topics": [
+      "af_readability_legacy"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-readability-legacy",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-readability-legacy.git",
+    "last_update": "2022-12-11T19:48:53Z"
+  },
+  {
+    "name": "Af_Unburn",
+    "description": "fox",
+    "topics": [
+      "af_unburn"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-unburn",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-unburn.git",
+    "last_update": "2023-04-02T16:07:23Z"
+  },
+  {
+    "name": "Af_Video_Fill_Poster",
+    "description": "fox",
+    "topics": [
+      "af_video_fill_poster"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-video-fill-poster",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-video-fill-poster.git",
+    "last_update": "2022-12-11T19:48:57Z"
+  },
+  {
+    "name": "Af_Youtube_Thumb",
+    "description": "fox",
+    "topics": [
+      "af_youtube_thumb"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-youtube-thumb",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-youtube-thumb.git",
+    "last_update": "2023-04-02T16:07:23Z"
+  },
+  {
+    "name": "Af_Zz_NoAutoPlay",
+    "description": "fox",
+    "topics": [
+      "af_zz_noautoplay"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-no-autoplay",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-no-autoplay.git",
+    "last_update": "2023-04-02T16:07:23Z"
+  },
+  {
+    "name": "Af_Zz_NoPreload",
+    "description": "fox",
+    "topics": [
+      "af_zz_nopreload"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-no-video-preload",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-no-video-preload.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "Af_Zz_Pause_Bg",
+    "description": "fox",
+    "topics": [
+      "af_zz_pause_bg"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-pause-bg",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-pause-bg.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Api_Content_Lang",
+    "description": "fox",
+    "topics": [
+      "api_content_lang"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-api-content-lang",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-api-content-lang.git",
+    "last_update": "2022-12-11T19:48:44Z"
+  },
+  {
+    "name": "Api_Resize_Media",
+    "description": "fox",
+    "topics": [
+      "api_resize_media"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-api-resize",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-api-resize.git",
+    "last_update": "2024-01-28T11:50:10Z"
+  },
+  {
+    "name": "Article_Headline_Toggle",
+    "description": "wn",
+    "topics": [
+      "article_headline_toggle"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-article-headline-toggle",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-article-headline-toggle.git",
+    "last_update": "2021-11-10T18:34:07Z"
+  },
+  {
+    "name": "Auth_OIDC",
+    "description": "fox",
+    "topics": [
+      "auth_oidc"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-auth-oidc",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-auth-oidc.git",
+    "last_update": "2025-01-12T09:33:51Z"
+  },
+  {
+    "name": "CDM_No_Move_On_Expand",
+    "description": "fox",
+    "topics": [
+      "cdm_no_move_on_expand"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-cdm-no-move-on-expand",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-cdm-no-move-on-expand.git",
+    "last_update": "2023-04-13T17:15:00Z"
+  },
+  {
+    "name": "Cache_S3",
+    "description": "fox",
+    "topics": [
+      "cache_s3"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-cache-s3",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-cache-s3.git",
+    "last_update": "2025-09-09T14:33:48Z"
+  },
+  {
+    "name": "Card_View",
+    "description": "fox",
+    "topics": [
+      "card_view"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-card-view",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-card-view.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "Close_Button",
+    "description": "fox",
+    "topics": [
+      "close_button"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-close-button",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-close-button.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Data_Migration",
+    "description": "fox",
+    "topics": [
+      "data_migration"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-data-migration",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-data-migration.git",
+    "last_update": "2025-04-14T16:50:19Z"
+  },
+  {
+    "name": "Favicon_Unread",
+    "description": "fox",
+    "topics": [
+      "favicon_unread"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-favicon-unread",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-favicon-unread.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "GoogleReaderKeys",
+    "description": "markwaters",
+    "topics": [
+      "googlereaderkeys"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-googlereaderkeys",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-googlereaderkeys.git",
+    "last_update": "2025-10-14T03:25:04Z"
+  },
+  {
+    "name": "Grid_Masonry",
+    "description": "fox",
+    "topics": [
+      "grid_masonry"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-grid-masonry",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-grid-masonry.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "HL_Legacy",
+    "description": "fox",
+    "topics": [
+      "hl_legacy"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-hl-legacy",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-hl-legacy.git",
+    "last_update": "2023-04-02T16:07:21Z"
+  },
+  {
+    "name": "HighlightJS",
+    "description": "fox",
+    "topics": [
+      "highlightjs"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-highlightjs",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-highlightjs.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Hotkeys_Ru",
+    "description": "fox",
+    "topics": [
+      "hotkeys_ru"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-hotkeys-ru",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-hotkeys-ru.git",
+    "last_update": "2023-04-02T16:07:21Z"
+  },
+  {
+    "name": "LJ_No_LastModified",
+    "description": "fox",
+    "topics": [
+      "lj_no_lastmodified"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-lj-no-lastmodified",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-lj-no-lastmodified.git",
+    "last_update": "2022-12-11T19:48:49Z"
+  },
+  {
+    "name": "Labels_To_Tags",
+    "description": "vnab",
+    "topics": [
+      "labels_to_tags"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-labels-to-tags",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-labels-to-tags.git",
+    "last_update": "2023-04-02T16:02:38Z"
+  },
+  {
+    "name": "Mail",
+    "description": "fox",
+    "topics": [
+      "mail"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-share-mail",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-share-mail.git",
+    "last_update": "2023-04-02T16:07:23Z"
+  },
+  {
+    "name": "MailTo",
+    "description": "fox",
+    "topics": [
+      "mailto"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-share-mailto",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-share-mailto.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "Names_to_Tags",
+    "description": "fox",
+    "topics": [
+      "names_to_tags"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-names-to-tags",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-names-to-tags.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "Nginx_Xaccel",
+    "description": "fox",
+    "topics": [
+      "nginx_xaccel"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-nginx-xaccel",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-nginx-xaccel.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "No_Title_Counters",
+    "description": "fox",
+    "topics": [
+      "no_title_counters"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-no-title-counters",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-no-title-counters.git",
+    "last_update": "2023-04-02T16:07:19Z"
+  },
+  {
+    "name": "No_URL_Hashes",
+    "description": "fox",
+    "topics": [
+      "no_url_hashes"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-no-url-hashes",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-no-url-hashes.git",
+    "last_update": "2023-11-12T14:53:13Z"
+  },
+  {
+    "name": "Post_Delay",
+    "description": "fox",
+    "topics": [
+      "post_delay"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-post-delay",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-post-delay.git",
+    "last_update": "2023-10-05T13:42:42Z"
+  },
+  {
+    "name": "Prefs_Effective_Config",
+    "description": "wn",
+    "topics": [
+      "prefs_effective_config"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-prefs-effective-config",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-prefs-effective-config.git",
+    "last_update": "2025-10-08T20:12:48Z"
+  },
+  {
+    "name": "Profile_Chooser",
+    "description": "fox",
+    "topics": [
+      "profile_chooser"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-profile-chooser",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-profile-chooser.git",
+    "last_update": "2023-04-02T16:07:23Z"
+  },
+  {
+    "name": "Random_Order",
+    "description": "fox",
+    "topics": [
+      "random_order"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-random-order",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-random-order.git",
+    "last_update": "2023-05-06T11:09:52Z"
+  },
+  {
+    "name": "Remember_Previous",
+    "description": "wn",
+    "topics": [
+      "remember_previous"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-remember-previous",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-remember-previous.git",
+    "last_update": "2021-11-10T18:37:20Z"
+  },
+  {
+    "name": "Scored_Oldest_First",
+    "description": "fox",
+    "topics": [
+      "scored_oldest_first"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-scored-oldest-first",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-scored-oldest-first.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "Search_Button",
+    "description": "fox",
+    "topics": [
+      "search_button"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-toolbar-search-button",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-toolbar-search-button.git",
+    "last_update": "2023-04-02T16:07:21Z"
+  },
+  {
+    "name": "Search_Sphinx",
+    "description": "hoelzro",
+    "topics": [
+      "search_sphinx"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-search-sphinx",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-search-sphinx.git",
+    "last_update": "2022-12-11T19:48:54Z"
+  },
+  {
+    "name": "Time_to_Read",
+    "description": "fox",
+    "topics": [
+      "time_to_read"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-time-to-read",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-time-to-read.git",
+    "last_update": "2023-04-02T16:07:20Z"
+  },
+  {
+    "name": "UI_Gravatar",
+    "description": "fox",
+    "topics": [
+      "ui_gravatar"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-ui-gravatar",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-ui-gravatar.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "VF_Search",
+    "description": "fox",
+    "topics": [
+      "vf_search"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-vf-search",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-vf-search.git",
+    "last_update": "2023-09-14T05:07:02Z"
+  },
+  {
+    "name": "VF_Shared",
+    "description": "fox",
+    "topics": [
+      "vf_shared"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-vf-shared",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-vf-shared.git",
+    "last_update": "2023-04-02T16:07:22Z"
+  },
+  {
+    "name": "Version_Info",
+    "description": "wn",
+    "topics": [
+      "version_info"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-version-info",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-version-info.git",
+    "last_update": "2024-06-20T19:26:47Z"
+  },
+  {
+    "name": "mailer_smtp",
+    "description": "fox",
+    "topics": [
+      "mailer_smtp"
+    ],
+    "html_url": "https://github.com/tt-rss/tt-rss-plugin-mailer-smtp",
+    "clone_url": "https://github.com/tt-rss/tt-rss-plugin-mailer-smtp.git",
+    "last_update": "2023-04-02T16:07:21Z"
+  }
+]
