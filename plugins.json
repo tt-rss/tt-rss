@@ -1,7 +1,7 @@
 [
   {
     "name": "Af_Catchup_Old",
-    "description": "Clone of https://git.tt-rss.org/fox/ttrss-catchup-old.git",
+    "description": "Provides a filter action to mark old articles as read, based on feed-provided timestamp",
     "topics": [
       "af_catchup_old"
     ],
@@ -11,7 +11,7 @@
   },
   {
     "name": "Af_Enclosure_Fix_Type",
-    "description": "Clone of https://git.tt-rss.org/fox/ttrss-enclosure-fix-type.git",
+    "description": "Overrides content type for enclosures based on server-provided data",
     "topics": [
       "af_enclosure_fix_type"
     ],
@@ -87,7 +87,7 @@
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-af-readability",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-af-readability.git",
-    "last_update": "2025-10-10T11:38:53Z"
+    "last_update": "2025-10-16T16:16:47Z"
   },
   {
     "name": "Af_Readability_Legacy",
@@ -157,7 +157,7 @@
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-pause-bg",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-pause-bg.git",
-    "last_update": "2023-04-02T16:07:22Z"
+    "last_update": "2025-10-16T16:20:59Z"
   },
   {
     "name": "Api_Content_Lang",
@@ -257,7 +257,7 @@
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-favicon-unread",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-favicon-unread.git",
-    "last_update": "2023-04-02T16:07:20Z"
+    "last_update": "2025-10-16T16:17:54Z"
   },
   {
     "name": "GoogleReaderKeys",
@@ -277,7 +277,7 @@
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-grid-masonry",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-grid-masonry.git",
-    "last_update": "2023-04-02T16:07:19Z"
+    "last_update": "2025-10-16T16:19:22Z"
   },
   {
     "name": "HL_Legacy",
@@ -401,7 +401,7 @@
   },
   {
     "name": "Prefs_Effective_Config",
-    "description": "Clone of https://git.tt-rss.org/fox/ttrss-prefs-effective-config.git",
+    "description": "Shows your effective tt-rss config @ Preferences --> System",
     "topics": [
       "prefs_effective_config"
     ],
