@@ -181,7 +181,7 @@
   },
   {
     "name": "Article_Headline_Toggle",
-    "description": "A simple Tiny Tiny RSS plugin to toggle article visibility by clicking on the headline.",
+    "description": "Toggle article visibility by clicking on the headline",
     "topics": [
       "article_headline_toggle"
     ],
@@ -431,7 +431,7 @@
   },
   {
     "name": "Remember_Previous",
-    "description": "Remember your last-viewed category or feed",
+    "description": "Remember your last-viewed category or feed.",
     "topics": [
       "remember_previous"
     ],
@@ -511,7 +511,7 @@
   },
   {
     "name": "Version_Info",
-    "description": "Show Tiny Tiny RSS version info via Shift+V.",
+    "description": "Show the tt-rss version using Shift+V.",
     "topics": [
       "version_info"
     ],
