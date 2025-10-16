@@ -1,7 +1,7 @@
 [
   {
     "name": "Af_Catchup_Old",
-    "description": "fox",
+    "description": "Clone of https://git.tt-rss.org/fox/ttrss-catchup-old.git",
     "topics": [
       "af_catchup_old"
     ],
@@ -11,7 +11,7 @@
   },
   {
     "name": "Af_Enclosure_Fix_Type",
-    "description": "fox",
+    "description": "Clone of https://git.tt-rss.org/fox/ttrss-enclosure-fix-type.git",
     "topics": [
       "af_enclosure_fix_type"
     ],
@@ -21,7 +21,7 @@
   },
   {
     "name": "Af_Fontanka",
-    "description": "fox",
+    "description": "Gets full text content from fontanka.ru RSS feed",
     "topics": [
       "af_fontanka"
     ],
@@ -31,7 +31,7 @@
   },
   {
     "name": "Af_Fsckportal",
-    "description": "fox",
+    "description": "Remove feedsportal spamlinks from article content",
     "topics": [
       "af_fsckportal"
     ],
@@ -41,7 +41,7 @@
   },
   {
     "name": "Af_GoodShowSir",
-    "description": "fox",
+    "description": "Fix image url in goodshowsir.co.uk RSS feed",
     "topics": [
       "af_goodshowsir"
     ],
@@ -51,7 +51,7 @@
   },
   {
     "name": "Af_Img_Phash",
-    "description": "fox",
+    "description": "Filter duplicate images using perceptual hashing (requires GD)",
     "topics": [
       "af_img_phash"
     ],
@@ -61,7 +61,7 @@
   },
   {
     "name": "Af_Img_PlaceHolders",
-    "description": "fox",
+    "description": "Add loading placeholders for images (for slow connections)",
     "topics": [
       "af_img_placeholders"
     ],
@@ -71,7 +71,7 @@
   },
   {
     "name": "Af_Proxy_Http",
-    "description": "fox",
+    "description": "Loads media served over plain HTTP via built-in secure proxy",
     "topics": [
       "af_proxy_http"
     ],
@@ -81,7 +81,7 @@
   },
   {
     "name": "Af_Readability",
-    "description": "fox",
+    "description": "Try to inline article content using Readability",
     "topics": [
       "af_readability"
     ],
@@ -91,7 +91,7 @@
   },
   {
     "name": "Af_Readability_Legacy",
-    "description": "fox",
+    "description": "Try to inline article content using Readability (PHP 5.6 version)",
     "topics": [
       "af_readability_legacy"
     ],
@@ -101,7 +101,7 @@
   },
   {
     "name": "Af_Unburn",
-    "description": "fox",
+    "description": "Resolves feedburner and similar feed redirector URLs (requires CURL)",
     "topics": [
       "af_unburn"
     ],
@@ -111,7 +111,7 @@
   },
   {
     "name": "Af_Video_Fill_Poster",
-    "description": "fox",
+    "description": "Fills missing poster attributes of HTML5 video elements (uses ffmpeg)",
     "topics": [
       "af_video_fill_poster"
     ],
@@ -121,7 +121,7 @@
   },
   {
     "name": "Af_Youtube_Thumb",
-    "description": "fox",
+    "description": "Show Youtube videos as clickable thumbnails",
     "topics": [
       "af_youtube_thumb"
     ],
@@ -131,7 +131,7 @@
   },
   {
     "name": "Af_Zz_NoAutoPlay",
-    "description": "fox",
+    "description": "Don't autoplay HTML5 videos",
     "topics": [
       "af_zz_noautoplay"
     ],
@@ -141,7 +141,7 @@
   },
   {
     "name": "Af_Zz_NoPreload",
-    "description": "fox",
+    "description": "Don't preload HTML5 videos (for slow connections)",
     "topics": [
       "af_zz_nopreload"
     ],
@@ -151,7 +151,7 @@
   },
   {
     "name": "Af_Zz_Pause_Bg",
-    "description": "fox",
+    "description": "Pause HTML5 videos when in background",
     "topics": [
       "af_zz_pause_bg"
     ],
@@ -161,7 +161,7 @@
   },
   {
     "name": "Api_Content_Lang",
-    "description": "fox",
+    "description": "Sets lang=zh to article content returned via API (Chrome issue workaround)",
     "topics": [
       "api_content_lang"
     ],
@@ -171,7 +171,7 @@
   },
   {
     "name": "Api_Resize_Media",
-    "description": "fox",
+    "description": "Resizes media on the fly (for API clients or web UI)",
     "topics": [
       "api_resize_media"
     ],
@@ -181,7 +181,7 @@
   },
   {
     "name": "Article_Headline_Toggle",
-    "description": "wn",
+    "description": "A simple Tiny Tiny RSS plugin to toggle article visibility by clicking on the headline.",
     "topics": [
       "article_headline_toggle"
     ],
@@ -191,7 +191,7 @@
   },
   {
     "name": "Auth_OIDC",
-    "description": "fox",
+    "description": "Authenticates against configured OIDC provider",
     "topics": [
       "auth_oidc"
     ],
@@ -201,7 +201,7 @@
   },
   {
     "name": "CDM_No_Move_On_Expand",
-    "description": "fox",
+    "description": "Prevents article top from moving when clicking in unexpanded combined mode (whew!)",
     "topics": [
       "cdm_no_move_on_expand"
     ],
@@ -211,7 +211,7 @@
   },
   {
     "name": "Cache_S3",
-    "description": "fox",
+    "description": "File cache backend using S3 protocol (experimental)",
     "topics": [
       "cache_s3"
     ],
@@ -221,7 +221,7 @@
   },
   {
     "name": "Card_View",
-    "description": "fox",
+    "description": "Experimental card view for combined mode",
     "topics": [
       "card_view"
     ],
@@ -231,7 +231,7 @@
   },
   {
     "name": "Close_Button",
-    "description": "fox",
+    "description": "Adds a button to close article panel",
     "topics": [
       "close_button"
     ],
@@ -241,7 +241,7 @@
   },
   {
     "name": "Data_Migration",
-    "description": "fox",
+    "description": "Migrates user articles using neutral format",
     "topics": [
       "data_migration"
     ],
@@ -251,7 +251,7 @@
   },
   {
     "name": "Favicon_Unread",
-    "description": "fox",
+    "description": "Shows unread/fresh articles count in a favicon",
     "topics": [
       "favicon_unread"
     ],
@@ -261,7 +261,7 @@
   },
   {
     "name": "GoogleReaderKeys",
-    "description": "markwaters",
+    "description": "Keyboard hotkeys emulate Google Reader",
     "topics": [
       "googlereaderkeys"
     ],
@@ -271,7 +271,7 @@
   },
   {
     "name": "Grid_Masonry",
-    "description": "fox",
+    "description": "Fakes masonry layout for grid view (EXPERIMENTAL)",
     "topics": [
       "grid_masonry"
     ],
@@ -281,7 +281,7 @@
   },
   {
     "name": "HL_Legacy",
-    "description": "fox",
+    "description": "Revert back to legacy headline click behavior",
     "topics": [
       "hl_legacy"
     ],
@@ -291,7 +291,7 @@
   },
   {
     "name": "HighlightJS",
-    "description": "fox",
+    "description": "Hightlights code blocks in articles using HighlightJS",
     "topics": [
       "highlightjs"
     ],
@@ -301,7 +301,7 @@
   },
   {
     "name": "Hotkeys_Ru",
-    "description": "fox",
+    "description": "Mirrors English hotkey map into Russian keyboard layout",
     "topics": [
       "hotkeys_ru"
     ],
@@ -311,7 +311,7 @@
   },
   {
     "name": "LJ_No_LastModified",
-    "description": "fox",
+    "description": "Force unconditional HTTP requests for Livejournal (also disables cache)",
     "topics": [
       "lj_no_lastmodified"
     ],
@@ -321,7 +321,7 @@
   },
   {
     "name": "Labels_To_Tags",
-    "description": "vnab",
+    "description": "Add labels as tags in generated feeds",
     "topics": [
       "labels_to_tags"
     ],
@@ -331,7 +331,7 @@
   },
   {
     "name": "Mail",
-    "description": "fox",
+    "description": "Share article via email",
     "topics": [
       "mail"
     ],
@@ -341,7 +341,7 @@
   },
   {
     "name": "MailTo",
-    "description": "fox",
+    "description": "Share article via email (using mailto: links, invoking your mail client)",
     "topics": [
       "mailto"
     ],
@@ -351,7 +351,7 @@
   },
   {
     "name": "Names_to_Tags",
-    "description": "fox",
+    "description": "Assigns tags based on names in title",
     "topics": [
       "names_to_tags"
     ],
@@ -361,7 +361,7 @@
   },
   {
     "name": "Nginx_Xaccel",
-    "description": "fox",
+    "description": "Sends static files via nginx X-Accel-Redirect header",
     "topics": [
       "nginx_xaccel"
     ],
@@ -371,7 +371,7 @@
   },
   {
     "name": "No_Title_Counters",
-    "description": "fox",
+    "description": "Remove counters from window title (prevents tab flashing on new articles)",
     "topics": [
       "no_title_counters"
     ],
@@ -381,7 +381,7 @@
   },
   {
     "name": "No_URL_Hashes",
-    "description": "fox",
+    "description": "Disable URL hash usage (e.g. #f=10, etc)",
     "topics": [
       "no_url_hashes"
     ],
@@ -391,7 +391,7 @@
   },
   {
     "name": "Post_Delay",
-    "description": "fox",
+    "description": "Delays posts in RSS feeds",
     "topics": [
       "post_delay"
     ],
@@ -401,7 +401,7 @@
   },
   {
     "name": "Prefs_Effective_Config",
-    "description": "wn",
+    "description": "Clone of https://git.tt-rss.org/fox/ttrss-prefs-effective-config.git",
     "topics": [
       "prefs_effective_config"
     ],
@@ -411,7 +411,7 @@
   },
   {
     "name": "Profile_Chooser",
-    "description": "fox",
+    "description": "Adds a profile chooser to the main toolbar",
     "topics": [
       "profile_chooser"
     ],
@@ -421,7 +421,7 @@
   },
   {
     "name": "Random_Order",
-    "description": "fox",
+    "description": "Return headlines in random order",
     "topics": [
       "random_order"
     ],
@@ -431,7 +431,7 @@
   },
   {
     "name": "Remember_Previous",
-    "description": "wn",
+    "description": "Remember your last-viewed category or feed",
     "topics": [
       "remember_previous"
     ],
@@ -441,7 +441,7 @@
   },
   {
     "name": "Scored_Oldest_First",
-    "description": "fox",
+    "description": "Consider article score while sorting by oldest first",
     "topics": [
       "scored_oldest_first"
     ],
@@ -451,7 +451,7 @@
   },
   {
     "name": "Search_Button",
-    "description": "fox",
+    "description": "Adds a toolbar button to open search dialog",
     "topics": [
       "search_button"
     ],
@@ -461,7 +461,7 @@
   },
   {
     "name": "Search_Sphinx",
-    "description": "hoelzro",
+    "description": "Delegate searching for articles to Sphinx (don't forget to set options in config.php)",
     "topics": [
       "search_sphinx"
     ],
@@ -471,7 +471,7 @@
   },
   {
     "name": "Time_to_Read",
-    "description": "fox",
+    "description": "Shows (approximate) time it takes to read an article, combined mode only",
     "topics": [
       "time_to_read"
     ],
@@ -481,7 +481,7 @@
   },
   {
     "name": "UI_Gravatar",
-    "description": "fox",
+    "description": "Shows your globally recognized avatar (Gravatar) in the UI",
     "topics": [
       "ui_gravatar"
     ],
@@ -491,7 +491,7 @@
   },
   {
     "name": "VF_Search",
-    "description": "fox",
+    "description": "Show searches as feeds",
     "topics": [
       "vf_search"
     ],
@@ -501,7 +501,7 @@
   },
   {
     "name": "VF_Shared",
-    "description": "fox",
+    "description": "Feed for all articles actively shared by URL",
     "topics": [
       "vf_shared"
     ],
@@ -511,7 +511,7 @@
   },
   {
     "name": "Version_Info",
-    "description": "wn",
+    "description": "Show Tiny Tiny RSS version info via Shift+V.",
     "topics": [
       "version_info"
     ],
@@ -521,7 +521,7 @@
   },
   {
     "name": "mailer_smtp",
-    "description": "fox",
+    "description": "Sends mail via SMTP using PHPMailer. Read README.txt before enabling.",
     "topics": [
       "mailer_smtp"
     ],
