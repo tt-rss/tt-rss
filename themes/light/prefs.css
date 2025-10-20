@@ -1,12 +1,12 @@
 body.ttrss_prefs {
-	background-color : @color-panel-bg;
+	background-color : var(--color-panel-bg);
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: @font-size-content;
+	font-size: var(--font-size-content);
 
 	h1, h2, h3, h4 {
-		font-family : @fonts-ui;
+		font-family : var(--fonts-ui);
 		font-weight : 600;
-		color : @default-text;
+		color : var(--default-text);
 	}
 
 	select[multiple="multiple"] option {
@@ -14,7 +14,7 @@ body.ttrss_prefs {
 	}
 
 	.text-muted {
-		color : @fg-text-muted;
+		color : var(--fg-text-muted);
 	}
 
 	.dijitContentPane {
@@ -39,7 +39,7 @@ body.ttrss_prefs {
 	}
 
 	#footer {
-		background-color : @color-panel-bg;
+		background-color : var(--color-panel-bg);
 		font-size : 13px;
 		border : 0;
 		text-align : center;
@@ -72,7 +72,7 @@ body.ttrss_prefs {
 	}
 
 	#feedsTab {
-		background : @color-panel-bg;
+		background : var(--color-panel-bg);
 	}
 
 	#feedTree {
@@ -144,7 +144,7 @@ body.ttrss_prefs {
 		li {
 			display : flex;
 			align-items : center;
-			border-bottom: @border-default 1px solid;
+			border-bottom: var(--border-default) 1px solid;
 			line-height : 30px;
 
 			&.text-center {
@@ -175,7 +175,7 @@ body.ttrss_prefs {
 				}
 			}
 
-			@media (max-width: @breakpoint-lg) {
+			@media (max-width: var(--breakpoint-lg)) {
 				label.checkbox .name {
 					min-width : 200px ! important;
 				}
@@ -199,7 +199,7 @@ body.ttrss_prefs {
 
 	.plugin-installer-list, .plugin-updater-list {
 		li {
-			border-bottom: @border-default 1px solid;
+			border-bottom: var(--border-default) 1px solid;
 
 			> * {
 				padding : 8px 4px;
@@ -228,7 +228,7 @@ body.ttrss_prefs {
 		td, th {
 			cursor : pointer;
 			padding : 8px;
-			border-bottom: @border-default 1px solid;
+			border-bottom: var(--border-default) 1px solid;
 		}
 	}
 
@@ -256,13 +256,13 @@ body.ttrss_prefs {
 			}
 
 			.filename, .login, .timestamp {
-				color : @default-text;
+				color : var(--default-text);
 			}
 		}
 	}
 
 	hr {
-		border-color : @border-default;
+		border-color : var(--border-default);
 		max-width : 100%;
 	}
 

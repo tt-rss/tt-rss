@@ -1,8 +1,8 @@
 body.ttrss_main {
-	background : @default-bg;
-	color : @default-fg;
+	background : var(--default-bg);
+	color : var(--default-fg);
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: @font-size-content;
+	font-size: var(--font-size-content);
 	overflow : hidden;
 
 	:focus {
@@ -15,14 +15,14 @@ body.ttrss_main {
 
 	.post {
 		padding : 0;
-		font-size : @font-size-toolbar;
+		font-size : var(--font-size-toolbar);
 
 		.header {
 			padding : 5px;
-			color : @default-text;
-			border: 0 solid @border-default;
+			color : var(--default-text);
+			border: 0 solid var(--border-default);
 			border-bottom-width: 1px;
-			background: @color-panel-bg;
+			background: var(--color-panel-bg);
 
 			.left, .right {
 				display : flex;
@@ -49,7 +49,7 @@ body.ttrss_main {
 			img, i.material-icons {
 				margin : 0 4px;
 				vertical-align: middle;
-				color : @color-icon;
+				color : var(--color-icon);
 			}
 
 			.title {
@@ -57,7 +57,7 @@ body.ttrss_main {
 				font-size : 15px;
 				font-weight : 600;
 				text-rendering: optimizelegibility;
-				font-family : @fonts-ui;
+				font-family : var(--fonts-ui);
 				word-break : break-all;
 			}
 
@@ -82,7 +82,7 @@ body.ttrss_main {
 
 			div.embed-responsive {
 				overflow : hidden;
-				padding-bottom : @embed-responsive-padding;
+				padding-bottom : var(--embed-responsive-padding);
 				position : relative;
 
 				iframe {
@@ -128,37 +128,37 @@ body.ttrss_main {
 		font-size : 18px;
 		font-weight : 600;
 		text-rendering: optimizelegibility;
-		//font-family : @fonts-ui;
+		/*font-family : @fonts-ui; */
 	}
 
 	h2 {
 		font-size : 16px;
 		font-weight : 600;
 		text-rendering: optimizelegibility;
-		//font-family : @fonts-ui;
+		/*font-family : @fonts-ui; */
 	}
 
 	h3 {
 		font-size : 16px;
 		font-weight : 600;
 		text-rendering: optimizelegibility;
-		//font-family : @fonts-ui;
+		/*font-family : @fonts-ui; */
 	}
 
 	h4 {
 		font-size : 14px;
 		font-weight : 600;
 		text-rendering: optimizelegibility;
-		//font-family : @fonts-ui;
+		/*font-family : @fonts-ui; */
 	}
 
 	a {
-		color: @color-link;
+		color: var(--color-link);
 		text-decoration: none;
 	}
 
 	a:hover {
-		color: darken(@color-link, 20%);
+		color: color-mix(in srgb, var(--color-link) 80%, black 20%);
 		text-decoration: underline;
 	}
 
@@ -174,7 +174,7 @@ body.ttrss_main {
 		border-width : 1px;
 		border-style : solid;
 		position : fixed;
-		font-size : @font-size-content;
+		font-size : var(--font-size-content);
 		z-index : 99;
 		display : flex;
 		opacity: 0;
@@ -215,11 +215,11 @@ body.ttrss_main {
 	}
 
 	.notify.notify_info {
-		border-color : @color-accent;
-		background-color : @color-accent-light;
+		border-color : var(--color-accent);
+		background-color : var(--color-accent-light);
 
 		i.icon-notify {
-			color : @color-accent;
+			color : var(--color-accent);
 		}
 	}
 
@@ -245,12 +245,12 @@ body.ttrss_main {
 	}
 
 	.hl {
-		border: 0 solid @border-default;
+		border: 0 solid var(--border-default);
 		border-bottom-width: 1px;
 		transition : color 0.2s, background 0.2s;
 		display : flex;
 		flex-flow : row nowrap;
-		background : @color-panel-bg;
+		background : var(--color-panel-bg);
 		align-items : center;
 		user-select : none;
 
@@ -290,7 +290,7 @@ body.ttrss_main {
 			text-align : right;
 
 			i.material-icons {
-				color : @color-icon;
+				color : var(--color-icon);
 			}
 		}
 
@@ -303,8 +303,8 @@ body.ttrss_main {
 
 		.author {
 			white-space : nowrap;
-			color : @default-text;
-			font-size : @font-size-small;
+			color : var(--default-text);
+			font-size : var(--font-size-small);
 			font-weight : normal;
 		}
 
@@ -312,20 +312,20 @@ body.ttrss_main {
 			border-radius : 4px;
 			display : inline-block;
 			padding : 1px 4px;
-			font-size : @font-size-small;
+			font-size : var(--font-size-small);
 			font-style : italic;
 			font-weight : normal;
-			color : @default-text;
+			color : var(--default-text);
 
 			&:hover {
-				color : @color-accent;
+				color : var(--color-accent);
 			}
 		}
 
 		.updated {
-			color : @default-text;
+			color : var(--default-text);
 			text-align : right;
-			font-size : @font-size-small;
+			font-size : var(--font-size-small);
 			padding-left : 10px;
 
 			div {
@@ -336,7 +336,7 @@ body.ttrss_main {
 		div.title a {
 			font-weight : 600;
 			text-rendering: optimizelegibility;
-			font-family : @fonts-ui;
+			font-family : var(--fonts-ui);
 			color : #555;
 		}
 
@@ -357,18 +357,18 @@ body.ttrss_main {
 		}
 
 		&.active .title a {
-			color : @color-accent;
+			color : var(--color-accent);
 			/* text-shadow : 1px 1px 2px #fff; */
 		}
 
 		&.active {
-			background : @color-accent ! important;
+			background : var(--color-accent) ! important;
 		}
 
 		&.active,
 		&.Selected {
-			color : white;
-			background : desaturate(@color-accent, 25%);
+			color: white;
+			background: color-mix(in srgb, var(--color-accent) 75%, gray 25%);
 
 			a,
 			.feed a,
@@ -383,7 +383,7 @@ body.ttrss_main {
 	#headlines-frame blockquote,
 	.dijitContentPane blockquote {
 		margin : 5px 0;
-		color : @default-text;
+		color : var(--default-text);
 		padding-left : 10px;
 		border: 0 solid #ccc;
 		border-left-width: 4px;
@@ -401,11 +401,11 @@ body.ttrss_main {
 	.dijitContentPane pre {
 		margin: 5px 0;
 		padding: 10px;
-		color: @default-text;
+		color: var(--default-text);
 		font-family: monospace;
 		font-size: 12px;
 		border: 0 solid #ccc;
-		background: @color-panel-bg;
+		background: var(--color-panel-bg);
 		display: block;
 		max-width: 98%;
 		overflow: auto;
@@ -413,7 +413,7 @@ body.ttrss_main {
 	}
 
 	div.prefHelp {
-		color : @default-text;
+		color : var(--default-text);
 		padding : 5px;
 	}
 
@@ -428,8 +428,8 @@ body.ttrss_main {
 		display : inline-block;
 		vertical-align: middle;
 		background-color : #fff7d5;
-		font-size : @font-size-tiny;
-		color : @default-fg;
+		font-size : var(--font-size-tiny);
+		color : var(--default-fg);
 		font-weight : normal;
 		margin-left : 2px;
 		padding : 2px 4px;
@@ -438,7 +438,7 @@ body.ttrss_main {
 
 	i.marked-pic, i.pub-pic {
 		cursor : pointer;
-		color : @color-hl-icon;
+		color : var(--color-hl-icon);
 	}
 
 	/* ul.compact {
@@ -453,7 +453,7 @@ body.ttrss_main {
 	} */
 
 	#overlay {
-		background : @default-bg;
+		background : var(--default-bg);
 		left : 0;
 		top : 0;
 		height : 100%;
@@ -471,8 +471,8 @@ body.ttrss_main {
 		margin-left : 1px;
 		text-align : center;
 		padding : 1em 1em 0;
-		font-size : @font-size-small;
-		border: 0 solid @border-default;
+		font-size : var(--font-size-small);
+		border: 0 solid var(--border-default);
 		border-bottom-width: 1px;
 	}
 
@@ -481,8 +481,8 @@ body.ttrss_main {
 		.dlgSec, .dlgSecHoriz {
 			font-size : 16px;
 			font-weight : 600;
-			color : @default-text;
-			font-family: @fonts-ui;
+			color : var(--default-text);
+			font-family: var(--fonts-ui);
 		}
 
 		section,
@@ -561,11 +561,11 @@ body.ttrss_main {
 		position : absolute;
 		left : 5px;
 		bottom : 5px;
-		font-size : @font-size-small;
-		color : @default-text;
+		font-size : var(--font-size-small);
+		color : var(--default-text);
 		font-weight : bold;
-		background-color : @default-bg;
-		border : 1px solid @color-accent;
+		background-color : var(--default-bg);
+		border : 1px solid var(--color-accent);
 		padding : 3px 5px;
 		z-index : 5;
 	}
@@ -577,7 +577,7 @@ body.ttrss_main {
 		textarea {
 			width : 99%;
 			height : 200px;
-			font-size : @font-size-small;
+			font-size : var(--font-size-small);
 		}
 	}
 
@@ -590,9 +590,9 @@ body.ttrss_main {
 
 	#feeds-holder {
 		padding : 0;
-		border: 0 solid @border-default;
+		border: 0 solid var(--border-default);
 		overflow : hidden;
-		background : @color-panel-bg;
+		background : var(--color-panel-bg);
 		box-shadow : inset -1px 0 2px -1px rgb(0 0 0 / 10%);
 		-webkit-overflow-scrolling : touch;
 
@@ -600,7 +600,7 @@ body.ttrss_main {
 			height : 100%;
 			overflow-x : hidden;
 			text-rendering: optimizelegibility;
-			font-family : @fonts-ui;
+			font-family : var(--fonts-ui);
 
 			.dijitTreeNode {
 				.dijitTreeRow {
@@ -629,43 +629,43 @@ body.ttrss_main {
 						order : 2;
 						font-weight : bold;
 						display : none;
-						font-size : @font-size-tiny;
+						font-size : var(--font-size-tiny);
 						text-align : center;
-						border : 1px solid lighten(@color-accent, 5%);
+						border : 1px solid color-mix(in srgb, var(--color-accent) 95%, white 5%);
 						color : white;
-						background : lighten(@color-accent, 5%);
+						background : color-mix(in srgb, var(--color-accent) 95%, white 5%);
 						border-radius : 4px;
-						//vertical-align : middle;
-						//float : right;
-						//position : relative;
+						/*vertical-align : middle; */
+						/*float : right; */
+						/*position : relative; */
 						line-height : 14px;
 						margin-right : 8px;
-						//margin-top : 2px;
+						/*margin-top : 2px; */
 						min-width : 23px;
 						height : 14px;
 						flex-shrink : 0;
 
 						&.aux, &.marked, &.published {
-							background : @color-panel-bg;
-							color : lighten(@default-text, 10%);
-							border-color : darken(@color-panel-bg, 10%);
+							background : var(--color-panel-bg);
+							color : color-mix(in srgb, var(--default-text) 90%, white 10%);
+							border-color : color-mix(in srgb, var(--color-panel-bg) 90%, black 10%);
 						}
 
 						&.marked {
-							border-color : @color-accent-marked;
-							background : @default-bg;
+							border-color : var(--color-accent-marked);
+							background : var(--default-bg);
 						}
 
 						&.published {
-							border-color : @color-accent-published;
-							background : @default-bg;
+							border-color : var(--color-accent-published);
+							background : var(--default-bg);
 						}
 					}
 
-					// fresh
+					/* fresh */
 					&[data-feed-id="-3"][data-is-cat="false"] .counterNode.unread {
-						background-color: darken(@color-checked, 15%);
-						border-color: darken(@color-checked, 25%);
+						background-color: color-mix(in srgb, var(--color-checked) 85%, black 15%);
+						border-color: color-mix(in srgb, var(--color-checked) 75%, black 25%);
 					}
 
 					.dijitTreeContent {
@@ -682,8 +682,8 @@ body.ttrss_main {
 						text-overflow : ellipsis;
 						position : relative;
 
-						// Segoe UI (@fonts-ui) seems to have wrong baseline set
-						// top : -0.5px;SegoeUIseemstohavewrongbaselinesettop
+						/* Segoe UI (@fonts-ui) seems to have wrong baseline set */
+						/* top : -0.5px;SegoeUIseemstohavewrongbaselinesettop */
 
 						&.Unread {
 							font-weight : bold;
@@ -696,9 +696,9 @@ body.ttrss_main {
 
 					&.dijitTreeRowSelected {
 						box-shadow : -1px 0 2px -1px rgb(0 0 0 / 10%);
-						border-color : @border-default transparent;
-						background : @default-bg;
-						color : @default-text;
+						border-color : var(--border-default) transparent;
+						background : var(--default-bg);
+						color : var(--default-text);
 					}
 
 					.dijitIcon.feed-icon {
@@ -706,33 +706,33 @@ body.ttrss_main {
 					}
 
 					i.icon.icon-inbox {
-						color : lighten(@default-text, 20%);
+						color : color-mix(in srgb, var(--default-text) 80%, white 20%);
 					}
 
 					i.icon.icon-archive {
-						color : darken(@color-marked, 30%);
+						color : color-mix(in srgb, var(--color-marked) 70%, black 30%);
 					}
 
 					i.icon.icon-star {
 						position : relative;
-						color : @color-marked;
+						color : var(--color-marked);
 						font-size : 21px;
 						left : -2px;
 					}
 
 					i.icon.icon-rss_feed {
-						color : @color-published;
+						color : var(--color-published);
 					}
 
 					i.icon.icon-whatshot {
-						color : @color-checked;
+						color : var(--color-checked);
 					}
 
 					i.icon.icon-restore {
-						//position : relative;
-						//top : -1px;
+						/*position : relative; */
+						/*top : -1px; */
 						font-weight : bold;
-						color : @color-accent;
+						color : var(--color-accent);
 					}
 				}
 			}
@@ -741,10 +741,10 @@ body.ttrss_main {
 
 	#headlines-frame:not([data-headlines-count="0"])[data-is-cdm="true"][data-is-cdm-expanded="true"][data-enable-grid="true"] {
 		display : grid;
-		grid-template-columns: repeat(auto-fit, minmax(@cdm-grid-col-width, 1fr));
-		padding : @cdm-grid-padding;
-		grid-gap : @cdm-grid-padding;
-		background-color: @color-panel-bg;
+		grid-template-columns: repeat(auto-fit, minmax(var(--cdm-grid-col-width), 1fr));
+		padding : var(--cdm-grid-padding);
+		grid-gap : var(--cdm-grid-padding);
+		background-color: var(--color-panel-bg);
 
 		> * {
 			/* 2 = because #headlines-spacer is the actual last child
@@ -764,8 +764,8 @@ body.ttrss_main {
 
 		.cdm.expanded {
 			.header, .content {
-				background : @default-bg;
-				border : 1px solid @border-default;
+				background : var(--default-bg);
+				border : 1px solid var(--border-default);
 				overflow : hidden;
 			}
 
@@ -781,7 +781,7 @@ body.ttrss_main {
 			}
 
 			.header[data-is-stuck] {
-				top : -@cdm-grid-padding;
+				top : -var(--cdm-grid-padding);
 				border-bottom-width: 1px;
 			}
 
@@ -856,35 +856,35 @@ body.ttrss_main {
 		#headlines-spacer {
 			margin-left : 1px;
 			text-align : center;
-			color : @default-text;
-			font-size : @font-size-small;
+			color : var(--default-text);
+			font-size : var(--font-size-small);
 
 			a, span {
-				color : @default-text;
+				color : var(--default-text);
 				padding : 10px;
 				display : block;
 			}
 
 			a:hover {
-				color : @color-accent;
+				color : var(--color-accent);
 			}
 		}
 
 		.feed-title {
-			border: 0 solid @color-link;
+			border: 0 solid var(--color-link);
 			border-bottom-width: 1px;
 			padding: 5px 8px;
 
 			a.title {
-				color: @default-text;
+				color: var(--default-text);
 				font-weight: bold;
 			}
 
 			a {
-				color: @default-text;
+				color: var(--default-text);
 
 				&:hover {
-					color: @color-link;
+					color: var(--color-link);
 				}
 			}
 		}
@@ -905,18 +905,18 @@ body.ttrss_main {
 		margin : 0;
 		border : 0;
 		white-space: nowrap;
-		font-size : @font-size-toolbar;
+		font-size : var(--font-size-toolbar);
 
 		#toolbar {
 			background : white;
-			border: 0 solid @border-default;
+			border: 0 solid var(--border-default);
 			border-bottom-width: 1px;
 			padding-left : 4px;
 			height : 32px;
 			display : flex;
 			flex-flow : row nowrap;
-			color : @default-text;
-			font-size : @font-size-toolbar;
+			color : var(--default-text);
+			font-size : var(--font-size-toolbar);
 			align-items : center;
 
 			.dijitSelect,
@@ -939,7 +939,7 @@ body.ttrss_main {
 			}
 
 			#toolbar-headlines {
-				font-size : @font-size-toolbar;
+				font-size : var(--font-size-toolbar);
 				background: transparent;
 				padding-right : 4px;
 				flex-grow : 2;
@@ -954,7 +954,7 @@ body.ttrss_main {
 						margin-left : 4px;
 					}
 
-					@media (max-width: @breakpoint-md) {
+					@media (max-width: var(--breakpoint-md)) {
 						.feed_title, i.icon-syndicate {
 							display : none;
 						}
@@ -968,7 +968,7 @@ body.ttrss_main {
 			}
 
 			#updates-available {
-				color : @color-checked;
+				color : var(--color-checked);
 				padding-right : 4px;
 			}
 
@@ -976,16 +976,16 @@ body.ttrss_main {
 				font-style : italic;
 				text-align : right;
 				margin-right : 4px;
-				color : @color-accent;
+				color : var(--color-accent);
 			}
 
-			@media (max-width: @breakpoint-md) {
+			@media (max-width: var(--breakpoint-md)) {
 				#selected_prompt {
 					display : none;
 				}
 			}
 
-			@media (max-width: @breakpoint-sm) {
+			@media (max-width: var(--breakpoint-sm)) {
 				.select-articles-dropdown,
 				.catchup-button {
 					display : none;
@@ -997,7 +997,7 @@ body.ttrss_main {
 
 	#header {
 		text-align : right;
-		color : @default-text;
+		color : var(--default-text);
 		padding : 5px 5px 0 0;
 		position : absolute;
 		border : 0;
@@ -1016,7 +1016,7 @@ body.ttrss_main {
 		}
 
 		#updates-available {
-			color : @color-checked;
+			color : var(--color-checked);
 			padding-right : 4px;
 		}
 
@@ -1068,7 +1068,7 @@ body.ttrss_main {
 		}
 
 		.hk {
-			color : @color-accent;
+			color : var(--color-accent);
 			width : 100px;
 		}
 
@@ -1108,24 +1108,24 @@ body.ttrss_main {
 	}
 
 	.dijitTooltipContents {
-		background : @color-tooltip-bg;
-		color : @color-tooltip-fg;
+		background : var(--color-tooltip-bg);
+		color : var(--color-tooltip-fg);
 	}
 
 	.dijitTooltipRight .dijitTooltipConnector {
-		border-right-color : @color-tooltip-bg;
+		border-right-color : var(--color-tooltip-bg);
 	}
 
 	.dijitTooltipLeft .dijitTooltipConnector {
-		border-left-color : @color-tooltip-bg;
+		border-left-color : var(--color-tooltip-bg);
 	}
 
 	.dijitTooltipBelow .dijitTooltipConnector {
-		border-bottom-color : @color-tooltip-bg;
+		border-bottom-color : var(--color-tooltip-bg);
 	}
 
 	.dijitTooltipAbove .dijitTooltipConnector {
-		border-top-color : @color-tooltip-bg;
+		border-top-color : var(--color-tooltip-bg);
 	}
 }
 
@@ -1140,7 +1140,7 @@ body.ttrss_main {
 
 body.ttrss_main[view-mode="marked"] #feeds-holder #feedTree {
 	.dijitTreeRow.Has_Marked .dijitTreeLabel {
-		color : @color-accent-marked;
+		color : var(--color-accent-marked);
 	}
 	.dijitTreeRow.Has_Marked .counterNode.marked {
 		display : inline-block;
@@ -1149,7 +1149,7 @@ body.ttrss_main[view-mode="marked"] #feeds-holder #feedTree {
 
 body.ttrss_main[view-mode="published"] #feeds-holder #feedTree {
 	.dijitTreeRow.Has_Published .dijitTreeLabel {
-		color : @color-accent-published;
+		color : var(--color-accent-published);
 	}
 	.dijitTreeRow.Has_Published .counterNode.published {
 		display : inline-block;
@@ -1198,9 +1198,9 @@ body.ttrss_main:not([view-mode="marked"], [view-mode="published"])[hide-read-fee
 body.ttrss_main {
 	#toolbar-headlines {
 		i.icon-syndicate {
-			color: @color-published;
+			color: var(--color-published);
 			margin-right: 8px;
-			border: 1px solid @color-published;
+			border: 1px solid var(--color-published);
 			border-radius: 4px;
 		}
 
@@ -1208,9 +1208,9 @@ body.ttrss_main {
 			margin-left : 8px;
 			font-weight : bold;
 			text-align : center;
-			border : 1px solid lighten(@color-accent, 5%);;
+			border : 1px solid color-mix(in srgb, var(--color-accent) 95%, white 5%);;
 			color : white;
-			background : lighten(@color-accent, 5%);
+			background : color-mix(in srgb, var(--color-accent) 95%, white 5%);
 			border-radius : 4px;
 			min-width : 23px;
 		}
@@ -1226,16 +1226,16 @@ body.ttrss_main {
 
 	.cdm.marked .left i.marked-pic,
 	.hl.marked .left i.marked-pic {
-		color : @color-marked;
+		color : var(--color-marked);
 	}
 
 	.cdm.published .left i.pub-pic,
 	.hl.published .left i.pub-pic {
-		color : @color-published;
+		color : var(--color-published);
 	}
 
 	.score-high i.icon-score {
-		color : @color-checked;
+		color : var(--color-checked);
 	}
 
 	.score-low i.icon-score {
@@ -1248,10 +1248,10 @@ body.ttrss_main {
 
 	i.icon-score, i.icon-grid-span {
 		cursor : pointer;
-		color : @color-icon;
+		color : var(--color-icon);
 	}
 
-	// only shown in grid mode
+	/* only shown in grid mode */
 	.icon-grid-span {
 		display : none;
 	}
@@ -1261,13 +1261,13 @@ body.ttrss_main {
 	}
 
 	.panel {
-		border : 1px solid @border-default;
-		background : @color-panel-bg;
+		border : 1px solid var(--border-default);
+		background : var(--color-panel-bg);
 		padding : 4px;
 	}
 
 	.dijitDialog .panel {
-		background : @default-bg;
+		background : var(--default-bg);
 	}
 
 	.panel-scrollable {
@@ -1372,15 +1372,15 @@ body.ttrss_main, body.ttrss_utility {
 	}
 
 	.text-warning {
-		color: darken(#c09853, 10%);
+		color: color-mix(in srgb, #c09853 90%, black 10%);
 	}
 
 	.text-muted {
-		color : @fg-text-muted;
+		color : var(--fg-text-muted);
 	}
 
 	.text-small, .small {
-		font-size : @font-size-small;
+		font-size : var(--font-size-small);
 	}
 
 	.alert,
@@ -1432,8 +1432,8 @@ body.ttrss_main, body.ttrss_utility {
 	/* div.autocomplete {
 		position : absolute;
 		width : 250px;
-		background-color : @default-bg;
-		border :1px solid @border-default;
+		background-color : var(--default-bg);
+		border :1px solid var(--border-default);
 		margin : 0px;
 		padding : 0px;
 
@@ -1444,7 +1444,7 @@ body.ttrss_main, body.ttrss_utility {
 		}
 
 		ul li.selected {
-			background-color : darken(@default-bg, 10%);
+			background-color : color-mix(in srgb, var(--default-bg) 90%, black 10%);
 		}
 
 		ul li {
@@ -1458,8 +1458,8 @@ body.ttrss_main, body.ttrss_utility {
 }
 
 ::selection {
-	background : @color-accent;
-	color : @default-bg;
+	background : var(--color-accent);
+	color : var(--default-bg);
 }
 
 ::-webkit-scrollbar {
@@ -1467,7 +1467,7 @@ body.ttrss_main, body.ttrss_utility {
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: @color-accent;
+	background-color: var(--color-accent);
 }
 
 ::-webkit-scrollbar-track {

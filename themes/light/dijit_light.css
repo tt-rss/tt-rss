@@ -1,11 +1,11 @@
 .flat {
 
 	.dijitDialog .dijitDialogPaneContent {
-		background : @color-panel-bg;
+		background : var(--color-panel-bg);
 	}
 
 	.dijitTab:not(.dijitTabChecked) {
-		background : @color-panel-bg;
+		background : var(--color-panel-bg);
 	}
 
 	.dijitCheckBox {

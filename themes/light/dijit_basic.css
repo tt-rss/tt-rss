@@ -38,8 +38,8 @@
 	}
 
 	.dijitToolbar {
-		font-size: @font-size-toolbar;
-		font-family: @fonts-ui;
+		font-size: var(--font-size-toolbar);
+		font-family: var(--fonts-ui);
 		padding: 0;
 
 		.dijitTextBox .dijitInputContainer {
@@ -64,19 +64,19 @@
 	}
 
 	.dijitCheckBox.dijitCheckBoxChecked {
-		background-color : @color-checked;
-		border-color : darken(@color-checked, 10%);
+		background-color : var(--color-checked);
+		border-color : color-mix(in srgb, var(--color-checked) 90%, black 10%);
 	}
 
 	.dijitMenu {
 		.dijitMenuItem .dijitMenuItemLabel {
 			padding: 4px 8px;
-			font-size: @font-size-toolbar;
-			font-family: @fonts-ui;
+			font-size: var(--font-size-toolbar);
+			font-family: var(--fonts-ui);
 		}
 
 		.dijitMenuItem.dijitDisabled:not(.dijitMenuItemSelected) .dijitMenuItemLabel {
-			color : lighten(@color-accent, 10%);
+			color : color-mix(in srgb, var(--color-accent) 90%, white 10%);
 		}
 
 		.dijitMenuItem td {
@@ -96,13 +96,13 @@
 
 	.dijitTab,
 	.dijitAccordionTitle {
-		font-family: @fonts-ui;
+		font-family: var(--fonts-ui);
 	}
 
 	.dijitTab,
 	.dijitAccordionInnerContainer:not(.dijitSelected) {
 		i.material-icons {
-			color: @color-accent;
+			color: var(--color-accent);
 		}
 	}
 
@@ -112,7 +112,7 @@
 			flex-direction : row;
 			align-items : center;
 
-			// AAAAAA (pushes element down)
+			/* AAAAAA (pushes element down) */
 			.dijitTreeIcon {
 				font-size : inherit;
 				height : auto;
@@ -135,7 +135,7 @@
 			}
 
 			.dijitTreeExpando {
-				color : @color-accent;
+				color : var(--color-accent);
 			}
 		}
 
@@ -189,7 +189,7 @@
 		top : 1px;
 
 		&:hover {
-			background-color : @color-panel-bg;
+			background-color : var(--color-panel-bg);
 		}
 	}
 
@@ -197,7 +197,7 @@
 		.dijitTreeNode .dijitTreeRow {
 			padding : 4px 0;
 			border-width : 1px;
-			color : @default-text;
+			color : var(--default-text);
 		}
 	}
 

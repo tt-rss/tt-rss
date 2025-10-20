@@ -45,12 +45,15 @@ Tiny Tiny RSS is a web-based RSS/Atom feed reader and aggregator built with PHP 
 - **Issue**: UrlHelper::url_to_youtube_vid() test missed despite being high-value pure logic
 - **Root cause**: Focused only on methods already in test file, no systematic review
 - **Improvement**: Added "Completeness Check: Review for Missing Tests" with grep workflow for all public methods
-- **Issue**: CSS/Less linting infrastructure created but instructions not updated
+- **Issue**: CSS linting infrastructure created but instructions not updated
 - **Root cause**: Forgot to proactively update instructions after completing new code quality workflow
 - **Improvement**: Added explicit reminder to update instructions when adding code quality tools, workflows, or discovering project patterns
 - **Issue**: Used outdated "CSS3" terminology in documentation
 - **Root cause**: Didn't verify terminology against authoritative sources (MDN)
 - **Improvement**: Added requirement to check authoritative documentation sources for technical terminology
+- **Issue**: Project migrated from Less to native CSS but many converted files had syntax errors
+- **Root cause**: Automated conversion script had bugs; didn't verify all output files after bulk changes
+- **Improvement**: Added practice to systematically check all affected files after bulk transformations with grep and lint tools
 
 **Goal**: Continuously improve these instructions based on real-world usage patterns and mistakes.
 
@@ -146,7 +149,7 @@ When writing documentation about web technologies, programming languages, or fra
 - **Widgets**: dijit (Dojo UI library) - `dojoType="dijit.form.TextBox"`, `dijit.Dialog`, etc.
 - **Global Object**: `App` in `js/App.js` - contains utilities, translations, form helpers
 - **Main Modules**: `Feeds.js`, `Headlines.js`, `Article.js`, `CommonDialogs.js`
-- **Build**: Gulp for Less compilation (`gulpfile.js`) - run `npx gulp` to watch/compile themes
+- **Styling**: Native CSS with custom properties (`themes/*.css`) - edit CSS files directly, no build step required
 
 ### Database & ORM Patterns
 ```php
@@ -177,9 +180,11 @@ docker-compose up  # Starts db, app, updater, web-nginx
 # Install PHP dependencies
 composer install
 
-# Install JS dependencies & watch
+# Install JS dependencies
 npm install
-npx gulp  # Watch Less files and compile on changes
+
+# CSS linting
+npm run lint:css  # Stylelint for code quality
 ```
 
 ### Code Quality & Testing
@@ -193,7 +198,7 @@ vendor/bin/rector process  # PHP 8.2 upgrades, config in rector.php
 # JavaScript Linting
 npx eslint js/**/*.js plugins/**/*.js  # Config in eslint.config.js
 
-# CSS/Less Linting
+# CSS Linting
 npm run lint:css  # Stylelint, config in .stylelintrc.json
 # Scope: lib/flat-ttrss, themes, plugins/*/*.css
 # Known issues: Mostly legacy Dojo styles with IE hacks and outdated syntax
@@ -249,21 +254,52 @@ cd lib/dojo-src
 - **XHR**: `xhr.json()` wrapper (custom) or `dojo.xhrPost()`
 - **Dialogs**: Create via `App.dialogOf(this).hide()` or `new SingleUseDialog({})`
 
-### CSS/Less Style
+### CSS Style
 - **Indentation**: 2 spaces (enforced by `.editorconfig` and Stylelint)
-- **Modern CSS**: Use current CSS syntax where possible
-  - Pseudo-elements: `::before`, `::after` (not `:before`, `:after`)
-  - Color functions: `rgb(0 0 0 / 30%)` space-separated (not `rgba(0, 0, 0, 0.3)` comma-separated)
-  - Alpha channel: Percentages `30%` (not decimals `.3`)
+- **Modern CSS**: Project migrated from Less to native CSS (October 2025)
+  - **Variables**: Use CSS custom properties in `:root` (e.g., `--color-accent`, `--font-size-content`)
+  - **Nesting**: Native CSS nesting supported (e.g., `.parent { .child { } }`)
+  - **No build step**: CSS files are served directly, no compilation required
+  - **Modular structure**: Theme files import component CSS (e.g., `themes/light.css` → `themes/light/defines.css`)
+- **Pseudo-elements**: `::before`, `::after` (not `:before`, `:after`)
+- **Color functions**: `rgb(0 0 0 / 30%)` space-separated (not `rgba(0, 0, 0, 0.3)` comma-separated)
+  - Use `color-mix(in srgb, ...)` for color manipulation instead of preprocessor functions
+- **Alpha channel**: Percentages `30%` (not decimals `.3`)
 - **Zero Values**: Omit units (`padding: 0` not `padding: 0px`)
 - **Hex Colors**: Use shorthand when possible (`#090` not `#009900`)
 - **Legacy Dojo Styles**: `lib/flat-ttrss/*.css` contains Dojo Toolkit widget styles, now maintained by tt-rss
   - Known legacy issues: `filter: alpha()` (IE6-9), single-colon pseudo-elements, deprecated properties
   - These files are part of tt-rss codebase and should be incrementally modernized
   - Most issues are auto-fixable; apply fixes incrementally with testing
-- **Linting**: Run `npm run lint:css` before committing CSS/Less changes
+- **Linting**: Run `npm run lint:css` before committing CSS changes
   - Config: `.stylelintrc.json` extends `stylelint-config-standard`
   - Auto-fix: `npx stylelint --fix` for most issues
+
+### Theme Structure & Customization
+- **Top-level theme files** (in `themes/`) are simple import files:
+  - `light.css` → imports `light/light_base.css`
+  - `night.css` → imports `night_base.css`
+  - `compact.css` → imports `light/light_base.css` + `compact_base.css`
+  - `compact_night.css` → imports `night_base.css` + `compact_base.css`
+  - `night_blue.css` → imports `night_base.css` + dark blue variant
+  - `light-high-contrast.css` → imports with variable overrides in `:root`
+- **Component files** (in `themes/light/`) contain the actual styles:
+  - `defines.css` - CSS custom properties (`:root` block) and imports all components
+  - `tt-rss.css` - Main app styles (feeds, articles, headlines)
+  - `cdm.css` - Combined display mode (CDM) styles
+  - `prefs.css` - Preferences/settings page styles
+  - `utility.css` - Utility classes and helpers
+  - `zoom.css` - Image zoom functionality styles
+  - `dijit_light.css` / `dijit_basic.css` - Dojo widget overrides
+- **To modify a theme**:
+  1. Edit component files in `themes/light/` (for light theme) or create overrides in theme-specific files
+  2. Modify CSS custom properties in `:root` blocks to change colors/sizes globally
+  3. Use browser DevTools to inspect variable usage (e.g., `var(--color-accent)`)
+  4. No build step required - changes take effect immediately on page reload
+- **To create a theme variant**:
+  1. Create a new top-level CSS file (e.g., `themes/my-theme.css`)
+  2. Import base components and add `:root` overrides for custom properties
+  3. Example: See `light-high-contrast.css` for variable override pattern
 
 ### Code Generation & Templates
 - **PHP HTML Helpers**: Prefer `\Controls\*` functions (e.g., `\Controls\submit_tag()`, `\Controls\hidden_tag()`, `\Controls\select_tag()`)
@@ -721,6 +757,5 @@ grep -E '(Config::|Prefs::|PluginHost::|Db::)' classes/YourClass.php
 ## Common Gotchas
 - **Config Changes**: Restart Docker containers after modifying `.env`
 - **Plugin State**: Plugin data cached in `ttrss_plugin_storage` - may need DB clear for dev
-- **Theme Changes**: Run `npx gulp` to recompile Less after CSS edits
 - **ORM Caching**: Idiorm uses identity map - call `ORM::reset_db()` to clear
 - **Database-Only**: PostgreSQL is the only supported database (MySQL support removed)

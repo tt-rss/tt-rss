@@ -1,6 +1,6 @@
 .cdm {
 	/* i.material-icons {
-		color : @color-icon;
+		color : var(--color-icon);
 	} */
 
 	.header, .footer {
@@ -48,9 +48,9 @@
 		}
 
 		.updated {
-			color : @default-text;
+			color : var(--default-text);
 			font-weight : normal;
-			font-size : @font-size-small;
+			font-size : var(--font-size-small);
 			white-space : nowrap;
 		}
 
@@ -61,7 +61,7 @@
 		.feed {
 			font-weight: normal;
 			font-style: italic;
-			font-size: @font-size-small;
+			font-size: var(--font-size-small);
 			display : inline-block;
 			max-width : 25%;
 			overflow : hidden;
@@ -69,13 +69,13 @@
 			border-radius : 4px;
 			padding : 1px 4px;
 			margin-right : 4px;
-			color: @default-text;
+			color: var(--default-text);
 		}
 
 		.author {
 			white-space : nowrap;
-			color : @default-text;
-			font-size : @font-size-small;
+			color : var(--default-text);
+			font-size : var(--font-size-small);
 			font-weight : normal;
 		}
 	}
@@ -84,12 +84,12 @@
 		height : 30px;
 		padding-left : 5px;
 		font-weight : normal;
-		color : @default-text;
+		color : var(--default-text);
 		clear : both;
 		align-items : center;
 
 		i.material-icons {
-			color : @color-icon;
+			color : var(--color-icon);
 		}
 
 		.left, .right {
@@ -154,7 +154,7 @@
 		}
 
 		.footer {
-			border: 0 solid @border-default;
+			border: 0 solid var(--border-default);
 			border-bottom-width: 1px;
 		}
 
@@ -169,7 +169,7 @@
 			font-weight : 600;
 			transition : color 0.2s, background 0.2s;
 			text-rendering: optimizelegibility;
-			font-family : @fonts-ui;
+			font-family : var(--fonts-ui);
 		}
 
 		&.active,
@@ -181,7 +181,7 @@
 
 		&.active {
 			.header .title {
-				color : @color-link;
+				color : var(--color-link);
 			}
 		}
 
@@ -192,7 +192,7 @@
 		}
 
 		.content {
-			color : @default-text;
+			color : var(--default-text);
 		}
 	}
 
@@ -201,28 +201,28 @@
 	}
 
 	.feed-title {
-		border: 0 solid @color-link;
+		border: 0 solid var(--color-link);
 		border-bottom-width: 1px;
 		padding: 5px 3px 5px 5px;
 
 		a.title {
-			color: @default-text;
+			color: var(--default-text);
 			font-weight: bold;
 		}
 
 		a {
-			color: @default-text;
+			color: var(--default-text);
 		}
 
 		a:hover {
-			color: @color-link;
+			color: var(--color-link);
 		}
 	}
 
 	.content-inner {
 		.embed-responsive {
 			overflow : hidden;
-			padding-bottom : @embed-responsive-padding;
+			padding-bottom : var(--embed-responsive-padding);
 			position : relative;
 
 			iframe {
@@ -238,8 +238,8 @@
 	}
 
 	&.expandable {
-		background-color : @color-panel-bg;
-		border: 0 solid @border-default;
+		background-color : var(--color-panel-bg);
+		border: 0 solid var(--border-default);
 		border-bottom-width: 1px;
 
 		> hr {
@@ -254,7 +254,7 @@
 
 		.excerpt {
 			white-space : nowrap;
-			font-size : @font-size-small;
+			font-size : var(--font-size-small);
 			color : #999;
 			font-weight : normal;
 			cursor : pointer;
@@ -269,7 +269,7 @@
 		}
 
 		&.Selected:not(.active) {
-			background : desaturate(@color-accent, 25%);
+			background: color-mix(in srgb, var(--color-accent) 75%, gray 25%);
 
 			a,
 			.header a.title,
@@ -288,11 +288,11 @@
 
 		.header a.title {
 			font-weight : 600;
-			color : @default-text;
-			font-size : @font-size-content;
+			color : var(--default-text);
+			font-size : var(--font-size-content);
 			transition : color 0.2s, background 0.2s;
 			text-rendering: optimizelegibility;
-			font-family : @fonts-ui;
+			font-family : var(--fonts-ui);
 		}
 
 		&.Unread div.header a.title {
@@ -301,7 +301,7 @@
 
 		&.active {
 			.collapse i.material-icons {
-				color : @color-accent;
+				color : var(--color-accent);
 				cursor : pointer;
 			}
 
@@ -310,11 +310,11 @@
 			}
 
 			div.header a.title {
-				color: @color-link;
+				color: var(--color-link);
 				font-size: 16px;
 				font-weight: 600;
 				text-rendering: optimizelegibility;
-				font-family: @fonts-ui;
+				font-family: var(--fonts-ui);
 			}
 		}
 
@@ -331,9 +331,9 @@
 	&.expanded {
 		.header[data-is-stuck] {
 			box-shadow : 0 1px 1px -1px rgb(0 0 0 / 10%);
-			border: 0 solid @border-default;
+			border: 0 solid var(--border-default);
 			border-bottom-width: 1px;
-			background : fade(@default-bg, 90%) ! important;
+			background : fade(var(--default-bg), 90%) ! important;
 			backdrop-filter: blur(6px);
 		}
 	}

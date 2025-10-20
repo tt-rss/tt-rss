@@ -3,15 +3,15 @@ body.ttrss_utility.sanity_failed {
 }
 
 body.ttrss_utility {
-	background : @color-panel-bg;
-	color : @default-fg;
+	background : var(--color-panel-bg);
+	color : var(--default-fg);
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-size: @font-size-content;
+	font-size: var(--font-size-content);
 	margin : 4em;
 
 	.content {
-		background : @default-bg;
-		border : 1px solid @border-default;
+		background : var(--default-bg);
+		border : 1px solid var(--border-default);
 		padding : 20px;
 		box-shadow : 0 1px 1px -1px rgb(0 0 0 / 10%);
 
@@ -20,8 +20,8 @@ body.ttrss_utility {
 		}
 
 		h2, h3, h4 {
-			color : @color-accent;
-			font-family: @fonts-ui;
+			color : var(--color-accent);
+			font-family: var(--fonts-ui);
 		}
 
 		h2 {
@@ -34,19 +34,19 @@ body.ttrss_utility {
 	}
 
 	a {
-		color : @color-link;
+		color : var(--color-link);
 		text-decoration : none;
 	}
 
 	a:hover,
 	a:focus {
-		color: darken(@color-link, 20%);
+		color: color-mix(in srgb, var(--color-link) 80%, black 20%);
 		text-decoration: underline;
 	}
 
 	h1 {
 		color : gray;
-		font-family: @fonts-ui;
+		font-family: var(--fonts-ui);
 		font-size : 18px;
 		margin : 10px 0 0;
 	}
@@ -60,7 +60,7 @@ body.ttrss_utility {
 		}
 
 		a:hover {
-			color : @color-accent;
+			color : var(--color-accent);
 		}
 	}
 

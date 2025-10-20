@@ -1,0 +1,89 @@
+@import url('tt-rss.css');
+@import url('cdm.css');
+@import url('prefs.css');
+@import url('utility.css');
+@import url('dijit_basic.css');
+
+:root {
+  --fonts-ui: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --default-fg: #555;
+  --default-bg: white;
+  --color-accent: #257aa7;
+  --color-accent-light: color-mix(in srgb, var(--color-accent) 50%, white 50%);
+  --color-link: var(--color-accent);
+  --color-published: color-mix(in srgb, #ff5718 90%, white 10%);
+  --color-marked: #ffc069;
+  --color-accent-marked: var(--color-accent);
+  --color-accent-published: color-mix(in srgb, var(--color-published) 70%, black 30%);
+  --color-panel-bg: #f5f5f5;
+  --color-checked: #69C671;
+  --border-default: #ddd;
+  --default-text: var(--default-fg);
+  --color-icon: #777;
+  --color-hl-icon: #ccc;
+  --color-tooltip-fg: var(--color-panel-bg);
+  --color-tooltip-bg: color-mix(in srgb, var(--color-accent) 90%, black 10%);
+  --cdm-grid-padding: 8px;
+  --cdm-grid-col-width: 600px;
+  --font-size-tiny: 9px;
+  --font-size-small: 11px;
+  --font-size-toolbar: 13px;
+  --font-size-content: 14px;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --fg-text-muted: color-mix(in srgb, var(--default-text) 80%, white 20%);
+  --embed-responsive-padding: 56.25%;
+}
+
+body.ttrss_main,
+body.ttrss_prefs,
+#main {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("../../vendor/mervick/material-design-icons/fonts/MaterialIcons-Regular.eot"); /* For IE6-8 */
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url("../../vendor/mervick/material-design-icons/fonts/MaterialIcons-Regular.woff2") format('woff2'),
+  url("../../vendor/mervick/material-design-icons/fonts/MaterialIcons-Regular.woff") format('woff'),
+  url("../../vendor/mervick/material-design-icons/fonts/MaterialIcons-Regular.ttf") format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  /*color : #777; */
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  vertical-align: middle;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizelegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
