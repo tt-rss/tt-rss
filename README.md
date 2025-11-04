@@ -20,7 +20,7 @@ Please refer to [the wiki](https://github.com/tt-rss/tt-rss/wiki).
       and safe for use.  Like all software, however, bugs sometimes slip through; the goal is to address those bugs promptly.
     * Using the latest code/image is strongly encouraged, and may be a prerequisite to getting support in certain situations.
   * Developer note: Due to use of `invalid@email.com` on `supahgreg`'s pre-2025-10-03 commits (which were done on `tt-rss.org`) GitHub incorrectly shows `ivanivanov884`
-    (the GitHub user associated with that e-mail address) as the author instead of `wn_`/`supahgreg`.  Apologies for any confusion.  `¯\_(ツ)_/¯`
+    (the GitHub user associated with that email address) as the author instead of `wn_`/`supahgreg`.  Apologies for any confusion.  `¯\_(ツ)_/¯`
 * Plugins that were under https://gitlab.tt-rss.org/tt-rss/plugins have been mirrored to `https://github.com/tt-rss/tt-rss-plugin-*`.
   * Plugin repository names have changed to get a consistent `tt-rss-plugin-*` prefix.
 * Documentation from https://tt-rss.org has been recreated in https://github.com/tt-rss/tt-rss/wiki .
