@@ -103,7 +103,7 @@ class Pref_Prefs extends Handler_Protected {
 			Prefs::CONFIRM_FEED_CATCHUP => [__("Confirm marking feeds as read")],
 			Prefs::DEFAULT_UPDATE_INTERVAL => [__("Default update interval")],
 			Prefs::DIGEST_CATCHUP => [__("Mark sent articles as read")],
-			Prefs::DIGEST_ENABLE => [__("Enable digest"), __("Send daily digest of new (and unread) headlines to your e-mail address")],
+			Prefs::DIGEST_ENABLE => [__("Enable digest"), __("Send daily digest of new (and unread) headlines to your email address")],
 			Prefs::DIGEST_PREFERRED_TIME => [__("Try to send around this time"), __("Time in UTC")],
 			Prefs::ENABLE_API_ACCESS => [__("Enable API"), __("Allows accessing this account through the API")],
 			Prefs::ENABLE_FEED_CATS => [__("Enable categories")],
@@ -303,7 +303,7 @@ class Pref_Prefs extends Handler_Protected {
 			</fieldset>
 
 			<fieldset>
-				<label><?= __('E-mail:') ?></label>
+				<label><?= __('Email:') ?></label>
 				<input dojoType='dijit.form.ValidationTextBox' name='email' required='1' value="<?= htmlspecialchars($user->email) ?>">
 			</fieldset>
 
