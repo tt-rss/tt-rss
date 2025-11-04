@@ -69,7 +69,7 @@ class Auth_Remote extends Auth_Base {
 						$sth = $this->pdo->prepare("UPDATE ttrss_users SET full_name = ? WHERE id = ?");
 						$sth->execute([$fullname, $user_id]);
 					}
-					// update user mail
+					// update user email
 					$email = $_SERVER['HTTP_USER_MAIL'] ?? $_SERVER['AUTHENTICATE_MAIL'] ?? '';
 					if ($email){
 						$sth = $this->pdo->prepare("UPDATE ttrss_users SET email = ? WHERE id = ?");

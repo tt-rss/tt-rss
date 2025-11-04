@@ -21,7 +21,7 @@ class Mailer {
 		$to_combined = $to_name ? "$to_name <$to_address>" : $to_address;
 
 		if (Config::get(Config::LOG_SENT_MAIL))
-			Logger::log(E_USER_NOTICE, "Sending mail from $from_combined to $to_combined [$subject]: $message");
+			Logger::log(E_USER_NOTICE, "Sending email from $from_combined to $to_combined [$subject]: $message");
 
 		// HOOK_SEND_MAIL plugin instructions:
 		// 1. return 1 or true if mail is handled
@@ -50,7 +50,7 @@ class Mailer {
 		]));
 
 		if (!$rc) {
-			$this->set_error(error_get_last()['message'] ?? T_sprintf("Unknown error while sending mail. Hooks tried: %d.", $hooks_tried));
+			$this->set_error(error_get_last()['message'] ?? T_sprintf("Unknown error while sending email. Hooks tried: %d.", $hooks_tried));
 		}
 
 		return $rc;
@@ -58,7 +58,7 @@ class Mailer {
 
 	function set_error(string $message): void {
 		$this->last_error = $message;
-		user_error("Error sending mail: $message", E_USER_WARNING);
+		user_error("Error sending email: $message", E_USER_WARNING);
 	}
 
 	function error(): string {

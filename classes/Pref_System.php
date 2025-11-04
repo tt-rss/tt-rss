@@ -20,7 +20,7 @@ class Pref_System extends Handler_Administrative {
 		$rc = $mailer->mail(["to_name" => "",
 			"to_address" => $mail_address,
 			"subject" => __("Test message from tt-rss"),
-			"message" => ("This message confirms that tt-rss can send outgoing mail.")
+			"message" => ("This message confirms that tt-rss can send outgoing email.")
 			]);
 
 		print json_encode(['rc' => $rc, 'error' => $mailer->error()]);
@@ -199,7 +199,7 @@ class Pref_System extends Handler_Administrative {
 					?>
 				</div>
 			<?php } ?>
-			<div dojoType='dijit.layout.AccordionPane' style='padding : 0' title='<i class="material-icons">mail</i> <?= __('Mail configuration') ?>'>
+			<div dojoType='dijit.layout.AccordionPane' style='padding : 0' title='<i class="material-icons">mail</i> <?= __('Email configuration') ?>'>
 				<div dojoType="dijit.layout.ContentPane">
 
 					<form dojoType="dijit.form.Form">

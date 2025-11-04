@@ -497,7 +497,7 @@ const	CommonDialogs = {
 
 					// options tab
 					const options = {
-						include_in_digest: [ feed.include_in_digest, __('Include in e-mail digest') ],
+						include_in_digest: [ feed.include_in_digest, __('Include in email digest') ],
 						always_display_enclosures: [ feed.always_display_enclosures, __('Always display image attachments') ],
 						hide_images: [ feed.hide_images, __('Do not embed media') ],
 						cache_images: [ feed.cache_images, __('Cache media') ],
