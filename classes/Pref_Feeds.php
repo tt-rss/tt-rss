@@ -618,7 +618,7 @@ class Pref_Feeds extends Handler_Protected {
 			$local_purge_intervals[0] .= " " . sprintf("(%s)", __("Disabled"));
 
 		$options = [
-			"include_in_digest" => __('Include in e-mail digest'),
+			"include_in_digest" => __('Include in email digest'),
 			"always_display_enclosures" => __('Always display image attachments'),
 			"hide_images" => __('Do not embed media'),
 			"cache_images" => __('Cache media'),
