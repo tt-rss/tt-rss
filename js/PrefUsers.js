@@ -95,7 +95,7 @@ const	Users = {
 									<hr/>
 
 									<fieldset>
-										<label>${__("E-mail:")}</label>
+										<label>${__("Email:")}</label>
 										<input dojoType='dijit.form.TextBox' size='30' name='email'
 											value="${App.escapeHtml(user.email)}">
 									</fieldset>
