@@ -1,7 +1,7 @@
 <!-- $BeginBlock message -->
 Hello, ${LOGIN}.
 
-Your mail address for this Tiny Tiny RSS instance has been changed to ${NEWMAIL}.
+Your email address for this Tiny Tiny RSS instance has been changed to ${NEWMAIL}.
 
 If you haven't requested this change, consider contacting your instance owner or resetting your password.
 
