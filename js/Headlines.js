@@ -660,6 +660,7 @@ const Headlines = {
 						<option value='headlines_select_none'>${__('None')}</option>
 						<option></option>
 						<option value='article_selectionOpenInNewWindow'>${__('Open original article')}</option>
+						<option value='article_selectionDisplayArticleUrl'>${__('Display article URL')}</option>
 						<option></option>
 						<option value='headlines_selectionToggleUnread'>${__('Toggle unread')}</option>
 						<option value='headlines_selectionToggleMarked'>${__('Toggle starred')}</option>
@@ -722,6 +723,9 @@ const Headlines = {
 						break;
 					case 'article_selectionOpenInNewWindow':
 						Article.selectionOpenInNewWindow();
+						break;
+					case 'article_selectionDisplayArticleUrl':
+						Article.selectionDisplayArticleUrl();
 						break;
 					case 'headlines_deleteSelection':
 						Headlines.deleteSelection();

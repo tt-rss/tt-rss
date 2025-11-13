@@ -131,6 +131,27 @@ const Article = {
             alert(__("No articles selected."));
         }
     },
+    selectionDisplayArticleUrl: function () {
+        const ids = Headlines.getSelected();
+
+        if (ids.length > 0) {
+            let content = "<ul>\n";
+            ids.forEach((id) => {
+                const hl = Headlines.objectById(id);
+                if (hl?.link) {
+                    content += '<li><a href="' + encodeURI(hl.link) + '" target="_blank">' + encodeURI(hl.link) + "</li>\n";
+                }
+            });
+            content += "</ul>\n";
+            const dialog = new fox.SingleUseDialog({
+                title: __("URL of selected articles"),
+                content: content,
+            });
+            dialog.show();
+        } else {
+            alert(__("No articles selected."));
+        }
+	},
 	renderNote: function (id, note) {
 		return `<div class="article-note" data-note-for="${id}" style="display : ${note ? "" : "none"}">
 				${App.FormFields.icon('note')} <div onclick class='body'>${note ? App.escapeHtml(note) : ""}</div>
