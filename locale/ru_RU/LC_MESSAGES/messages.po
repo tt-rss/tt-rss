@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: tt-rss git\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-20 18:16+0000\n"
-"PO-Revision-Date: 2025-11-19 01:35+0000\n"
+"PO-Revision-Date: 2025-11-22 19:27+0000\n"
 "Last-Translator: liilliil <liilliil@liilliil.net>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/tt-rss/webui/ru/"
-">\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/tt-rss/webui/ru/>"
+"\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural="
+"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
+"1 : 2);\n"
 "X-Generator: Weblate 5.15-dev\n"
 
 #: backend.php:55
@@ -208,37 +209,27 @@ msgstr "Старше двух недель"
 
 #: index.php:228
 msgid "Switch to three panel view"
-msgstr ""
+msgstr "Переключиться в трехпанельный вид"
 
 #: index.php:229
-#, fuzzy
-#| msgid "Switch to digest..."
 msgid "Switch to combined view"
-msgstr "Перейти в дайджест..."
+msgstr "Переключиться на комбинированный вид"
 
 #: index.php:230
-#, fuzzy
-#| msgid "Toggle widescreen mode"
 msgid "Disable widescreen mode"
-msgstr "Переключить широкоэкранный режим"
+msgstr "Выключить широкоэкранный режим"
 
 #: index.php:231
-#, fuzzy
-#| msgid "Toggle widescreen mode"
 msgid "Enable widescreen mode"
-msgstr "Переключить широкоэкранный режим"
+msgstr "Включить широкоэкранный режим"
 
 #: index.php:232
-#, fuzzy
-#| msgid "Assign selected articles to label?"
 msgid "Expand selected article only"
-msgstr "Привязать выбранную статью к метке?"
+msgstr "Раскрыть только выбранную статью"
 
 #: index.php:233
-#, fuzzy
-#| msgid "Expand article"
 msgid "Expand all articles"
-msgstr "Отправить по почте"
+msgstr "Раскрыть все статьи"
 
 #: index.php:236
 msgid "Actions..."
@@ -680,13 +671,8 @@ msgid "Enable digest"
 msgstr "Включить дайджест по электронной почте"
 
 #: classes/Pref_Prefs.php:106
-#, fuzzy
-#| msgid ""
-#| "Send daily digest of new (and unread) headlines to your e-mail address"
 msgid "Send daily digest of new (and unread) headlines to your email address"
-msgstr ""
-"Отправлять дайджест новых (и непрочитанных) заголовков на вашу электронную "
-"почту"
+msgstr "Отправлять дайджест новых (и непрочитанных) заголовков на ваш e-mail"
 
 #: classes/Pref_Prefs.php:107
 msgid "Try to send around this time"
@@ -1196,7 +1182,7 @@ msgstr "Результаты поиска: %s"
 #: classes/Feeds.php:2371
 #, php-format
 msgid "The date keyword \"%s\" was not recognized."
-msgstr ""
+msgstr "Ключевое слово даты \"%s\" не опознано."
 
 #: classes/Pref_Labels.php:163
 #, php-format
@@ -1335,10 +1321,8 @@ msgid "Your access level is insufficient to run this script."
 msgstr "В доступе отказано - недостаточный уровень привилегий."
 
 #: classes/Handler_Public.php:688
-#, fuzzy
-#| msgid "Feeds with update errors"
 msgid "Proceed with update?"
-msgstr "Ленты с ошибками обновления"
+msgstr "Обновляем далее?"
 
 #: classes/Handler_Public.php:693
 msgid "Database Updater"
@@ -1406,8 +1390,6 @@ msgid "(%d days)"
 msgstr "(%d дней)"
 
 #: classes/Pref_Feeds.php:621 js/CommonDialogs.js:500
-#, fuzzy
-#| msgid "Include in e-mail digest"
 msgid "Include in email digest"
 msgstr "Включить в e-mail дайджест"
 
@@ -1530,9 +1512,8 @@ msgid "Sharing"
 msgstr "Публикация"
 
 #: classes/Pref_Filters.php:24
-#, fuzzy
 msgid "Delete article"
-msgstr "Выбрать все статьи"
+msgstr "Удалить статью"
 
 #: classes/Pref_Filters.php:26
 msgid "Set starred"
@@ -1556,24 +1537,19 @@ msgstr "Применить метку"
 
 #: classes/Pref_Filters.php:31
 msgid "Stop / Do nothing"
-msgstr ""
+msgstr "Стоп / Ничего не делать"
 
 #: classes/Pref_Filters.php:32
-#, fuzzy
-#| msgid "Install plugin"
 msgid "Invoke plugin"
-msgstr "Установить дополнение"
+msgstr "Вызвать плагин"
 
 #: classes/Pref_Filters.php:33
-#, fuzzy
 msgid "Ignore tags"
-msgstr "нет тегов"
+msgstr "Игнорировать теги"
 
 #: classes/Pref_Filters.php:39
-#, fuzzy
-#| msgid "Content:"
 msgid "Content"
-msgstr "Содержимое:"
+msgstr "Содержимое"
 
 #: classes/Pref_Filters.php:40
 msgid "Title or Content"
@@ -1588,10 +1564,8 @@ msgid "Author"
 msgstr "Автор"
 
 #: classes/Pref_Filters.php:45
-#, fuzzy
-#| msgid "Article tags"
 msgid "Article Tags"
-msgstr "Метки статьи"
+msgstr "Метки Статьи"
 
 #: classes/Pref_Filters.php:275 classes/Pref_Filters.php:285
 #: classes/Pref_Filters.php:461 classes/Pref_Filters.php:963
@@ -1665,17 +1639,15 @@ msgstr "Проверочное сообщение из tt-rss"
 
 #: classes/Pref_System.php:24
 msgid "This message confirms that tt-rss can send outgoing email."
-msgstr ""
+msgstr "Это сообщение подтверждает, что tt-rss может отправлять e-mail."
 
 #: classes/Pref_System.php:34
 msgid "Task name"
 msgstr "Название задания"
 
 #: classes/Pref_System.php:35
-#, fuzzy
-#| msgid "Scheduled tasks"
 msgid "Schedule"
-msgstr "Запланированные задания"
+msgstr "Запланировано"
 
 #: classes/Pref_System.php:36
 msgid "Last executed"
@@ -1743,14 +1715,12 @@ msgid "Event log"
 msgstr "Журнал событий"
 
 #: classes/Pref_System.php:203
-#, fuzzy
-#| msgid "Mail configuration"
 msgid "Email configuration"
-msgstr "Конфигурация почты"
+msgstr "Конфигурация E-mail"
 
 #: classes/Pref_System.php:214
 msgid "Email sent."
-msgstr ""
+msgstr "E-mail ушло."
 
 #: classes/Pref_System.php:234
 msgid "To:"
@@ -1769,10 +1739,9 @@ msgid "PHP Information"
 msgstr "Информация о PHP"
 
 #: classes/Mailer.php:53
-#, fuzzy, php-format
-#| msgid "Unknown error while sending mail. Hooks tried: %d."
+#, php-format
 msgid "Unknown error while sending email. Hooks tried: %d."
-msgstr "Неизвестная ошибка при отправке почты. Попробовали %d хук."
+msgstr "Неизвестная ошибка при отправке e-mail. Попробовали хук %d."
 
 #: classes/Pref_Users.php:49 classes/Pref_Users.php:239
 msgid "Registered"
@@ -2910,16 +2879,12 @@ msgid "Expand to select feed"
 msgstr "Развернуть к выбранной ленте"
 
 #: js/CommonDialogs.js:189
-#, fuzzy
-#| msgid "Couldn't download the specified URL: %s"
 msgid "Couldn't download the specified URL."
-msgstr "Не могу скачать по указанному URL-адресу: %s"
+msgstr "Не могу скачать с этого URL."
 
 #: js/CommonDialogs.js:192
-#, fuzzy
-#| msgid "Inline content"
 msgid "Invalid content."
-msgstr "Встроить контент"
+msgstr "Плохой контент"
 
 #: js/CommonDialogs.js:195
 msgid "Error while creating feed database entry."
