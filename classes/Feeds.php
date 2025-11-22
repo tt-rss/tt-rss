@@ -509,7 +509,7 @@ class Feeds extends Handler_Protected {
 
 		$reply['headlines'] = [];
 
-		[$override_order, $skip_first_id_check] = self::_order_to_override_query($order_by);
+		[$override_order, $skip_first_id_check] = self::_order_to_override_query($order_by, $feed);
 
 		$ret = $this->_format_headlines_list($feed, $method,
 			$view_mode, $limit, $cat_view, $offset,
@@ -2168,12 +2168,12 @@ class Feeds extends Handler_Protected {
 		 *    such as _@yesterday_ or _"@last Monday"_ or a date.
 		 *  - a tsquery of PostgreSQL Full Text Search: a string, but also operators
 		 *    such as '&', '|', '!' and parenthesis.
-		 *  - a list of words between quotes, such as _"one two three"_, which is handled 
+		 *  - a list of words between quotes, such as _"one two three"_, which is handled
 		 *    via PostgreSQL Full Text Search operator '<->' as a list of consecutive words.
 		 * Known issue: Logical operators & | ! and parenthesis are only partially supported
 		 * in a tsquery. For example _pub:true | (title:price & ! "hello")_ does not work.
 		 */
-		
+
 		/**
 		 * Modify the Search Query so that:
 		 *  _keyword:"foo bar"_ becomes _"keyword:foo bar"_
@@ -2436,9 +2436,10 @@ class Feeds extends Handler_Protected {
 	}
 
 	/**
+	 * @param int|string $feed_id A feed ID (int, numeric string, or tag string), used to provide context when determining the field(s) for sorting.
 	 * @return array{0: string, 1: bool}
 	 */
-	static function _order_to_override_query(string $order): array {
+	static function _order_to_override_query(string $order, int|string $feed_id): array {
 		$query = "";
 		$skip_first_id = false;
 
@@ -2460,11 +2461,11 @@ class Feeds extends Handler_Protected {
 				$query = "ttrss_entries.title, date_entered, updated";
 				break;
 			case "date_reverse":
-				$query = "updated";
+				$query = $feed_id == self::FEED_RECENTLY_READ ? 'last_read' : 'updated';
 				$skip_first_id = true;
 				break;
 			case "feed_dates":
-				$query = "updated DESC";
+				$query = ($feed_id == self::FEED_RECENTLY_READ ? 'last_read' : 'updated') . ' DESC';
 				break;
 		}
 

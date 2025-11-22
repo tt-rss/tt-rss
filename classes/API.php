@@ -210,7 +210,7 @@ class API extends Handler {
 
 			$_SESSION['hasSandbox'] = $has_sandbox;
 
-			[$override_order, $skip_first_id_check] = Feeds::_order_to_override_query(clean($_REQUEST["order_by"] ?? ""));
+			[$override_order, $skip_first_id_check] = Feeds::_order_to_override_query(clean($_REQUEST['order_by'] ?? ''), $feed_id);
 
 			/* do not rely on params below */
 

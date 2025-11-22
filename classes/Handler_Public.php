@@ -21,7 +21,7 @@ class Handler_Public extends Handler {
 		if (!$limit)
 			$limit = 60;
 
-		[$override_order, $skip_first_id_check] = Feeds::_order_to_override_query($order);
+		[$override_order, $skip_first_id_check] = Feeds::_order_to_override_query($order, $feed);
 
 		if (!$override_order) {
 			$override_order = match (true) {
