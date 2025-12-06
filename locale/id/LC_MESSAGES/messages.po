@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-28 21:06+0000\n"
-"PO-Revision-Date: 2025-12-01 22:00+0000\n"
+"PO-Revision-Date: 2025-12-06 11:00+0000\n"
 "Last-Translator: Dony Wibowo <dony@dony.me>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/tt-rss/webui/"
 "id/>\n"
@@ -1348,86 +1348,82 @@ msgstr "Skema basis data perlu diperbarui ke versi terbaru (%d ke %d)."
 #, php-format
 msgid "(%d feed)"
 msgid_plural "(%d feeds)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(%d umpan)"
 
 #: classes/Pref_Feeds.php:98 classes/Pref_Feeds.php:277
 #: classes/Pref_Feeds.php:320
 #, php-format
 msgid "(%d article / %s)"
 msgid_plural "(%d articles / %s)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(%d artikel / %s)"
 
 #: classes/Pref_Feeds.php:542
 #, php-format
 msgid "(%d day)"
 msgid_plural "(%d days)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "(%d hari)"
 
 #: classes/Pref_Feeds.php:548
 #, php-format
 msgid "%d day"
 msgid_plural "%d days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d hari"
 
 #: classes/Pref_Feeds.php:579
 msgid "Check to enable field"
-msgstr ""
+msgstr "Centang untuk mengaktifkan bidang"
 
 #: classes/Pref_Feeds.php:595
 #, php-format
 msgid "(%d days)"
-msgstr ""
+msgstr "(%d hari)"
 
 #: classes/Pref_Feeds.php:600 js/CommonDialogs.js:500
 msgid "Include in email digest"
-msgstr ""
+msgstr "Sertakan dalam ringkasan email"
 
 #: classes/Pref_Feeds.php:601 js/CommonDialogs.js:501
 msgid "Always display image attachments"
-msgstr ""
+msgstr "Selalu tampilkan lampiran gambar"
 
 #: classes/Pref_Feeds.php:603 js/CommonDialogs.js:503
 msgid "Cache media"
-msgstr ""
+msgstr "Cache media"
 
 #: classes/Pref_Feeds.php:604 js/CommonDialogs.js:504
 msgid "Mark updated articles as unread"
-msgstr ""
+msgstr "Tandai artikel diperbarui belum dibaca"
 
 #: classes/Pref_Feeds.php:619 js/PrefFeedTree.js:439 js/CommonDialogs.js:58
 #: js/CommonDialogs.js:540
 msgid "Place in category:"
-msgstr ""
+msgstr "Masukkan dalam kategori:"
 
 #: classes/Pref_Feeds.php:626 js/Feeds.js:644 js/CommonDialogs.js:556
 msgid "Language:"
-msgstr ""
+msgstr "Bahasa:"
 
 #: classes/Pref_Feeds.php:636 js/CommonDialogs.js:64 js/CommonDialogs.js:566
 msgid "Update interval:"
-msgstr ""
+msgstr "Interval pembaruan:"
 
 #: classes/Pref_Feeds.php:643 js/CommonDialogs.js:572
 msgid "Article purging:"
-msgstr ""
+msgstr "Pembersihan artikel:"
 
 #: classes/Pref_Feeds.php:650 plugins/auth_internal/init.php:85
 #: js/PrefFeedTree.js:447 js/CommonDialogs.js:582
 msgid "Authentication"
-msgstr ""
+msgstr "Otentikasi"
 
 #: classes/Pref_Feeds.php:659 plugins/bookmarklets/init.php:315
 #: include/login_form.php:137 js/CommonDialogs.js:591
 msgid "Password:"
-msgstr ""
+msgstr "Kata sandi:"
 
 #: classes/Pref_Feeds.php:666 js/CommonDialogs.js:598
 msgid "Options"
-msgstr ""
+msgstr "Pilihan"
 
 #: classes/Pref_Feeds.php:683 plugins/note/init.php:50
 #: plugins/bookmarklets/init.php:288 js/CommonFilters.js:225
@@ -1437,52 +1433,52 @@ msgstr ""
 #: js/PrefHelpers.js:305 js/Feeds.js:658 js/Feeds.js:713
 #: js/CommonDialogs.js:113
 msgid "Cancel"
-msgstr ""
+msgstr "Batalkan"
 
 #: classes/Pref_Feeds.php:883
 msgid "Feeds with errors"
-msgstr ""
+msgstr "Umpan dengan kesalahan"
 
 #: classes/Pref_Feeds.php:889
 msgid "Inactive feeds"
-msgstr ""
+msgstr "Umpan tidak aktif"
 
 #: classes/Pref_Feeds.php:928
 msgid "Edit selected feeds"
-msgstr ""
+msgstr "Edit Umpan dipilih"
 
 #: classes/Pref_Feeds.php:930 classes/Pref_Feeds.php:945
 #: classes/Pref_Filters.php:748
 msgid "Reset sort order"
-msgstr ""
+msgstr "Atur ulang urutan penyortiran"
 
 #: classes/Pref_Feeds.php:932 js/PrefFeedTree.js:409
 msgid "Batch subscribe"
-msgstr ""
+msgstr "Berlangganan kelompok"
 
 #: classes/Pref_Feeds.php:940
 msgid "Categories"
-msgstr ""
+msgstr "Kategori"
 
 #: classes/Pref_Feeds.php:943
 msgid "Add category"
-msgstr ""
+msgstr "Tambahkan kategori"
 
 #: classes/Pref_Feeds.php:982
 msgid "Choose file..."
-msgstr ""
+msgstr "Pilih file..."
 
 #: classes/Pref_Feeds.php:990
 msgid "Import OPML"
-msgstr ""
+msgstr "Impor OPML"
 
 #: classes/Pref_Feeds.php:1001
 msgid "Export OPML"
-msgstr ""
+msgstr "Ekspor OPML"
 
 #: classes/Pref_Feeds.php:1006
 msgid "Include tt-rss settings"
-msgstr ""
+msgstr "Sertakan pengaturan tt-rss"
 
 #: classes/Pref_Feeds.php:1022
 msgid "Display URL"
@@ -1546,7 +1542,7 @@ msgstr "Konten"
 
 #: classes/Pref_Filters.php:40
 msgid "Title or Content"
-msgstr ""
+msgstr "Judul atau Isi"
 
 #: classes/Pref_Filters.php:41
 msgid "Link"

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Tiny Tiny RSS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-28 21:06+0000\n"
-"PO-Revision-Date: 2025-11-29 22:00+0000\n"
+"PO-Revision-Date: 2025-12-06 11:00+0000\n"
 "Last-Translator: LaurentC <laurentc@users.noreply.hosted.weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/tt-rss/webui/fr/>"
 "\n"
@@ -3032,7 +3032,7 @@ msgstr "Libellé"
 
 #: js/Article.js:114
 msgid "Copied to clipboard."
-msgstr "Copier dans le presse-papier."
+msgstr "Copié dans le presse-papier."
 
 #: js/Article.js:116
 msgid "Article URL:"
