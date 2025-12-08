@@ -1030,9 +1030,23 @@ class Feeds extends Handler_Protected {
 			$url = key($feedUrls);
 		}
 
+		// Call the plugin hooks, which can rewrite the feed content, in order to fix
+		// it, so the next call to FeedParser does not fail.
+		$start_ts = microtime(true);
+		// The feed object is not yet set, so use a feed ID of -1 instead.
+		$feedid_not_yet_set = -1;
+		PluginHost::getInstance()->chain_hooks_callback(PluginHost::HOOK_FEED_FETCHED,
+			function ($result, $plugin) use (&$contents, $start_ts) {
+				$contents = $result;
+				Debug::log(sprintf("=== %.4f (sec) %s", microtime(true) - $start_ts, $plugin::class), Debug::LOG_VERBOSE);
+			},
+			$contents, $url, $user->id, $feedid_not_yet_set);
+
 		// Don't allow subscribing if the content is invalid
 		$fp = new FeedParser($contents);
-		if ($fp->error() || $fp->get_type() === FeedParser::FEED_UNKNOWN)
+		if ($fp->error())
+			return ['code' => 6, 'message' => truncate_string(clean($fp->error()), 250, '…')];
+		if ($fp->get_type() === FeedParser::FEED_UNKNOWN)
 			return ['code' => 6, 'message' => truncate_string(clean($contents), 250, '…')];
 
 		$feed = ORM::for_table('ttrss_feeds')
