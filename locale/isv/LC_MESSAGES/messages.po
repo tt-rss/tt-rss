@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-28 21:06+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-12-15 02:00+0000\n"
+"Last-Translator: γλωσσολαλιά <glossolalia@kropotk.in>\n"
+"Language-Team: Interslavic <https://hosted.weblate.org/projects/tt-rss/webui/"
+"isv/>\n"
 "Language: isv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -55,27 +57,27 @@ msgstr ""
 
 #: backend.php:66 backend.php:76
 msgid "15 minutes"
-msgstr ""
+msgstr "15 minut"
 
 #: backend.php:67 backend.php:77
 msgid "30 minutes"
-msgstr ""
+msgstr "30 minut"
 
 #: backend.php:68 backend.php:78
 msgid "Hourly"
-msgstr ""
+msgstr "Každa časina"
 
 #: backend.php:69 backend.php:79
 msgid "4 hours"
-msgstr ""
+msgstr "4 časiny"
 
 #: backend.php:70 backend.php:80
 msgid "12 hours"
-msgstr ""
+msgstr "12 časin"
 
 #: backend.php:71 backend.php:81
 msgid "Daily"
-msgstr ""
+msgstr "Každodenno"
 
 #: backend.php:72 backend.php:82
 msgid "Weekly"
