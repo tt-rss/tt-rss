@@ -39,7 +39,7 @@ jobs:
 
     # https://phpstan.org/user-guide/result-cache
     - name: Restore result cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: .phpstan-tmp
         key: phpstan-result-cache-${{ github.run_id }}
@@ -51,7 +51,7 @@ jobs:
 
     # https://phpstan.org/user-guide/result-cache
     - name: Save result cache
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       if: ${{ !cancelled() }}
       with:
         # same as in phpstan.neon
@@ -107,7 +107,7 @@ jobs:
 
     # https://getrector.com/documentation/cache-in-ci#content-github-actions
     - name: Restore result cache
-      uses: actions/cache/restore@v4
+      uses: actions/cache/restore@v5
       with:
         path: .rector-tmp
         key: rector-result-cache-${{ github.run_id }}
@@ -119,7 +119,7 @@ jobs:
 
     # https://getrector.com/documentation/cache-in-ci#content-github-actions
     - name: Save result cache
-      uses: actions/cache/save@v4
+      uses: actions/cache/save@v5
       if: ${{ !cancelled() }}
       with:
         # same as in rector.php
