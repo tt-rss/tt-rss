@@ -1,4 +1,4 @@
-FROM nginx:1.29.3-alpine
+FROM nginx:1.29.4-alpine
 
 ARG APP_UPSTREAM=app
 ARG APP_FASTCGI_PASS=\$backend
