@@ -35,7 +35,7 @@
         8080, 9000
     ],
 
-    "onCreateCommand": "cat > config.php << 'EOF'\n<?php\n\n\tputenv('TTRSS_DB_HOST=localhost');\n\tputenv('TTRSS_DB_NAME=postgres');\n\tputenv('TTRSS_DB_USER=postgres');\nEOF",
+    "onCreateCommand": "cat > config.php << 'EOF'\n<?php\n\n\tputenv('TTRSS_DB_HOST=localhost');\n\tputenv('TTRSS_DB_NAME=postgres');\n\tputenv('TTRSS_DB_USER=postgres');\n\tputenv('TTRSS_DB_PASS=');\nEOF",
 
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html",
