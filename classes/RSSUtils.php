@@ -512,10 +512,12 @@ class RSSUtils {
 				Debug::log("source claims data not modified (304), nothing to do.", Debug::LOG_VERBOSE);
 				$error_message = "";
 
+				$now = Db::NOW();
+
 				$feed_obj->set([
 					'last_error' => '',
-					'last_successful_update' => Db::NOW(),
-					'last_updated' => Db::NOW(),
+					'last_successful_update' => $now,
+					'last_updated' => $now,
 				]);
 
 				$feed_obj->save();
@@ -679,9 +681,12 @@ class RSSUtils {
 			if (count($items) === 0) {
 				Debug::log("no articles found.", Debug::LOG_VERBOSE);
 
+				$now = Db::NOW();
+
 				$feed_obj->set([
-					'last_updated' => Db::NOW(),
-					'last_unconditional' => Db::NOW(),
+					'last_updated' => $now,
+					'last_unconditional' => $now,
+					'last_successful_update' => $now,
 					'last_error' => '',
 				]);
 
@@ -1275,10 +1280,12 @@ class RSSUtils {
 
 			Feeds::_purge($feed, 0);
 
+			$now = Db::NOW();
+
 			$feed_obj->set([
-				'last_updated' => Db::NOW(),
-				'last_unconditional' => Db::NOW(),
-				'last_successful_update' => Db::NOW(),
+				'last_updated' => $now,
+				'last_unconditional' => $now,
+				'last_successful_update' => $now,
 				'last_error' => '',
 			]);
 
@@ -1296,9 +1303,11 @@ class RSSUtils {
 				}
 			}
 
+			$now = Db::NOW();
+
 			$feed_obj->set([
-				'last_updated' => Db::NOW(),
-				'last_unconditional' => Db::NOW(),
+				'last_updated' => $now,
+				'last_unconditional' => $now,
 				'last_error' => $error_msg,
 			]);
 
