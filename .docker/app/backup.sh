@@ -11,7 +11,7 @@ if pg_isready -h $TTRSS_DB_HOST -U $TTRSS_DB_USER -p $TTRSS_DB_PORT; then
 
 	export PGPASSWORD=$TTRSS_DB_PASS
 
-	pg_dump --clean -h $TTRSS_DB_HOST -U $TTRSS_DB_USER $TTRSS_DB_NAME | gzip > $DST_DIR/$DST_FILE
+	pg_dump --clean -h $TTRSS_DB_HOST -U $TTRSS_DB_USER -p $TTRSS_DB_PORT $TTRSS_DB_NAME | gzip > $DST_DIR/$DST_FILE
 
 	DST_FILE=ttrss-backup-$(date +%Y%m%d).tar.gz
 
