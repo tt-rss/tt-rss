@@ -1517,8 +1517,10 @@ class Feeds extends Handler_Protected {
 
 			}
 		} else if ($feed == Feeds::FEED_RECENTLY_READ) { // recently read
+			$intl = (int) Prefs::get(Prefs::RECENTLY_READ_MAX_AGE, $owner_uid, $profile);
+
 			$query_strategy_part = "unread = false AND last_read IS NOT NULL AND
-				last_read > NOW() - INTERVAL '1 day'";
+				last_read > NOW() - INTERVAL '$intl hour'";
 
 			$vfeed_query_part = "ttrss_feeds.title AS feed_title,";
 			$allow_archived = true;

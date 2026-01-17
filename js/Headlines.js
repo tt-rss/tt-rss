@@ -301,7 +301,8 @@ const Headlines = {
 				console.warn('loadMore:', view_mode, 'not implemented');
 				break;
 			case "unread":
-				offset = unread_in_buffer;
+				if (!(Feeds.getActive() === Feeds.FEED_RECENTLY_READ && !Feeds.activeIsCat()))
+					offset = unread_in_buffer;
 				break;
 			case "adaptive":
 				if (!(Feeds.getActive() === Feeds.FEED_STARRED && !Feeds.activeIsCat()))

@@ -24,6 +24,7 @@ class Prefs {
 	//const STRIP_UNSAFE_TAGS = "STRIP_UNSAFE_TAGS";
 	const BLACKLISTED_TAGS = "BLACKLISTED_TAGS";
 	const FRESH_ARTICLE_MAX_AGE = "FRESH_ARTICLE_MAX_AGE";
+	const RECENTLY_READ_MAX_AGE = 'RECENTLY_READ_MAX_AGE';
 	const DIGEST_CATCHUP = "DIGEST_CATCHUP";
 	const CDM_EXPANDED = "CDM_EXPANDED";
 	const PURGE_UNREAD_ARTICLES = "PURGE_UNREAD_ARTICLES";
@@ -86,6 +87,7 @@ class Prefs {
 		//Prefs::STRIP_UNSAFE_TAGS => [ true, Config::T_BOOL ],
 		Prefs::BLACKLISTED_TAGS => [ 'main, generic, misc, uncategorized, blog, blogroll, general, news', Config::T_STRING ],
 		Prefs::FRESH_ARTICLE_MAX_AGE => [ 24, Config::T_INT ],
+		Prefs::RECENTLY_READ_MAX_AGE => [ 24, Config::T_INT ],
 		Prefs::DIGEST_CATCHUP => [ false, Config::T_BOOL ],
 		Prefs::CDM_EXPANDED => [ true, Config::T_BOOL ],
 		Prefs::PURGE_UNREAD_ARTICLES => [ true, Config::T_BOOL ],

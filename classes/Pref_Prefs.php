@@ -44,6 +44,7 @@ class Pref_Prefs extends Handler_Protected {
 			__('Feeds') => [
 				Prefs::DEFAULT_UPDATE_INTERVAL,
 				Prefs::FRESH_ARTICLE_MAX_AGE,
+				Prefs::RECENTLY_READ_MAX_AGE,
 				Prefs::DEFAULT_SEARCH_LANGUAGE,
 				self::BLOCK_SEPARATOR,
 				Prefs::ENABLE_FEED_CATS,
@@ -108,6 +109,7 @@ class Pref_Prefs extends Handler_Protected {
 			Prefs::ENABLE_API_ACCESS => [__("Enable API"), __("Allows accessing this account through the API")],
 			Prefs::ENABLE_FEED_CATS => [__("Enable categories")],
 			Prefs::FRESH_ARTICLE_MAX_AGE => [__("Maximum age of fresh articles"), "<strong>" . __("hours") . "</strong>"],
+			Prefs::RECENTLY_READ_MAX_AGE => [__('Maximum age of recently read articles'), '<strong>' . __('hours') . '</strong>'],
 			Prefs::HIDE_READ_FEEDS => [__("Hide read feeds")],
 			Prefs::HIDE_READ_SHOWS_SPECIAL => [__("Always show special feeds"), __("While hiding read feeds")],
 			Prefs::LONG_DATE_FORMAT => [__("Long date format"), __("Syntax is identical to PHP <a href='https://www.php.net/manual/function.date.php'>date()</a> function.")],
@@ -675,7 +677,7 @@ class Pref_Prefs extends Handler_Protected {
 								['onclick' => 'Helpers.Digest.preview()', 'style' => 'margin-left : 10px']);
 						}
 
-					} else if (in_array($pref_name, [Prefs::FRESH_ARTICLE_MAX_AGE,
+					} else if (in_array($pref_name, [Prefs::FRESH_ARTICLE_MAX_AGE, Prefs::RECENTLY_READ_MAX_AGE,
 							Prefs::PURGE_OLD_DAYS, Prefs::LONG_DATE_FORMAT, Prefs::SHORT_DATE_FORMAT, Prefs::DIGEST_MIN_SCORE])) {
 
 						if ($pref_name == Prefs::PURGE_OLD_DAYS && Config::get(Config::FORCE_ARTICLE_PURGE) != 0) {
