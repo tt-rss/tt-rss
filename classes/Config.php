@@ -48,8 +48,22 @@ class Config {
 	/** PostgreSQL SSL mode (prefer, require, disabled) */
 	const DB_SSLMODE = "DB_SSLMODE";
 
-	/** this is a fallback falue for the CLI SAPI, it should be set to a fully-qualified tt-rss URL */
+	/**
+	 * The fully-qualified tt-rss URL accessed by users.
+	 * This value is only used when running via the CLI SAPI or when FORCE_SELF_URL_PATH_USAGE is enabled.
+	 * By default the 'Host' request header seen by tt-rss is used to construct the 'self URL'.
+	 */
 	const SELF_URL_PATH = "SELF_URL_PATH";
+
+	/**
+	 * By default the tt-rss self URL will be built using the 'Host' request header.
+	 * Enabling this option will force tt-rss to instead always use the SELF_URL_PATH value,
+	 * which may simplify things in certain scenarios (e.g. multiple proxies).
+	 *
+	 * NOTE: This was introduced instead of always using 'SELF_URL_PATH' since 'SELF_URL_PATH' may already exist
+	 * in configs but be invalid (which was a common setup issue prior to auto-detection).
+	 */
+	const FORCE_SELF_URL_PATH_USAGE = 'FORCE_SELF_URL_PATH_USAGE';
 
 	/** operate in single user mode, disables all functionality related to
 	 * multiple users and authentication. enabling this assumes you have
@@ -230,6 +244,7 @@ class Config {
 		Config::DB_PORT => [ "5432",										Config::T_STRING ],
 		Config::DB_SSLMODE => [ "prefer",                        Config::T_STRING ],
 		Config::SELF_URL_PATH => [ "https://example.com/tt-rss", Config::T_STRING ],
+		Config::FORCE_SELF_URL_PATH_USAGE => ['false', Config::T_BOOL],
 		Config::SINGLE_USER_MODE => [ "",								Config::T_BOOL ],
 		Config::PHP_EXECUTABLE => [ "/usr/bin/php",					Config::T_STRING ],
 		Config::LOCK_DIRECTORY => [ "lock",								Config::T_STRING ],
@@ -493,21 +508,23 @@ class Config {
 			(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
 	}
 
-	/** returns fully-qualified external URL to tt-rss (no trailing slash)
-	 * SELF_URL_PATH configuration variable is used as a fallback for the CLI SAPI
-	 * */
+	/**
+	 * Returns the fully-qualified external URL to tt-rss (with no trailing slash).
+	 * The SELF_URL_PATH configuration variable is always used when running under
+	 * the CLI SAPI or when FORCE_SELF_URL_PATH_USAGE is enabled.
+	 */
 	static function get_self_url(bool $always_detect = false) : string {
-		if (!$always_detect && php_sapi_name() == "cli") {
-			return self::get(Config::SELF_URL_PATH);
+		if ((!$always_detect && php_sapi_name() == 'cli') || self::get(self::FORCE_SELF_URL_PATH_USAGE)) {
+			$self_url_path = self::get(Config::SELF_URL_PATH);
 		} else {
 			$proto = self::is_server_https() ? 'https' : 'http';
 
 			$self_url_path = $proto . '://' . $_SERVER["HTTP_HOST"] . parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 			$self_url_path = preg_replace("/(\/api\/{1,})?(\w+\.php)?(\?.*$)?$/", "", $self_url_path);
 			$self_url_path = preg_replace("/(\/plugins(.local)?)\/.{1,}$/", "", $self_url_path);
-
-			return rtrim($self_url_path, "/");
 		}
+
+		return rtrim($self_url_path, '/');
 	}
 	/* sanity check stuff */
 
