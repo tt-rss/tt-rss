@@ -209,6 +209,14 @@ class Feeds extends Handler_Protected {
 					$line["content_preview"] = "";
 				} else {
 					$line["content_preview"] =  "&mdash; " . truncate_string(strip_tags($line["content"]), 250);
+					
+					$enclosures = [];
+					[$flavor_image, $flavor_stream, $flavor_kind] = Article::_get_image($enclosures,
+						$line["content"],
+						$line["site_url"] ?? "",
+						$line);
+					if ($flavor_image)
+						$line["content_preview"] = "<img src='$flavor_image' class='content-preview-img'>" . $line["content_preview"];
 
 					$max_excerpt_length = 250;
 
