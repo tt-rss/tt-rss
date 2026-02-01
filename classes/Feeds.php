@@ -215,8 +215,12 @@ class Feeds extends Handler_Protected {
 						$line["content"],
 						$line["site_url"] ?? "",
 						$line);
-					if ($flavor_image)
+					
+					if (($flavor_kind == Article::ARTICLE_KIND_VIDEO) &&($flavor_stream)) {
+						$line["content_preview"] = "<video muted autoplay loop src='$flavor_stream' class='content-preview-player' poster='$flavor_image'></video>" . $line["content_preview"];
+					} else if ($flavor_image) {
 						$line["content_preview"] = "<img src='$flavor_image' class='content-preview-img'>" . $line["content_preview"];
+					} 
 
 					$max_excerpt_length = 250;
 
