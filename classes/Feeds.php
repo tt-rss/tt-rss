@@ -208,7 +208,10 @@ class Feeds extends Handler_Protected {
 				if (!Prefs::get(Prefs::SHOW_CONTENT_PREVIEW, $_SESSION['uid'], $profile)) {
 					$line["content_preview"] = "";
 				} else {
-					$line["content_preview"] =  "&mdash; " . truncate_string(strip_tags($line["content"]), 250);
+					$content = Sanitizer::sanitize($line['content'], $line['hide_images'],
+						site_url: $line['site_url'], article_id: $line['id']);
+					if(! $content) $content = '';
+					$line["content_preview"] =  "&mdash; " . truncate_string(strip_tags($content), 250);
 
 					$max_excerpt_length = 250;
 
