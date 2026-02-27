@@ -261,6 +261,12 @@
 
 	/**
 	 * This is used for user HTTP parameters unless HTML code is actually needed.
+	 *
+	 * @template T
+	 *
+	 * @param T $param
+	 *
+	 * @return T
 	 */
 	function clean(mixed $param): mixed {
 		$filter = static fn($v) => is_string($v) ? trim(strip_tags($v)) : $v;
