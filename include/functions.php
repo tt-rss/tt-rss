@@ -266,7 +266,7 @@
 	 *
 	 * @param T $param
 	 *
-	 * @return T
+	 * @return (T is array ? array<array-key, mixed> : (T is string ? string : T))
 	 */
 	function clean(mixed $param): mixed {
 		$filter = static fn($v) => is_string($v) ? trim(strip_tags($v)) : $v;

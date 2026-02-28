@@ -8,7 +8,7 @@
 
 	if (!init_plugins()) return;
 
-	$method = (string) clean($_REQUEST['op'] ?? '');
+	$method = clean($_REQUEST['op'] ?? '');
 
 	// shortcut syntax for public (exposed) methods (?op=plugin--pmethod&...params)
 	if (str_contains($method, PluginHost::PUBLIC_METHOD_DELIMITER)) {

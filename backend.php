@@ -20,8 +20,8 @@
 	require_once __DIR__ . '/include/autoload.php';
 	require_once __DIR__ . '/include/sessions.php';
 
-	$op = (string)clean($op);
-	$method = (string)clean($method);
+	$op = clean($op);
+	$method = clean($method);
 
 	startup_gettext();
 
