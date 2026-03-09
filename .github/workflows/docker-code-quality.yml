@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v6
 
     - name: Validate configuration
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         context: .
         file: ${{ matrix.image.dockerfile }}
