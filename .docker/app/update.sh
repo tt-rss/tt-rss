@@ -55,7 +55,6 @@ if [ -z $SKIP_RSYNC_ON_STARTUP ]; then
 		sudo -u app rsync -a --no-owner --delete \
 			--exclude /cache \
 			--exclude /lock \
-			--exclude /feed-icons \
 			--exclude /plugins/af_comics/filters.local \
 			--exclude /plugins.local \
 			--exclude /templates.local \
@@ -70,7 +69,7 @@ else
 	echo "warning: working copy in $DST_DIR won't be updated, make sure you know what you're doing."
 fi
 
-for d in cache lock feed-icons plugins.local themes.local templates.local cache/export cache/feeds cache/images cache/upload; do
+for d in cache lock plugins.local themes.local templates.local cache/export cache/feeds cache/images cache/upload; do
 	sudo -u app mkdir -p $DST_DIR/$d
 done
 
@@ -79,7 +78,7 @@ done
 # - fatal error: could not open certificate file "/root/.postgresql/postgresql.crt": Permission denied
 chown -R app:app /root # /.postgresql
 
-for d in cache lock feed-icons; do
+for d in cache lock; do
 	chown -R app:app $DST_DIR/$d
 	chmod -R u=rwX,g=rX,o=rX $DST_DIR/$d
 done
