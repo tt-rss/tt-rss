@@ -23,7 +23,13 @@
 	if ($config_path)
 		require_once $config_path;
 
-	require_once "autoload.php";
+	require_once 'autoload.php';
+	require_once __DIR__ . '/../lib/gettext/gettext.inc.php';
+
+	require_once 'controls.php';
+	require_once 'controls_compat.php';
+
+	ini_set('user_agent', Config::get_user_agent());
 
 	/** @deprecated use the 'SUBSTRING_FOR_DATE' string directly */
 	const SUBSTRING_FOR_DATE = 'SUBSTRING_FOR_DATE';
@@ -46,53 +52,60 @@
 	 * @return array<string, string>
 	 */
 	function get_translations(): array {
-		$t = [
-					"auto"  => __("Detect automatically"),
-					"ar_SA" => "العربيّة (Arabic)",
-					"be"    => "Беларуская",
-					"bg_BG" => "Bulgarian",
-					"da_DA" => "Dansk",
-					"ca_CA" => "Català",
-					"cs_CZ" => "Česky",
-					"en_US" => "English",
-					"el_GR" => "Ελληνικά",
-					"es"    => "Español (España)",
-					"de_DE" => "Deutsch",
-					"fa"    => "Persian (Farsi)",
-					"fr_FR" => "Français",
-					"gl"    => "Galego",
-					"hu_HU" => "Magyar (Hungarian)",
-					"it_IT" => "Italiano",
-					"ja_JP" => "日本語 (Japanese)",
-					"lv_LV" => "Latviešu",
-					"nb_NO" => "Norwegian bokmål",
-					"nl_NL" => "Dutch",
-					"pl_PL" => "Polski",
-					"ru_RU" => "Русский",
-					"pt_BR" => "Portuguese/Brazil",
-					"pt_PT" => "Portuguese/Portugal",
-					"zh_CN" => "Simplified Chinese",
-					"zh_TW" => "Traditional Chinese",
-					"uk_UA" => "Українська",
-					"sv_SE" => "Svenska",
-					"fi_FI" => "Suomi",
-					"ta"    => "Tamil",
-					"tr_TR" => "Türkçe"];
-
-		return $t;
+		return [
+			'auto'  => __('Detect automatically'),
+			'ar_SA' => 'العربيّة (Arabic)',
+			'be'    => 'Беларуская',
+			'bg_BG' => 'Bulgarian',
+			'da_DA' => 'Dansk',
+			'ca_CA' => 'Català',
+			'cs_CZ' => 'Česky',
+			'en_US' => 'English',
+			'el_GR' => 'Ελληνικά',
+			'es'    => 'Español (España)',
+			'de_DE' => 'Deutsch',
+			'fa'    => 'Persian (Farsi)',
+			'fr_FR' => 'Français',
+			'gl'    => 'Galego',
+			'hu_HU' => 'Magyar (Hungarian)',
+			'it_IT' => 'Italiano',
+			'ja_JP' => '日本語 (Japanese)',
+			'lv_LV' => 'Latviešu',
+			'nb_NO' => 'Norwegian bokmål',
+			'nl_NL' => 'Dutch',
+			'pl_PL' => 'Polski',
+			'ru_RU' => 'Русский',
+			'pt_BR' => 'Portuguese/Brazil',
+			'pt_PT' => 'Portuguese/Portugal',
+			'zh_CN' => 'Simplified Chinese',
+			'zh_TW' => 'Traditional Chinese',
+			'uk_UA' => 'Українська',
+			'sv_SE' => 'Svenska',
+			'fi_FI' => 'Suomi',
+			'ta'    => 'Tamil',
+			'tr_TR' => 'Türkçe',
+		];
 	}
 
-	require_once __DIR__ . '/../lib/gettext/gettext.inc.php';
-
+	/**
+	 * Attempt to initialize translations using the locale specified by the user (via preference)
+	 * or detected using 'Accept-Language' request header.
+	 */
 	function startup_gettext(): void {
+		$selected_locale = '';
 
-		$selected_locale = "";
+		if (!empty($_SESSION['uid'])) {
+			$pref_locale = Prefs::get(Prefs::USER_LANGUAGE, $_SESSION['uid'], $_SESSION['profile'] ?? null);
+
+			if (!empty($pref_locale) && $pref_locale != 'auto')
+				$selected_locale = $pref_locale;
+		}
 
 		// https://www.codingwithjesse.com/blog/use-accept-language-header/
-		if (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		if (!$selected_locale && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 			$valid_langs = [];
-			$translations = array_keys(get_translations());
 
+			$translations = array_keys(get_translations());
 			array_shift($translations); // remove "auto"
 
 			// full locale first
@@ -114,7 +127,8 @@
 
 				// set default to 1 for any without q factor
 				foreach ($langs as $lang => $val) {
-					if ($val === '') $langs[$lang] = 1;
+					if ($val === '')
+						$langs[$lang] = 1;
 				}
 
 				// sort list based on value
@@ -133,14 +147,6 @@
 			}
 		}
 
-		if (!empty($_SESSION["uid"]) && Config::get_schema_version() >= 120) {
-			$pref_locale = Prefs::get(Prefs::USER_LANGUAGE, $_SESSION["uid"], $_SESSION["profile"] ?? null);
-
-			if (!empty($pref_locale) && $pref_locale != 'auto') {
-				$selected_locale = $pref_locale;
-			}
-		}
-
 		if ($selected_locale) {
 			if (defined('LC_MESSAGES')) {
 				_setlocale(LC_MESSAGES, $selected_locale);
@@ -153,11 +159,6 @@
 			_bind_textdomain_codeset("messages", "UTF-8");
 		}
 	}
-
-	require_once 'controls.php';
-	require_once 'controls_compat.php';
-
-	ini_set('user_agent', Config::get_user_agent());
 
 	/* compat shims */
 
@@ -179,7 +180,6 @@
 	function _debug(string $msg): void {
 		Debug::log($msg);
 	}
-
 
 	/** @deprecated by Feeds::_get_counters()
 	 * @param int|string $feed feed id or tag name
@@ -260,12 +260,12 @@
 	/* end compat shims */
 
 	/**
+	 * Strip tags from and trim a string or array of strings.
+	 *
 	 * This is used for user HTTP parameters unless HTML code is actually needed.
 	 *
 	 * @template T
-	 *
 	 * @param T $param
-	 *
 	 * @return (T is array ? array<array-key, mixed> : (T is string ? string : T))
 	 */
 	function clean(mixed $param): mixed {
@@ -311,6 +311,12 @@
 		return isset($csrf_token) && hash_equals($_SESSION['csrf_token'] ?? "", $csrf_token);
 	}
 
+	/**
+	 * @param string $str The string to potentially truncate
+	 * @param int $max_len The maximum allowed string length
+	 * @param string $suffix The suffix to append if the string was truncated
+	 * @return string The potentially-truncated string
+	 */
 	function truncate_string(string $str, int $max_len, string $suffix = '&hellip;'): string {
 		if (mb_strlen($str, "utf-8") > $max_len) {
 			return mb_substr($str, 0, $max_len, "utf-8") . $suffix;
@@ -319,6 +325,15 @@
 		}
 	}
 
+	/**
+	 * Multibyte-safe substring replacement
+	 *
+	 * @param string $original The original string
+	 * @param string $replacement The string used to replace the selected substring
+	 * @param int $position The starting position of the substring to replace
+	 * @param int $length The length of the substring to replace
+	 * @return string
+	 */
 	function mb_substr_replace(string $original, string $replacement, int $position, int $length): string {
 		$startString = mb_substr($original, 0, $position, "UTF-8");
 		$endString = mb_substr($original, $position + $length, mb_strlen($original), "UTF-8");
@@ -328,6 +343,14 @@
 		return $out;
 	}
 
+	/**
+	 * Truncate from the middle of a string if it exceeds a max length
+	 *
+	 * @param string $str The string to potentially truncate
+	 * @param int $max_len The maximum allowed length of the string
+	 * @param string $suffix The suffix to append if the string was truncated
+	 * @return string
+	 */
 	function truncate_middle(string $str, int $max_len, string $suffix = '&hellip;'): string {
 		if (mb_strlen($str) > $max_len) {
 			return mb_substr_replace($str, $suffix, $max_len / 2, mb_strlen($str) - $max_len);
@@ -336,7 +359,9 @@
 		}
 	}
 
-	/** Convert values accepted by tt-rss as true/false to PHP booleans
+	/**
+	 * Convert values accepted by tt-rss as true/false to PHP booleans.
+	 *
 	 * @see https://tt-rss.org/docs/API-Reference.html#boolean-values
 	 * @param null|string $s null values are considered false
 	 */
@@ -344,13 +369,20 @@
 		return $s && ($s !== "f" && $s !== "false"); //no-op for PDO, backwards compat for legacy layer
 	}
 
-	/** workaround for PDO casting all query parameters to string unless type is specified explicitly,
+	/**
+	 * workaround for PDO casting all query parameters to string unless type is specified explicitly,
 	 * which breaks booleans having false value because they become empty string literals ("") causing
 	 * DB type mismatches and breaking SQL queries */
 	function bool_to_sql_bool(bool $s): int {
 		return (int)$s;
 	}
 
+	/**
+	 * Check if a lock file is locked
+	 *
+	 * @param string $filename The lock file to check
+	 * @return bool Whether the lock file is locked
+	 */
 	function file_is_locked(string $filename): bool {
 		if (file_exists(Config::get(Config::LOCK_DIRECTORY) . "/$filename")) {
 			$fp = @fopen(Config::get(Config::LOCK_DIRECTORY) . "/$filename", "r");
@@ -371,6 +403,8 @@
 	}
 
 	/**
+	 * Create a lock file.
+	 *
 	 * @return resource|false A file pointer resource on success, or false on error.
 	 */
 	function make_lockfile(string $filename) {
@@ -397,7 +431,8 @@
 		}
 	}
 
-	/** checkbox-specific workaround for PDO casting all query parameters to string unless type is
+	/**
+	 * checkbox-specific workaround for PDO casting all query parameters to string unless type is
 	 * specified explicitly, which breaks booleans having false value because they become empty
 	 * string literals ("") causing DB type mismatches and breaking SQL queries
 	 * @param mixed $val
@@ -410,14 +445,27 @@
 		return uniqid(base_convert((string)random_int(0, mt_getrandmax()), 10, 36));
 	}
 
-	function T_sprintf(): string {
+	/**
+	 * Translation-aware sprintf.
+	 *
+	 * @param string $format The format string to translate
+	 * @param mixed ...$args Optional values to use in the string
+	 * @see https://www.php.net/manual/function.sprintf.php
+	 */
+	function T_sprintf(string $format): string {
 		$args = func_get_args();
-		return vsprintf(__(array_shift($args)), $args);
+		array_shift($args);
+		return vsprintf(__($format), $args);
 	}
 
-	function T_nsprintf(): string {
+	/**
+	 * Translation-aware sprintf with message pluralization.
+	 * @see T_sprintf()
+	 */
+	function T_nsprintf(string $singular_format, string $plural_format, int $number): string {
 		$args = func_get_args();
-		return vsprintf(_ngettext(array_shift($args), array_shift($args), array_shift($args)), $args);
+		array_splice($args, 0, 3);
+		return vsprintf(_ngettext($singular_format, $plural_format, $number), $args);
 	}
 
 	function init_plugins(): bool {
