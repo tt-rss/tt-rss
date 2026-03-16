@@ -39,7 +39,7 @@
 	},
 	"require": {
 		"spomky-labs/otphp": "^11.3",
-		"chillerlan/php-qrcode": "^5.0.5",
+		"chillerlan/php-qrcode": "^6.0.0",
 		"mervick/material-design-icons": "4.0.1",
 		"j4mie/idiorm": "dev-master",
 		"soundasleep/html2text": "^2.1",
