@@ -51,13 +51,13 @@
   },
   {
     "name": "Af_Img_Phash",
-    "description": "Filter duplicate images using perceptual hashing (requires GD)",
+    "description": "Filter duplicate images using perceptual hashing (requires GD/Imagick)",
     "topics": [
       "af_img_phash"
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-perceptual-image-hash",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-perceptual-image-hash.git",
-    "last_update": "2025-02-12T08:11:28Z"
+    "last_update": "2026-03-10T01:44:59Z"
   },
   {
     "name": "Af_Img_PlaceHolders",
