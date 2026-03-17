@@ -9,10 +9,11 @@
  *
  * @noinspection PhpComposerExtensionStubsInspection
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
-use function imagewebp, max, min;
+use function imagewebp;
 
 /**
  * GdImage webp output
@@ -21,13 +22,15 @@ use function imagewebp, max, min;
  */
 class QRGdImageWEBP extends QRGdImage{
 
-	public const MIME_TYPE = 'image/webp';
+	final public const MIME_TYPE = 'image/webp';
 
 	/**
-	 * @inheritDoc
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
 	protected function renderImage():void{
-		imagewebp($this->image, null, max(-1, min(100, $this->options->quality)));
+		if(imagewebp(image: $this->image, quality: $this->getQuality()) === false){
+			throw new QRCodeOutputException('imagewebp() error');
+		}
 	}
 
 }

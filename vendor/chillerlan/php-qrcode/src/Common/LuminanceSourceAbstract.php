@@ -9,13 +9,14 @@
  * @copyright    2021 Smiley
  * @license      Apache-2.0
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Common;
 
-use chillerlan\QRCode\Decoder\QRCodeDecoderException;
 use chillerlan\QRCode\QROptions;
+use chillerlan\QRCode\Decoder\QRCodeDecoderException;
 use chillerlan\Settings\SettingsContainerInterface;
-use function array_slice, array_splice, file_exists, is_file, is_readable, realpath;
+use function array_slice, file_exists, is_file, is_readable, realpath;
 
 /**
  * The purpose of this class hierarchy is to abstract different bitmap implementations across
@@ -25,58 +26,39 @@ use function array_slice, array_splice, file_exists, is_file, is_readable, realp
  */
 abstract class LuminanceSourceAbstract implements LuminanceSourceInterface{
 
-	/** @var \chillerlan\QRCode\QROptions|\chillerlan\Settings\SettingsContainerInterface */
-	protected SettingsContainerInterface $options;
-	protected array $luminances;
+	protected SettingsContainerInterface|QROptions $options;
+	/** @var int[] */
+	protected array $luminances = [];
 	protected int   $width;
 	protected int   $height;
 
-	/**
-	 *
-	 */
-	public function __construct(int $width, int $height, ?SettingsContainerInterface $options = null){
+	public function __construct(int $width, int $height, SettingsContainerInterface|QROptions $options = new QROptions){
 		$this->width   = $width;
 		$this->height  = $height;
-		$this->options = ($options ?? new QROptions);
-
-		$this->luminances = [];
+		$this->options = $options;
 	}
 
-	/** @inheritDoc */
 	public function getLuminances():array{
 		return $this->luminances;
 	}
 
-	/** @inheritDoc */
 	public function getWidth():int{
 		return $this->width;
 	}
 
-	/** @inheritDoc */
 	public function getHeight():int{
 		return $this->height;
 	}
 
-	/**
-	 * @inheritDoc
-	 * @throws \chillerlan\QRCode\Decoder\QRCodeDecoderException
-	 */
 	public function getRow(int $y):array{
 
-		if($y < 0 || $y >= $this->getHeight()){
+		if($y < 0 || $y >= $this->height){
 			throw new QRCodeDecoderException('Requested row is outside the image: '.$y);
 		}
 
-		$arr = [];
-
-		array_splice($arr, 0, $this->width, array_slice($this->luminances, ($y * $this->width), $this->width));
-
-		return $arr;
+		return array_slice($this->luminances, ($y * $this->width), $this->width);
 	}
 
-	/**
-	 *
-	 */
 	protected function setLuminancePixel(int $r, int $g, int $b):void{
 		$this->luminances[] = ($r === $g && $g === $b)
 			// Image is already greyscale, so pick any channel.

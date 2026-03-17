@@ -8,6 +8,7 @@
  * @copyright    2021 Smiley
  * @license      Apache-2.0
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Detector;
 
@@ -30,6 +31,7 @@ use function array_fill, count, intdiv, sprintf;
  */
 final class GridSampler{
 
+	/** @var float[] */
 	private array $points;
 
 	/**
@@ -158,7 +160,7 @@ final class GridSampler{
 					intdiv($x, 2),
 					$y,
 					$matrix->check((int)$this->points[$x], (int)$this->points[($x + 1)]),
-					QRMatrix::M_DATA
+					QRMatrix::M_DATA,
 				);
 			}
 #			}

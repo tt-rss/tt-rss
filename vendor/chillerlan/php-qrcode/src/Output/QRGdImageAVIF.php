@@ -1,8 +1,8 @@
 <?php
 /**
- * Class QRGdImageGIF
+ * Class QRGdImageAVIF
  *
- * @created      25.10.2023
+ * @created      26.11.2023
  * @author       smiley <smiley@chillerlan.net>
  * @copyright    2023 smiley
  * @license      MIT
@@ -13,23 +13,23 @@ declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
-use function imagegif;
+use function imageavif;
 
 /**
- * GdImage gif output
+ * GDImage avif output
  *
- * @see \imagegif()
+ * @see \imageavif()
  */
-class QRGdImageGIF extends QRGdImage{
+class QRGdImageAVIF extends QRGdImage{
 
-	final public const MIME_TYPE = 'image/gif';
+	final public const MIME_TYPE = 'image/avif';
 
 	/**
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
 	protected function renderImage():void{
-		if(imagegif(image: $this->image) === false){
-			throw new QRCodeOutputException('imagegif() error');
+		if(imageavif(image: $this->image, quality: $this->getQuality()) === false){
+			throw new QRCodeOutputException('imageavif() error');
 		}
 	}
 

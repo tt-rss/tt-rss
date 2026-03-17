@@ -9,14 +9,15 @@
  *
  * @noinspection PhpComposerExtensionStubsInspection
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
+use chillerlan\QRCode\QROptions;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\Settings\SettingsContainerInterface;
-use finfo, Imagick, ImagickDraw, ImagickPixel;
-use function extension_loaded, in_array, is_string, max, min, preg_match, strlen;
-use const FILEINFO_MIME_TYPE;
+use Imagick, ImagickDraw, ImagickPixel;
+use function extension_loaded, in_array, is_string, max, min, preg_match, sprintf, strlen;
 
 /**
  * ImageMagick output module (requires ext-imagick)
@@ -46,7 +47,7 @@ class QRImagick extends QROutputAbstract{
 	 *
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	public function __construct(SettingsContainerInterface $options, QRMatrix $matrix){
+	public function __construct(SettingsContainerInterface|QROptions|iterable $options, QRMatrix $matrix){
 
 		foreach(['fileinfo', 'imagick'] as $ext){
 			if(!extension_loaded($ext)){
@@ -63,7 +64,7 @@ class QRImagick extends QROutputAbstract{
 	 * @see https://www.php.net/manual/imagickpixel.construct.php
 	 * @inheritDoc
 	 */
-	public static function moduleValueIsValid($value):bool{
+	public static function moduleValueIsValid(mixed $value):bool{
 
 		if(!is_string($value)){
 			return false;
@@ -93,26 +94,15 @@ class QRImagick extends QROutputAbstract{
 		return false;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function prepareModuleValue($value):ImagickPixel{
+	protected function prepareModuleValue(mixed $value):ImagickPixel{
 		return new ImagickPixel($value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function getDefaultModuleValue(bool $isDark):ImagickPixel{
 		return $this->prepareModuleValue(($isDark) ? '#000' : '#fff');
 	}
 
-	/**
-	 * @inheritDoc
-	 *
-	 * @return string|\Imagick
-	 */
-	public function dump(?string $file = null){
+	public function dump(string|null $file = null):string|Imagick{
 		$this->setBgColor();
 
 		$this->imagick = $this->createImage();
@@ -132,7 +122,7 @@ class QRImagick extends QROutputAbstract{
 		$this->saveToFile($imageData, $file);
 
 		if($this->options->outputBase64){
-			$imageData = $this->toBase64DataURI($imageData, (new finfo(FILEINFO_MIME_TYPE))->buffer($imageData));
+			$imageData = $this->toBase64DataURI($imageData);
 		}
 
 		return $imageData;
@@ -218,7 +208,7 @@ class QRImagick extends QROutputAbstract{
 				(($x + 0.5) * $this->scale),
 				(($y + 0.5) * $this->scale),
 				(($x + 0.5 + $this->circleRadius) * $this->scale),
-				(($y + 0.5) * $this->scale)
+				(($y + 0.5) * $this->scale),
 			);
 
 			return;
@@ -228,7 +218,7 @@ class QRImagick extends QROutputAbstract{
 			($x * $this->scale),
 			($y * $this->scale),
 			((($x + 1) * $this->scale) - 1),
-			((($y + 1) * $this->scale) - 1)
+			((($y + 1) * $this->scale) - 1),
 		);
 	}
 

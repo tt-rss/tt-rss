@@ -7,6 +7,7 @@
  * @copyright    2022 smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
@@ -25,7 +26,7 @@ use function array_chunk, implode, is_string, preg_match, sprintf, trim;
  */
 class QRMarkupSVG extends QRMarkup{
 
-	public const MIME_TYPE = 'image/svg+xml';
+	final public const MIME_TYPE = 'image/svg+xml';
 
 	/**
 	 * @todo: XSS proof
@@ -33,7 +34,7 @@ class QRMarkupSVG extends QRMarkup{
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/fill
 	 * @inheritDoc
 	 */
-	public static function moduleValueIsValid($value):bool{
+	public static function moduleValueIsValid(mixed $value):bool{
 
 		if(!is_string($value)){
 			return false;
@@ -50,16 +51,10 @@ class QRMarkupSVG extends QRMarkup{
 		return parent::moduleValueIsValid($value);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function getOutputDimensions():array{
 		return [$this->moduleCount, $this->moduleCount];
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function getCssClass(int $M_TYPE = 0):string{
 		return implode(' ', [
 			'qr-'.($this::LAYERNAMES[$M_TYPE] ?? $M_TYPE),
@@ -68,9 +63,6 @@ class QRMarkupSVG extends QRMarkup{
 		]);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function createMarkup(bool $saveToFile):string{
 		$svg = $this->header();
 
@@ -82,11 +74,6 @@ class QRMarkupSVG extends QRMarkup{
 
 		// close svg
 		$svg .= sprintf('%1$s</svg>%1$s', $this->eol);
-
-		// transform to data URI only when not saving to file
-		if(!$saveToFile && $this->options->outputBase64){
-			$svg = $this->toBase64DataURI($svg);
-		}
 
 		return $svg;
 	}
@@ -115,7 +102,7 @@ class QRMarkupSVG extends QRMarkup{
 			$this->options->cssClass,
 			$this->getViewBox(),
 			$this->options->svgPreserveAspectRatio,
-			$this->eol
+			$this->eol,
 		);
 
 		if($this->options->svgAddXmlHeader){
@@ -129,8 +116,7 @@ class QRMarkupSVG extends QRMarkup{
 	 * returns one or more SVG <path> elements
 	 */
 	protected function paths():string{
-		/** @phan-suppress-next-line PhanDeprecatedFunction */
-		$paths = $this->collectModules(fn(int $x, int $y, int $M_TYPE):string => $this->module($x, $y, $M_TYPE));
+		$paths = $this->collectModules();
 		$svg   = [];
 
 		// create the path elements
@@ -167,7 +153,7 @@ class QRMarkupSVG extends QRMarkup{
 				'<path class="%s" fill="%s" d="%s"/>',
 				$this->getCssClass($M_TYPE),
 				$this->getModuleValue($M_TYPE),
-				$path
+				$path,
 			);
 		}
 
@@ -179,10 +165,10 @@ class QRMarkupSVG extends QRMarkup{
 	 *
 	 * @see https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
 	 */
-	protected function module(int $x, int $y, int $M_TYPE):string{
+	protected function moduleTransform(int $x, int $y, int $M_TYPE, int $M_TYPE_LAYER):string|null{
 
 		if(!$this->drawLightModules && !$this->matrix->isDark($M_TYPE)){
-			return '';
+			return null;
 		}
 
 		if($this->drawCircularModules && !$this->matrix->checkTypeIn($x, $y, $this->keepAsSquare)){

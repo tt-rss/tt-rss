@@ -7,6 +7,7 @@
  * @copyright    2020 smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Data;
 
@@ -20,21 +21,25 @@ abstract class QRDataModeAbstract implements QRDataModeInterface{
 	/**
 	 * The data to write
 	 */
-	protected string $data;
+	protected string $data = '';
 
 	/**
 	 * QRDataModeAbstract constructor.
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function __construct(string $data){
-		$data = $this::convertEncoding($data);
+	public function __construct(string|null $data = null){
 
-		if(!$this::validateString($data)){
-			throw new QRCodeDataException('invalid data');
+		if($data !== null){
+			$data = $this::convertEncoding($data);
+
+			if(!$this::validateString($data)){
+				throw new QRCodeDataException('invalid data');
+			}
+
+			$this->data = $data;
 		}
 
-		$this->data = $data;
 	}
 
 	/**
@@ -44,9 +49,6 @@ abstract class QRDataModeAbstract implements QRDataModeInterface{
 		return strlen($this->data);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public static function convertEncoding(string $string):string{
 		return $string;
 	}
@@ -54,7 +56,7 @@ abstract class QRDataModeAbstract implements QRDataModeInterface{
 	/**
 	 * shortcut
 	 */
-	protected static function getLengthBits(int $versionNumber):int{
+	protected function getLengthBits(int $versionNumber):int{
 		return Mode::getLengthBitsForVersion(static::DATAMODE, $versionNumber);
 	}
 

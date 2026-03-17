@@ -9,39 +9,34 @@
  *
  * @noinspection PhpComposerExtensionStubsInspection
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
+use chillerlan\QRCode\QROptions;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\Settings\SettingsContainerInterface;
-use ErrorException;
-use Throwable;
-use function array_values, count, extension_loaded, imagebmp, imagecolorallocate, imagecolortransparent,
-	imagecreatetruecolor, imagefilledellipse, imagefilledrectangle, imagegif, imagejpeg, imagepng,
-	imagescale, imagetypes, imagewebp, intdiv, intval, is_array, is_numeric, max, min, ob_end_clean, ob_get_contents, ob_start,
-	restore_error_handler, set_error_handler, sprintf;
-use const IMG_BMP, IMG_GIF, IMG_JPG, IMG_PNG, IMG_WEBP;
+use GdImage;
+use function extension_loaded, imagecolorallocate, imagecolortransparent, imagecreatetruecolor,
+	imagefilledellipse, imagefilledrectangle, imagescale, imagetypes, intdiv, intval, is_iterable,
+	max, min, ob_end_clean, ob_get_contents, ob_start, sprintf;
+use const IMG_AVIF, IMG_BMP, IMG_GIF, IMG_JPG, IMG_PNG, IMG_WEBP;
 
 /**
  * Converts the matrix into GD images, raw or base64 output (requires ext-gd)
  *
  * @see https://php.net/manual/book.image.php
- *
- * @deprecated 5.0.0 this class will be made abstract in future versions,
- *                   calling it directly is deprecated - use one of the child classes instead
  * @see https://github.com/chillerlan/php-qrcode/issues/223
  */
-class QRGdImage extends QROutputAbstract{
+abstract class QRGdImage extends QROutputAbstract{
+	use RGBArrayModuleValueTrait;
 
 	/**
 	 * The GD image resource
 	 *
 	 * @see imagecreatetruecolor()
-	 * @var resource|\GdImage
-	 *
-	 * @todo: add \GdImage type in v6
 	 */
-	protected $image;
+	protected GdImage $image;
 
 	/**
 	 * The allocated background color
@@ -58,12 +53,15 @@ class QRGdImage extends QROutputAbstract{
 	protected bool $upscaled = false;
 
 	/**
-	 * @inheritDoc
-	 *
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 * @noinspection PhpMissingParentConstructorInspection
 	 */
-	public function __construct(SettingsContainerInterface $options, QRMatrix $matrix){
+	public function __construct(SettingsContainerInterface|QROptions|iterable $options, QRMatrix $matrix){
+
+		if(is_iterable($options)){
+			$options = new QROptions($options);
+		}
+
 		$this->options = $options;
 		$this->matrix  = $matrix;
 
@@ -80,7 +78,6 @@ class QRGdImage extends QROutputAbstract{
 	/**
 	 * Checks whether GD is installed and if the given mode is supported
 	 *
-	 * @return void
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 * @codeCoverageIgnore
 	 */
@@ -91,58 +88,32 @@ class QRGdImage extends QROutputAbstract{
 		}
 
 		$modes = [
-			self::GDIMAGE_BMP  => IMG_BMP,
-			self::GDIMAGE_GIF  => IMG_GIF,
-			self::GDIMAGE_JPG  => IMG_JPG,
-			self::GDIMAGE_PNG  => IMG_PNG,
-			self::GDIMAGE_WEBP => IMG_WEBP,
+			QRGdImageAVIF::class => IMG_AVIF,
+			QRGdImageBMP::class  => IMG_BMP,
+			QRGdImageGIF::class  => IMG_GIF,
+			QRGdImageJPEG::class => IMG_JPG,
+			QRGdImagePNG::class  => IMG_PNG,
+			QRGdImageWEBP::class => IMG_WEBP,
 		];
 
-		// likely using default or custom output
-		if(!isset($modes[$this->options->outputType])){
+		// likely using custom output/manual invocation
+		if(!isset($modes[$this->options->outputInterface])){
 			return;
 		}
 
-		$mode = $modes[$this->options->outputType];
+		$mode = $modes[$this->options->outputInterface];
 
 		if((imagetypes() & $mode) !== $mode){
-			throw new QRCodeOutputException(sprintf('output mode "%s" not supported', $this->options->outputType));
+			throw new QRCodeOutputException(sprintf('output mode "%s" not supported', $this->options->outputInterface));
 		}
 
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public static function moduleValueIsValid($value):bool{
-
-		if(!is_array($value) || count($value) < 3){
-			return false;
-		}
-
-		// check the first 3 values of the array
-		foreach(array_values($value) as $i => $val){
-
-			if($i > 2){
-				break;
-			}
-
-			if(!is_numeric($val)){
-				return false;
-			}
-
-		}
-
-		return true;
-	}
-
-	/**
-	 * @param array $value
-	 *
 	 * @inheritDoc
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	protected function prepareModuleValue($value):int{
+	protected function prepareModuleValue(mixed $value):int{
 		$values = [];
 
 		foreach(array_values($value) as $i => $val){
@@ -164,9 +135,6 @@ class QRGdImage extends QROutputAbstract{
 		return $color;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function getDefaultModuleValue(bool $isDark):int{
 		return $this->prepareModuleValue(($isDark) ? [0, 0, 0] : [255, 255, 255]);
 	}
@@ -174,30 +142,32 @@ class QRGdImage extends QROutputAbstract{
 	/**
 	 * @inheritDoc
 	 *
-	 * @return string|resource|\GdImage
-	 *
-	 * @phan-suppress PhanUndeclaredTypeReturnType, PhanTypeMismatchReturn
-	 * @throws \ErrorException
+	 * @throws \ErrorException|\chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	public function dump(?string $file = null){
-
-		set_error_handler(function(int $errno, string $errstr):bool{
-			throw new ErrorException($errstr, $errno);
-		});
-
+	public function dump(string|null $file = null):string|GdImage{
 		$this->image = $this->createImage();
 		// set module values after image creation because we need the GdImage instance
 		$this->setModuleValues();
 		$this->setBgColor();
 
-		imagefilledrectangle($this->image, 0, 0, $this->length, $this->length, $this->background);
+		if(imagefilledrectangle($this->image, 0, 0, $this->length, $this->length, $this->background) === false){
+			throw new QRCodeOutputException('imagefilledrectangle() error');
+		}
 
 		$this->drawImage();
 
 		if($this->upscaled){
 			// scale down to the expected size
-			$this->image    = imagescale($this->image, ($this->length / 10), ($this->length / 10));
+			$scaled = imagescale($this->image, ($this->length / 10), ($this->length / 10));
+
+			if($scaled === false){
+				throw new QRCodeOutputException('imagescale() error');
+			}
+
+			$this->image    = $scaled;
 			$this->upscaled = false;
+			// Reset scaled and length values after rescaling image to prevent issues with subclasses that use the output from dump()
+			$this->setMatrixDimensions();
 		}
 
 		// set transparency after scaling, otherwise it would be undone
@@ -205,8 +175,6 @@ class QRGdImage extends QROutputAbstract{
 		$this->setTransparencyColor();
 
 		if($this->options->returnResource){
-			restore_error_handler();
-
 			return $this->image;
 		}
 
@@ -215,11 +183,8 @@ class QRGdImage extends QROutputAbstract{
 		$this->saveToFile($imageData, $file);
 
 		if($this->options->outputBase64){
-			// @todo: remove mime parameter in v6
-			$imageData = $this->toBase64DataURI($imageData, 'image/'.$this->options->outputType);
+			$imageData = $this->toBase64DataURI($imageData);
 		}
-
-		restore_error_handler();
 
 		return $imageData;
 	}
@@ -231,9 +196,9 @@ class QRGdImage extends QROutputAbstract{
 	 *
 	 * @see https://github.com/chillerlan/php-qrcode/issues/23
 	 *
-	 * @return \GdImage|resource
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	protected function createImage(){
+	protected function createImage():GdImage{
 
 		if($this->drawCircularModules && $this->options->gdImageUseUpscale && $this->options->scale < 20){
 			// increase the initial image size by 10
@@ -242,7 +207,13 @@ class QRGdImage extends QROutputAbstract{
 			$this->upscaled  = true;
 		}
 
-		return imagecreatetruecolor($this->length, $this->length);
+		$im = imagecreatetruecolor($this->length, $this->length);
+
+		if($im === false){
+			throw new QRCodeOutputException('imagecreatetruecolor() error');
+		}
+
+		return $im;
 	}
 
 	/**
@@ -264,13 +235,12 @@ class QRGdImage extends QROutputAbstract{
 	}
 
 	/**
-	 * Sets the transparency color
+	 * Sets the transparency color, returns the identifier of the new transparent color
 	 */
-	protected function setTransparencyColor():void{
+	protected function setTransparencyColor():int{
 
-		// @todo: the jpg skip can be removed in v6
-		if($this->options->outputType === QROutputInterface::GDIMAGE_JPG || !$this->options->imageTransparent){
-			return;
+		if(!$this->options->imageTransparent){
+			return -1;
 		}
 
 		$transparencyColor = $this->background;
@@ -279,7 +249,14 @@ class QRGdImage extends QROutputAbstract{
 			$transparencyColor = $this->prepareModuleValue($this->options->transparencyColor);
 		}
 
-		imagecolortransparent($this->image, $transparencyColor);
+		return imagecolortransparent($this->image, $transparencyColor);
+	}
+
+	/**
+	 * Returns the image quality value for the current GdImage output child class (defaults to -1 ... 100)
+	 */
+	protected function getQuality():int{
+		return max(-1, min(100, $this->options->quality));
 	}
 
 	/**
@@ -311,7 +288,7 @@ class QRGdImage extends QROutputAbstract{
 				(($y * $this->scale) + intdiv($this->scale, 2)),
 				(int)($this->circleDiameter * $this->scale),
 				(int)($this->circleDiameter * $this->scale),
-				$color
+				$color,
 			);
 
 			return;
@@ -323,45 +300,16 @@ class QRGdImage extends QROutputAbstract{
 			($y * $this->scale),
 			(($x + 1) * $this->scale),
 			(($y + 1) * $this->scale),
-			$color
+			$color,
 		);
 	}
 
 	/**
 	 * Renders the image with the gdimage function for the desired output
 	 *
-	 * @see \imagebmp()
-	 * @see \imagegif()
-	 * @see \imagejpeg()
-	 * @see \imagepng()
-	 * @see \imagewebp()
-	 *
-	 * @todo: v6.0: make abstract and call from child classes
 	 * @see https://github.com/chillerlan/php-qrcode/issues/223
-	 * @codeCoverageIgnore
 	 */
-	protected function renderImage():void{
-
-		switch($this->options->outputType){
-			case QROutputInterface::GDIMAGE_BMP:
-				imagebmp($this->image, null, ($this->options->quality > 0));
-				break;
-			case QROutputInterface::GDIMAGE_GIF:
-				imagegif($this->image);
-				break;
-			case QROutputInterface::GDIMAGE_JPG:
-				imagejpeg($this->image, null, max(-1, min(100, $this->options->quality)));
-				break;
-			case QROutputInterface::GDIMAGE_WEBP:
-				imagewebp($this->image, null, max(-1, min(100, $this->options->quality)));
-				break;
-			// silently default to png output
-			case QROutputInterface::GDIMAGE_PNG:
-			default:
-				imagepng($this->image, null, max(-1, min(9, $this->options->quality)));
-		}
-
-	}
+	abstract protected function renderImage():void;
 
 	/**
 	 * Creates the final image by calling the desired GD output function
@@ -369,29 +317,17 @@ class QRGdImage extends QROutputAbstract{
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
 	protected function dumpImage():string{
-		$exception = null;
-		$imageData = null;
-
 		ob_start();
 
-		try{
-			$this->renderImage();
+		$this->renderImage();
 
-			$imageData = ob_get_contents();
+		$imageData = ob_get_contents();
+
+		if($imageData === false){
+			throw new QRCodeOutputException('ob_get_contents() error');
 		}
-		// not going to cover edge cases
-		// @codeCoverageIgnoreStart
-		catch(Throwable $e){
-			$exception = $e;
-		}
-		// @codeCoverageIgnoreEnd
 
 		ob_end_clean();
-
-		// throw here in case an exception happened within the output buffer
-		if($exception instanceof Throwable){
-			throw new QRCodeOutputException($exception->getMessage());
-		}
 
 		return $imageData;
 	}

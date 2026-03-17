@@ -7,11 +7,12 @@
  * @copyright    2015 Smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Data;
 
 use chillerlan\QRCode\Common\{BitBuffer, Mode};
-use function ceil, intdiv, substr, unpack;
+use function ceil, intdiv, preg_match, substr, unpack;
 
 /**
  * Numeric mode: decimal digits 0 to 9
@@ -21,34 +22,22 @@ use function ceil, intdiv, substr, unpack;
  */
 final class Number extends QRDataModeAbstract{
 
-	/**
-	 * @inheritDoc
-	 */
 	public const DATAMODE = Mode::NUMBER;
 
-	/**
-	 * @inheritDoc
-	 */
 	public function getLengthInBits():int{
 		return (int)ceil($this->getCharCount() * (10 / 3));
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public static function validateString(string $string):bool{
 		return (bool)preg_match('/^\d+$/', $string);
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function write(BitBuffer $bitBuffer, int $versionNumber):QRDataModeInterface{
+	public function write(BitBuffer $bitBuffer, int $versionNumber):static{
 		$len = $this->getCharCount();
 
 		$bitBuffer
 			->put(self::DATAMODE, 4)
-			->put($len, $this::getLengthBits($versionNumber))
+			->put($len, $this->getLengthBits($versionNumber))
 		;
 
 		$i = 0;
@@ -101,8 +90,8 @@ final class Number extends QRDataModeAbstract{
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public static function decodeSegment(BitBuffer $bitBuffer, int $versionNumber):string{
-		$length = $bitBuffer->read(self::getLengthBits($versionNumber));
+	public function decodeSegment(BitBuffer $bitBuffer, int $versionNumber):string{
+		$length = $bitBuffer->read($this->getLengthBits($versionNumber));
 		$result = '';
 		// Read three digits at a time
 		while($length >= 3){

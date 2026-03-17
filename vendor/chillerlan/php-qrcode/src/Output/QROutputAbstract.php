@@ -6,14 +6,19 @@
  * @author       Smiley <smiley@chillerlan.net>
  * @copyright    2015 Smiley
  * @license      MIT
+ *
+ * @noinspection PhpComposerExtensionStubsInspection
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
+use chillerlan\QRCode\QROptions;
 use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\Settings\SettingsContainerInterface;
-use Closure;
-use function base64_encode, dirname, file_put_contents, is_writable, ksort, sprintf;
+use finfo;
+use function base64_encode, dirname, extension_loaded, file_put_contents, is_iterable, is_writable, ksort, sprintf;
+use const FILEINFO_MIME_TYPE;
 
 /**
  * common output abstract
@@ -34,6 +39,8 @@ abstract class QROutputAbstract implements QROutputInterface{
 
 	/**
 	 * an (optional) array of color values for the several QR matrix parts
+	 *
+	 * @phpstan-var array<int, mixed>
 	 */
 	protected array $moduleValues;
 
@@ -43,24 +50,30 @@ abstract class QROutputAbstract implements QROutputInterface{
 	protected QRMatrix $matrix;
 
 	/**
-	 * @var \chillerlan\Settings\SettingsContainerInterface|\chillerlan\QRCode\QROptions
+	 * the options instance
 	 */
-	protected SettingsContainerInterface $options;
+	protected SettingsContainerInterface|QROptions $options;
 
+	/**
+	 * @see \chillerlan\QRCode\QROptions::$excludeFromConnect
+	 * @var int[]
+	 */
+	protected array $excludeFromConnect;
+	/**
+	 * @see \chillerlan\QRCode\QROptions::$keepAsSquare
+	 * @var int[]
+	 */
+	protected array $keepAsSquare;
 	/** @see \chillerlan\QRCode\QROptions::$scale */
 	protected int $scale;
 	/** @see \chillerlan\QRCode\QROptions::$connectPaths */
 	protected bool $connectPaths;
-	/** @see \chillerlan\QRCode\QROptions::$excludeFromConnect */
-	protected array $excludeFromConnect;
 	/** @see \chillerlan\QRCode\QROptions::$eol */
 	protected string $eol;
 	/** @see \chillerlan\QRCode\QROptions::$drawLightModules */
 	protected bool $drawLightModules;
 	/** @see \chillerlan\QRCode\QROptions::$drawCircularModules */
 	protected bool $drawCircularModules;
-	/** @see \chillerlan\QRCode\QROptions::$keepAsSquare */
-	protected array $keepAsSquare;
 	/** @see \chillerlan\QRCode\QROptions::$circleRadius */
 	protected float $circleRadius;
 	protected float $circleDiameter;
@@ -68,7 +81,12 @@ abstract class QROutputAbstract implements QROutputInterface{
 	/**
 	 * QROutputAbstract constructor.
 	 */
-	public function __construct(SettingsContainerInterface $options, QRMatrix $matrix){
+	public function __construct(SettingsContainerInterface|QROptions|iterable $options, QRMatrix $matrix){
+
+		if(is_iterable($options)){
+			$options = new QROptions($options);
+		}
+
 		$this->options = $options;
 		$this->matrix  = $matrix;
 
@@ -82,7 +100,7 @@ abstract class QROutputAbstract implements QROutputInterface{
 	}
 
 	/**
-	 * Creates copies of several QROptions values to avoid calling the magic getters
+	 * Creates copies of several QROptions values to avoid calling the magic getters/property hooks
 	 * in long loops for a significant performance increase.
 	 *
 	 * These variables are usually used in the "module" methods and are called up to 31329 times (at version 40).
@@ -121,6 +139,8 @@ abstract class QROutputAbstract implements QROutputInterface{
 	 * Returns a 2 element array with the current output width and height
 	 *
 	 * The type and units of the values depend on the output class. The default value is the current module count * scale.
+	 *
+	 * @return int[]
 	 */
 	protected function getOutputDimensions():array{
 		return [$this->length, $this->length];
@@ -137,6 +157,7 @@ abstract class QROutputAbstract implements QROutputInterface{
 		}
 
 		// now loop over the options values to replace defaults and add extra values
+		/** @var int $M_TYPE */
 		foreach($this->options->moduleValues as $M_TYPE => $value){
 			if($this::moduleValueIsValid($value)){
 				$this->moduleValues[$M_TYPE] = $this->prepareModuleValue($value);
@@ -147,27 +168,20 @@ abstract class QROutputAbstract implements QROutputInterface{
 
 	/**
 	 * Prepares the value for the given input (return value depends on the output class)
-	 *
-	 * @param mixed $value
-	 *
-	 * @return mixed|null
 	 */
-	abstract protected function prepareModuleValue($value);
+	abstract protected function prepareModuleValue(mixed $value):mixed;
 
 	/**
 	 * Returns a default value for either dark or light modules (return value depends on the output class)
-	 *
-	 * @return mixed|null
 	 */
-	abstract protected function getDefaultModuleValue(bool $isDark);
+	abstract protected function getDefaultModuleValue(bool $isDark):mixed;
 
 	/**
 	 * Returns the prepared value for the given $M_TYPE
 	 *
-	 * @return mixed return value depends on the output class
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException if $moduleValues[$M_TYPE] doesn't exist
 	 */
-	protected function getModuleValue(int $M_TYPE){
+	protected function getModuleValue(int $M_TYPE):mixed{
 
 		if(!isset($this->moduleValues[$M_TYPE])){
 			throw new QRCodeOutputException(sprintf('$M_TYPE %012b not found in module values map', $M_TYPE));
@@ -178,18 +192,45 @@ abstract class QROutputAbstract implements QROutputInterface{
 
 	/**
 	 * Returns the prepared module value at the given coordinate [$x, $y] (convenience)
-	 *
-	 * @return mixed|null
 	 */
-	protected function getModuleValueAt(int $x, int $y){
+	protected function getModuleValueAt(int $x, int $y):mixed{
 		return $this->getModuleValue($this->matrix->get($x, $y));
 	}
 
 	/**
 	 * Returns a base64 data URI for the given string and mime type
+	 *
+	 * The mime type can be set via class constant MIME_TYPE in child classes,
+	 * or given via $mime, otherwise it is guessed from the image $data.
 	 */
-	protected function toBase64DataURI(string $data, ?string $mime = null):string{
-		return sprintf('data:%s;base64,%s', ($mime ?? $this::MIME_TYPE), base64_encode($data));
+	protected function toBase64DataURI(string $data, string|null $mime = null):string{
+		$mime ??= static::MIME_TYPE;
+
+		if($mime === ''){
+			$mime = $this->guessMimeType($data);
+		}
+
+		return sprintf('data:%s;base64,%s', $mime, base64_encode($data));
+	}
+
+	/**
+	 * Guesses the mime type from the given $imageData
+	 *
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
+	 */
+	protected function guessMimeType(string $imageData):string{
+
+		if(!extension_loaded('fileinfo')){
+			throw new QRCodeOutputException('ext-fileinfo not loaded, cannot guess mime type');
+		}
+
+		$mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($imageData);
+
+		if($mime === false){
+			throw new QRCodeOutputException('unable to detect mime type');
+		}
+
+		return $mime;
 	}
 
 	/**
@@ -200,7 +241,7 @@ abstract class QROutputAbstract implements QROutputInterface{
 	 *
 	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
-	protected function saveToFile(string $data, ?string $file = null):void{
+	protected function saveToFile(string $data, string|null $file = null):void{
 
 		if($file === null){
 			return;
@@ -216,21 +257,14 @@ abstract class QROutputAbstract implements QROutputInterface{
 	}
 
 	/**
-	 * collects the modules per QRMatrix::M_* type and runs a $transform function on each module and
-	 * returns an array with the transformed modules
+	 * collects the modules per QRMatrix::M_* type, runs a transform method on each module and
+	 * returns an array with the transformed modules.
 	 *
-	 * The transform callback is called with the following parameters:
-	 *
-	 *   $x            - current column
-	 *   $y            - current row
-	 *   $M_TYPE       - field value
-	 *   $M_TYPE_LAYER - (possibly modified) field value that acts as layer id
-	 *
-	 * @deprecated 5.0.5 The parameter $transform will be removed in the next major version
-	 *                   in favor of a concrete method QROutputAbstract::moduleTransform()
 	 * @see \chillerlan\QRCode\Output\QROutputAbstract::moduleTransform()
+	 *
+	 * @return array<int, mixed>
 	 */
-	protected function collectModules(Closure $transform):array{
+	protected function collectModules():array{
 		$paths = [];
 
 		// collect the modules for each type
@@ -248,9 +282,9 @@ abstract class QROutputAbstract implements QROutputInterface{
 				}
 
 				// collect the modules per $M_TYPE
-				$module = $transform($x, $y, $M_TYPE, $M_TYPE_LAYER);
+				$module = $this->moduleTransform($x, $y, $M_TYPE, $M_TYPE_LAYER);
 
-				if(!empty($module)){
+				if($module !== null){
 					$paths[$M_TYPE_LAYER][] = $module;
 				}
 			}
@@ -274,9 +308,8 @@ abstract class QROutputAbstract implements QROutputInterface{
 	 * It must return `null` for an empty value.
 	 *
 	 * @see \chillerlan\QRCode\Output\QROutputAbstract::collectModules()
-	 * @return mixed|null
 	 */
-	protected function moduleTransform(int $x, int $y, int $M_TYPE, int $M_TYPE_LAYER){
+	protected function moduleTransform(int $x, int $y, int $M_TYPE, int $M_TYPE_LAYER):mixed{
 		return null;
 	}
 

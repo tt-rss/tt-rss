@@ -7,6 +7,7 @@
  * @copyright    2017 Smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Data;
 
@@ -94,7 +95,7 @@ class QRMatrix{
 	 *
 	 * @see \chillerlan\QRCode\Data\QRMatrix::checkNeighbours()
 	 *
-	 * @var array
+	 * @var int[][]
 	 */
 	protected const neighbours = [
 		0b00000001 => [-1, -1],
@@ -110,12 +111,12 @@ class QRMatrix{
 	/**
 	 * the matrix version - always set in QRMatrix, may be null in BitMatrix
 	 */
-	protected ?Version $version = null;
+	protected Version|null $version = null;
 
 	/**
 	 * the current ECC level - always set in QRMatrix, may be null in BitMatrix
 	 */
-	protected ?EccLevel $eccLevel = null;
+	protected EccLevel|null $eccLevel = null;
 
 	/**
 	 * the mask pattern that was used in the most recent operation, set via:
@@ -124,7 +125,7 @@ class QRMatrix{
 	 * - QRMatrix::mask()
 	 * - BitMatrix::readFormatInformation()
 	 */
-	protected ?MaskPattern $maskPattern = null;
+	protected MaskPattern|null $maskPattern = null;
 
 	/**
 	 * the size (side length) of the matrix, including quiet zone (if created)
@@ -150,6 +151,8 @@ class QRMatrix{
 
 	/**
 	 * Creates a 2-dimensional array (square) of the given $size
+	 *
+	 * @return int[][]
 	 */
 	protected function createMatrix(int $size, int $value):array{
 		return array_fill(0, $size, array_fill(0, $size, $value));
@@ -158,7 +161,7 @@ class QRMatrix{
 	/**
 	 * shortcut to initialize the functional patterns
 	 */
-	public function initFunctionalPatterns():self{
+	public function initFunctionalPatterns():static{
 		return $this
 			->setFinderPattern()
 			->setSeparators()
@@ -171,80 +174,49 @@ class QRMatrix{
 	}
 
 	/**
-	 * Returns the data matrix, returns a pure boolean representation if $boolean is set to true
+	 * Returns the data matrix
 	 *
-	 * @return int[][]|bool[][]
+	 * @return int[][]
 	 */
-	public function getMatrix(?bool $boolean = null):array{
-
-		if($boolean !== true){
-			return $this->matrix;
-		}
-
-		$matrix = $this->matrix;
-
-		foreach($matrix as &$row){
-			$row = array_map([$this, 'isDark'], $row);
-		}
-
-		return $matrix;
+	public function getMatrix():array{
+		return $this->matrix;
 	}
 
 	/**
-	 * @deprecated 5.0.0 use QRMatrix::getMatrix() instead
-	 * @see \chillerlan\QRCode\Data\QRMatrix::getMatrix()
-	 * @codeCoverageIgnore
+	 * Returns a boolean representation of the data matrix
+	 *
+	 * @return bool[][]
+	 * @phan-suppress PhanTypeMismatchReturn
 	 */
-	public function matrix(?bool $boolean = null):array{
-		return $this->getMatrix($boolean);
+	public function getBooleanMatrix():array{
+		$matrix = $this->matrix;
+
+		foreach($matrix as &$row){
+			$row = array_map($this->isDark(...), $row);
+		}
+		/** @var bool[][] $matrix (phpstan hates this otherwise) */
+		return $matrix;
 	}
 
 	/**
 	 * Returns the current version number
 	 */
-	public function getVersion():?Version{
+	public function getVersion():Version|null{
 		return $this->version;
-	}
-
-	/**
-	 * @deprecated 5.0.0 use QRMatrix::getVersion() instead
-	 * @see \chillerlan\QRCode\Data\QRMatrix::getVersion()
-	 * @codeCoverageIgnore
-	 */
-	public function version():?Version{
-		return $this->getVersion();
 	}
 
 	/**
 	 * Returns the current ECC level
 	 */
-	public function getEccLevel():?EccLevel{
+	public function getEccLevel():EccLevel|null{
 		return $this->eccLevel;
-	}
-
-	/**
-	 * @deprecated 5.0.0 use QRMatrix::getEccLevel() instead
-	 * @see \chillerlan\QRCode\Data\QRMatrix::getEccLevel()
-	 * @codeCoverageIgnore
-	 */
-	public function eccLevel():?EccLevel{
-		return $this->getEccLevel();
 	}
 
 	/**
 	 * Returns the current mask pattern
 	 */
-	public function getMaskPattern():?MaskPattern{
+	public function getMaskPattern():MaskPattern|null{
 		return $this->maskPattern;
-	}
-
-	/**
-	 * @deprecated 5.0.0 use QRMatrix::getMaskPattern() instead
-	 * @see \chillerlan\QRCode\Data\QRMatrix::getMaskPattern()
-	 * @codeCoverageIgnore
-	 */
-	public function maskPattern():?MaskPattern{
-		return $this->getMaskPattern();
 	}
 
 	/**
@@ -254,15 +226,6 @@ class QRMatrix{
 	 */
 	public function getSize():int{
 		return $this->moduleCount;
-	}
-
-	/**
-	 * @deprecated 5.0.0 use QRMatrix::getSize() instead
-	 * @see \chillerlan\QRCode\Data\QRMatrix::getSize()
-	 * @codeCoverageIgnore
-	 */
-	public function size():int{
-		return $this->getSize();
 	}
 
 	/**
@@ -283,7 +246,7 @@ class QRMatrix{
 	 *   true  => $M_TYPE | 0x800
 	 *   false => $M_TYPE
 	 */
-	public function set(int $x, int $y, bool $value, int $M_TYPE):self{
+	public function set(int $x, int $y, bool $value, int $M_TYPE):static{
 
 		if(isset($this->matrix[$y][$x])){
 			// we don't know whether the input is dark, so we remove the dark bit
@@ -302,7 +265,7 @@ class QRMatrix{
 	/**
 	 * Fills an area of $width * $height, from the given starting point [$startX, $startY] (top left) with $value for $M_TYPE.
 	 */
-	public function setArea(int $startX, int $startY, int $width, int $height, bool $value, int $M_TYPE):self{
+	public function setArea(int $startX, int $startY, int $width, int $height, bool $value, int $M_TYPE):static{
 
 		for($y = $startY; $y < ($startY + $height); $y++){
 			for($x = $startX; $x < ($startX + $width); $x++){
@@ -316,7 +279,7 @@ class QRMatrix{
 	/**
 	 * Flips the value of the module at ($x, $y)
 	 */
-	public function flip(int $x, int $y):self{
+	public function flip(int $x, int $y):static{
 
 		if(isset($this->matrix[$y][$x])){
 			$this->matrix[$y][$x] ^= $this::IS_DARK;
@@ -344,6 +307,8 @@ class QRMatrix{
 	/**
 	 * Checks whether the module at ($x, $y) is in the given array of $M_TYPES,
 	 * returns true if a match is found, otherwise false.
+	 *
+	 * @param int[] $M_TYPES
 	 */
 	public function checkTypeIn(int $x, int $y, array $M_TYPES):bool{
 
@@ -387,14 +352,14 @@ class QRMatrix{
 	 *   7 # 3
 	 *   6 5 4
 	 */
-	public function checkNeighbours(int $x, int $y, ?int $M_TYPE = null):int{
+	public function checkNeighbours(int $x, int $y, int|null $M_TYPE = null):int{
 		$bits = 0;
 
 		foreach($this::neighbours as $bit => [$ix, $iy]){
 			$ix += $x;
 			$iy += $y;
 
-			// $M_TYPE is given, skip if the field is not the same type
+			// check if the field is the same type
 			if($M_TYPE !== null && !$this->checkType($ix, $iy, $M_TYPE)){
 				continue;
 			}
@@ -412,7 +377,7 @@ class QRMatrix{
 	 *
 	 * 4 * version + 9 or moduleCount - 8
 	 */
-	public function setDarkModule():self{
+	public function setDarkModule():static{
 		$this->set(8, ($this->moduleCount - 8), true, $this::M_DARKMODULE);
 
 		return $this;
@@ -423,7 +388,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.2
 	 */
-	public function setFinderPattern():self{
+	public function setFinderPattern():static{
 
 		$pos = [
 			[0, 0], // top left
@@ -433,6 +398,7 @@ class QRMatrix{
 
 		foreach($pos as $c){
 			$this
+				// phpcs:ignore
 				->setArea( $c[0]     ,  $c[1]     , 7, 7, true, $this::M_FINDER)
 				->setArea(($c[0] + 1), ($c[1] + 1), 5, 5, false, $this::M_FINDER)
 				->setArea(($c[0] + 2), ($c[1] + 2), 3, 3, true, $this::M_FINDER_DOT)
@@ -447,7 +413,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.3
 	 */
-	public function setSeparators():self{
+	public function setSeparators():static{
 
 		$h = [
 			[7, 0],
@@ -478,7 +444,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.5
 	 */
-	public function setAlignmentPattern():self{
+	public function setAlignmentPattern():static{
 		$alignmentPattern = $this->version->getAlignmentPattern();
 
 		foreach($alignmentPattern as $y){
@@ -507,7 +473,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 7.3.4
 	 */
-	public function setTimingPattern():self{
+	public function setTimingPattern():static{
 
 		for($i = 8; $i < ($this->moduleCount - 8); $i++){
 
@@ -529,7 +495,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 8.10
 	 */
-	public function setVersionNumber():self{
+	public function setVersionNumber():static{
 		$bits = $this->version->getVersionPattern();
 
 		if($bits !== null){
@@ -553,7 +519,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 8.9
 	 */
-	public function setFormatInfo(?MaskPattern $maskPattern = null):self{
+	public function setFormatInfo(MaskPattern|null $maskPattern = null):static{
 		$this->maskPattern = $maskPattern;
 		$bits              = 0; // sets all format fields to false (test mode)
 
@@ -596,7 +562,7 @@ class QRMatrix{
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function setQuietZone(int $quietZoneSize):self{
+	public function setQuietZone(int $quietZoneSize):static{
 
 		// early exit if there's nothing to add
 		if($quietZoneSize < 1){
@@ -628,7 +594,7 @@ class QRMatrix{
 	/**
 	 * Rotates the matrix by 90 degrees clock wise
 	 */
-	public function rotate90():self{
+	public function rotate90():static{
 		/** @phan-suppress-next-line PhanParamTooFewInternalUnpack */
 		$this->matrix = array_map((fn(int ...$a):array => array_reverse($a)), ...$this->matrix);
 
@@ -640,7 +606,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2015 Section 6.2 - Reflectance reversal
 	 */
-	public function invert():self{
+	public function invert():static{
 
 		foreach($this->matrix as $y => $row){
 			foreach($row as $x => $val){
@@ -679,7 +645,7 @@ class QRMatrix{
 	 *
 	 * @throws \chillerlan\QRCode\Data\QRCodeDataException
 	 */
-	public function setLogoSpace(int $width, ?int $height = null, ?int $startX = null, ?int $startY = null):self{
+	public function setLogoSpace(int $width, int|null $height = null, int|null $startX = null, int|null $startY = null):static{
 		$height ??= $width;
 
 		// if width and height happen to be negative or 0 (default value), just return - nothing to do
@@ -741,7 +707,7 @@ class QRMatrix{
 	/**
 	 * Maps the interleaved binary $data on the matrix
 	 */
-	public function writeCodewords(BitBuffer $bitBuffer):self{
+	public function writeCodewords(BitBuffer $bitBuffer):static{
 		$data      = (new ReedSolomonEncoder($this->version, $this->eccLevel))->interleaveEcBytes($bitBuffer);
 		$byteCount = count($data);
 		$iByte     = 0;
@@ -794,7 +760,7 @@ class QRMatrix{
 	 *
 	 * ISO/IEC 18004:2000 Section 8.8.1
 	 */
-	public function mask(MaskPattern $maskPattern):self{
+	public function mask(MaskPattern $maskPattern):static{
 		$this->maskPattern = $maskPattern;
 		$mask              = $this->maskPattern->getMask();
 

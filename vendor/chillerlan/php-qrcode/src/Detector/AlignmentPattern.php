@@ -8,6 +8,7 @@
  * @copyright    2021 Smiley
  * @license      Apache-2.0
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Detector;
 
@@ -23,11 +24,11 @@ final class AlignmentPattern extends ResultPoint{
 	 * Combines this object's current estimate of a finder pattern position and module size
 	 * with a new estimate. It returns a new FinderPattern containing an average of the two.
 	 */
-	public function combineEstimate(float $i, float $j, float $newModuleSize):self{
+	public function combineEstimate(float $i, float $j, float $newModuleSize):static{
 		return new self(
 			(($this->x + $j) / 2.0),
 			(($this->y + $i) / 2.0),
-			(($this->estimatedModuleSize + $newModuleSize) / 2.0)
+			(($this->estimatedModuleSize + $newModuleSize) / 2.0),
 		);
 	}
 

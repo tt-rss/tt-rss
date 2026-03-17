@@ -9,10 +9,11 @@
  *
  * @noinspection PhpComposerExtensionStubsInspection
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Output;
 
-use function imagejpeg, max, min;
+use function imagejpeg;
 
 /**
  * GdImage jpeg output
@@ -21,20 +22,20 @@ use function imagejpeg, max, min;
  */
 class QRGdImageJPEG extends QRGdImage{
 
-	public const MIME_TYPE = 'image/jpg';
+	final public const MIME_TYPE = 'image/jpg';
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function setTransparencyColor():void{
+	protected function setTransparencyColor():int{
 		// noop - transparency is not supported
+		return -1;
 	}
 
 	/**
-	 * @inheritDoc
+	 * @throws \chillerlan\QRCode\Output\QRCodeOutputException
 	 */
 	protected function renderImage():void{
-		imagejpeg($this->image, null, max(-1, min(100, $this->options->quality)));
+		if(imagejpeg(image: $this->image, quality: $this->getQuality()) === false){
+			throw new QRCodeOutputException('imagejpeg() error');
+		}
 	}
 
 }

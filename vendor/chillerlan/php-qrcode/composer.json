@@ -1,7 +1,7 @@
 {
 	"$schema": "https://getcomposer.org/schema.json",
 	"name": "chillerlan/php-qrcode",
-	"description": "A QR Code generator and reader with a user-friendly API. PHP 7.4+",
+	"description": "A QR Code generator and reader with a user-friendly API. PHP 8.2+",
 	"homepage": "https://github.com/chillerlan/php-qrcode",
 	"license": [
 		"MIT", "Apache-2.0"
@@ -47,23 +47,27 @@
 	"minimum-stability": "stable",
 	"prefer-stable": true,
 	"require": {
-		"php": "^7.4 || ^8.0",
+		"php": "^8.2",
 		"ext-mbstring": "*",
-		"chillerlan/php-settings-container": "^2.1.6 || ^3.2.1"
+		"chillerlan/php-settings-container": "^3.2.1"
 	},
 	"require-dev": {
 		"ext-fileinfo": "*",
-		"chillerlan/php-authenticator": "^4.3.1 || ^5.2.1",
-		"phan/phan": "^5.5.2",
-		"phpcompatibility/php-compatibility": "10.x-dev",
-		"phpunit/phpunit": "^9.6",
+		"chillerlan/php-authenticator": "^5.3",
+		"intervention/image": "^3.11",
+		"phan/phan": "^6.0.1",
+		"phpbench/phpbench": "^1.4",
+		"phpunit/phpunit": "^11.5",
 		"phpmd/phpmd": "^2.15",
-		"setasign/fpdf": "^1.8.2",
-		"slevomat/coding-standard": "^8.23.0",
-		"squizlabs/php_codesniffer": "^4.0.0"
+		"phpstan/phpstan": "^2.1.40",
+		"phpstan/phpstan-deprecation-rules": "^2.0.4",
+		"setasign/fpdf": "^1.8.6",
+		"slevomat/coding-standard": "^8.28",
+		"squizlabs/php_codesniffer": "^4.0"
 	},
 	"suggest": {
 		"chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps.",
+		"intervention/image": "More advanced GD and ImageMagick output.",
 		"setasign/fpdf": "Required to use the QR FPDF output.",
 		"simple-icons/simple-icons": "SVG icons that you can use to embed as logos in the QR Code"
 	},
@@ -74,13 +78,20 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
+			"chillerlan\\QRCodeBenchmark\\": "benchmark",
 			"chillerlan\\QRCodeTest\\": "tests"
 		}
 	},
 	"scripts": {
 		"phan": "@php vendor/bin/phan",
-		"phpcs": "@php vendor/bin/phpcs -v",
+		"phpbench":[
+			"Composer\\Config::disableProcessTimeout",
+			"@php vendor/bin/phpbench run"
+		],
+		"phpcs": "@php vendor/bin/phpcs",
 		"phpmd": "@php vendor/bin/phpmd src text ./phpmd.xml.dist",
+		"phpstan": "@php vendor/bin/phpstan",
+		"phpstan-baseline": "@php vendor/bin/phpstan --generate-baseline",
 		"phpunit": "@php vendor/bin/phpunit"
 	},
 	"config": {

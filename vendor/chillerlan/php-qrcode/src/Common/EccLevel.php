@@ -7,6 +7,7 @@
  * @copyright    2020 smiley
  * @license      MIT
  */
+declare(strict_types=1);
 
 namespace chillerlan\QRCode\Common;
 
@@ -141,9 +142,6 @@ final class EccLevel{
 
 	/**
 	 * @param int $eccLevel containing the two bits encoding a QR Code's error correction level
-	 *
-	 * @todo: accept string values (PHP8+)
-	 * @see https://github.com/chillerlan/php-qrcode/discussions/160
 	 *
 	 * @throws \chillerlan\QRCode\QRCodeException
 	 */
