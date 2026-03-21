@@ -79,6 +79,15 @@ class Config {
 	/** base directory for local cache (must be writable) */
 	const CACHE_DIR = "CACHE_DIR";
 
+	/** base directory for local plugins (must be writable) */
+	const LOCAL_PLUGINS_DIR = "LOCAL_PLUGINS_DIR";
+
+	/** base directory for local templates (must be writable) */
+	const LOCAL_TEMPLATES_DIR = "LOCAL_TEMPLATES_DIR";
+
+	/** base directory for local themes (must be writable) */
+	const LOCAL_THEMES_DIR = "LOCAL_THEMES_DIR";
+
 	/** auto create users authenticated via external modules */
 	const AUTH_AUTO_CREATE = "AUTH_AUTO_CREATE";
 
@@ -249,6 +258,9 @@ class Config {
 		Config::PHP_EXECUTABLE => [ "/usr/bin/php",					Config::T_STRING ],
 		Config::LOCK_DIRECTORY => [ "lock",								Config::T_STRING ],
 		Config::CACHE_DIR => [ "cache",									Config::T_STRING ],
+		Config::LOCAL_PLUGINS_DIR => [ "plugins.local", Config::T_STRING ],
+		Config::LOCAL_TEMPLATES_DIR => [ "templates.local", Config::T_STRING ],
+		Config::LOCAL_THEMES_DIR => [ "themes.local", Config::T_STRING ],
 		Config::AUTH_AUTO_CREATE => [ "true",							Config::T_BOOL ],
 		Config::AUTH_AUTO_LOGIN => [ "true",							Config::T_BOOL ],
 		Config::FORCE_ARTICLE_PURGE => [ 0,								Config::T_INT ],
@@ -594,6 +606,15 @@ class Config {
 
 		if (!is_writable(self::get(Config::CACHE_DIR) . '/export'))
 			$errors[] = 'Data export cache is not writable (chmod -R 777 ' . self::get(Config::CACHE_DIR) . '/export)';
+
+		if (!is_writable(self::get(Config::LOCAL_PLUGINS_DIR)))
+			$errors[] = 'Local plugin directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_PLUGINS_DIR) . ')';
+
+		if (!is_writable(self::get(Config::LOCAL_TEMPLATES_DIR)))
+			$errors[] = 'Local template directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_TEMPLATES_DIR) . ')';
+
+		if (!is_writable(self::get(Config::LOCAL_THEMES_DIR)))
+			$errors[] = 'Local theme directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_THEMES_DIR) . ')';
 
 		if (!is_writable(self::get(Config::LOCK_DIRECTORY)))
 			$errors[] = 'LOCK_DIRECTORY is not writable (chmod -R 777 ' . self::get(Config::LOCK_DIRECTORY) . ').';

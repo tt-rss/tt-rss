@@ -422,7 +422,8 @@ class PluginHost {
 	 * @param PluginHost::KIND_* $kind
 	 */
 	function load_all(int $kind, ?int $owner_uid = null, bool $skip_init = false): void {
-		$plugins = [...(glob("plugins/*") ?: []), ...(glob("plugins.local/*") ?: [])];
+		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
+		$plugins = [...(glob("plugins/*") ?: []), ...(glob("$plugin_root_dir/*") ?: [])];
 		$plugins = array_filter($plugins, is_dir(...));
 		$plugins = array_map(basename(...), $plugins);
 
@@ -451,7 +452,8 @@ class PluginHost {
 			$file = Config::get_self_dir() . "/plugins/$class_file/init.php";
 
 			if (!file_exists($file)) {
-				$file = Config::get_self_dir() . "/plugins.local/$class_file/init.php";
+				$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
+				$file = "$plugin_root_dir/$class_file/init.php";
 
 				if (!file_exists($file)) {
 					continue;
@@ -906,10 +908,10 @@ class PluginHost {
 		return dirname($ref->getFileName());
 	}
 
-	// TODO: use get_plugin_dir()
 	function is_local(Plugin $plugin): bool {
-		$ref = new ReflectionClass($plugin::class);
-		return basename(dirname($ref->getFileName(), 2)) == "plugins.local";
+		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
+		$plugin_dir = $this->get_plugin_dir($plugin);
+		return realpath($plugin_root_dir) == realpath(dirname($plugin_dir));
 	}
 
 	/**

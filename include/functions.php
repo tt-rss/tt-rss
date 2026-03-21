@@ -476,14 +476,14 @@
 		$check = "themes/$theme";
 		if (file_exists($check)) return $check;
 
-		$check = "themes.local/$theme";
+		$check = Config::get(Config::LOCAL_THEMES_DIR) . "/$theme";
 		if (file_exists($check)) return $check;
 
 		return $default;
 	}
 
 	function theme_exists(string $theme): bool {
-		return file_exists("themes/$theme") || file_exists("themes.local/$theme");
+		return file_exists("themes/$theme") || file_exists(Config::get(Config::LOCAL_THEMES_DIR) . "/$theme");
 	}
 
 	/**

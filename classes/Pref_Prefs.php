@@ -625,7 +625,7 @@ class Pref_Prefs extends Handler_Protected {
 						$theme_files = array_map(basename(...), [
 							...glob('themes/*.php') ?: [],
 							...glob('themes/*.css') ?: [],
-							...glob('themes.local/*.css') ?: [],
+							...glob(Config::get(Config::LOCAL_THEMES_DIR) . '/*.css') ?: [],
 						]);
 
 						asort($theme_files);
@@ -1052,7 +1052,8 @@ class Pref_Prefs extends Handler_Protected {
 	 */
 	static function _get_updated_plugins(): array {
 		$root_dir = Config::get_self_dir();
-		$plugin_dirs = array_filter(glob("$root_dir/plugins.local/*"), is_dir(...));
+		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
+		$plugin_dirs = array_filter(glob("$plugin_root_dir/*"), is_dir(...));
 		$rv = [];
 
 		foreach ($plugin_dirs as $dir) {
@@ -1112,7 +1113,7 @@ class Pref_Prefs extends Handler_Protected {
 	 * @return array{'stdout': false|string, 'stderr': false|string, 'git_status': int, 'need_update': bool}|null
 	 */
 	private static function _plugin_needs_update(string $root_dir, string $plugin_name): ?array {
-		$plugin_dir = "$root_dir/plugins.local/" . basename($plugin_name);
+		$plugin_dir = Config::get(Config::LOCAL_PLUGINS_DIR) . "/" . basename($plugin_name);
 		$rv = null;
 
 		if (is_dir($plugin_dir) && is_dir("$plugin_dir/.git")) {
@@ -1143,7 +1144,7 @@ class Pref_Prefs extends Handler_Protected {
 	 * @return array{}|array{stdout: false|string, stderr: false|string, git_status: int}
 	 */
 	private function _update_plugin(string $root_dir, string $plugin_name): array {
-		$plugin_dir = "$root_dir/plugins.local/" . basename($plugin_name);
+		$plugin_dir = Config::get(Config::LOCAL_PLUGINS_DIR) . "/" . basename($plugin_name);
 
 		if (is_dir($plugin_dir) && is_dir("$plugin_dir/.git")) {
 			$current_branch = self::_git_current_branch($plugin_dir);
@@ -1213,7 +1214,7 @@ class Pref_Prefs extends Handler_Protected {
 			$plugin_name = basename(clean($_REQUEST['plugin']));
 			$status = 0;
 
-			$plugin_dir = Config::get_self_dir() . "/plugins.local/$plugin_name";
+			$plugin_dir = Config::get(Config::LOCAL_PLUGINS_DIR) . "/" . $plugin_name;
 
 			if (is_dir($plugin_dir)) {
 				$status = $this->_recursive_rmdir($plugin_dir);
@@ -1227,7 +1228,7 @@ class Pref_Prefs extends Handler_Protected {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN && Config::get(Config::ENABLE_PLUGIN_INSTALLER)) {
 			$plugin_name = basename(clean($_REQUEST['plugin']));
 			$all_plugins = $this->_get_available_plugins();
-			$plugin_dir = Config::get_self_dir() . "/plugins.local";
+			$plugin_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
 
 			$work_dir = "$plugin_dir/plugin-installer";
 
@@ -1353,7 +1354,8 @@ class Pref_Prefs extends Handler_Protected {
 					$rv[] = ['plugin' => $plugin_name, 'rv' => $this->_update_plugin($root_dir, $plugin_name)];
 				}
 			} else {
-				$plugin_dirs = array_filter(glob("$root_dir/plugins.local/*"), is_dir(...));
+				$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
+				$plugin_dirs = array_filter(glob("$plugin_root_dir/*"), is_dir(...));
 
 				foreach ($plugin_dirs as $dir) {
 					if (is_dir("$dir/.git")) {

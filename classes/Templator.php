@@ -7,10 +7,11 @@ class Templator extends MiniTemplator {
 	function readTemplateFromFile ($fileName) {
 		if (!str_contains($fileName, "/")) {
 
+			$templateRootDir = Config::get(Config::LOCAL_TEMPLATES_DIR);
 			$fileName = basename($fileName);
 
-			if (file_exists("templates.local/$fileName"))
-				return parent::readTemplateFromFile("templates.local/$fileName");
+			if (file_exists("$templateRootDir/$fileName"))
+				return parent::readTemplateFromFile("$templateRootDir/$fileName");
 			else
 				return parent::readTemplateFromFile("templates/$fileName");
 
