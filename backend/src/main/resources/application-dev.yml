@@ -1,0 +1,22 @@
+# Development Environment Configuration
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ttrss_dev
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  level:
+    root: INFO
+    com.ttrss: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG

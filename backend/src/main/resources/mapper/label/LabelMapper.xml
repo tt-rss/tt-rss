@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttrss.module.label.mapper.LabelMapper">
+
+    <resultMap id="BaseResultMap" type="com.ttrss.module.label.entity.Label">
+        <id column="id" property="id"/>
+        <result column="owner_uid" property="ownerUid"/>
+        <result column="fg_color" property="fgColor"/>
+        <result column="bg_color" property="bgColor"/>
+        <result column="caption" property="caption"/>
+    </resultMap>
+
+    <select id="selectByOwnerUid" resultMap="BaseResultMap">
+        SELECT id, owner_uid, fg_color, bg_color, caption
+        FROM ttrss_labels2
+        WHERE owner_uid = #{ownerUid}
+        ORDER BY caption ASC
+    </select>
+
+    <select id="selectByCaption" resultMap="BaseResultMap">
+        SELECT id, owner_uid, fg_color, bg_color, caption
+        FROM ttrss_labels2
+        WHERE owner_uid = #{ownerUid}
+          AND LOWER(caption) = LOWER(#{caption})
+        LIMIT 1
+    </select>
+
+    <delete id="deleteByOwnerUid">
+        DELETE FROM ttrss_labels2
+        WHERE id = #{id}
+          AND owner_uid = #{ownerUid}
+    </delete>
+
+</mapper>

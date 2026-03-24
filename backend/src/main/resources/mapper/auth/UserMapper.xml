@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttrss.module.auth.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.ttrss.module.auth.entity.User">
+        <id column="id" property="id"/>
+        <result column="login" property="login"/>
+        <result column="pwd_hash" property="pwdHash"/>
+        <result column="access_level" property="accessLevel"/>
+        <result column="otp_enabled" property="otpEnabled"/>
+        <result column="email" property="email"/>
+    </resultMap>
+
+    <select id="selectByLogin" resultMap="BaseResultMap">
+        SELECT id, login, pwd_hash, access_level, otp_enabled, email
+        FROM ttrss_users
+        WHERE login = #{login}
+    </select>
+
+    <select id="selectByEmail" resultMap="BaseResultMap">
+        SELECT id, login, pwd_hash, access_level, otp_enabled, email
+        FROM ttrss_users
+        WHERE email = #{email}
+    </select>
+
+</mapper>

@@ -1,25 +1,75 @@
+# Dependabot configuration for tt-rss React + Spring Boot
+
 version: 2
-
 updates:
-- package-ecosystem: composer
-  directory: /
-  schedule:
-    interval: weekly
-  commit-message:
-    prefix: 'Composer:'
+  # Backend (Gradle/Java)
+  - package-ecosystem: "gradle"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "java"
+    commit-message:
+      prefix: "chore(backend)"
+    reviewers:
+      - "tt-rss/maintainers"
 
-- package-ecosystem: docker
-  directories:
-  - /.docker/app
-  - /.docker/web-nginx
-  schedule:
-    interval: weekly
-  commit-message:
-    prefix: 'Docker:'
+  # Frontend (npm/JavaScript)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "javascript"
+    commit-message:
+      prefix: "chore(frontend)"
+    reviewers:
+      - "tt-rss/maintainers"
+    ignore:
+      # Ignore major updates to React until ready
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
 
-- package-ecosystem: github-actions
-  directory: /
-  schedule:
-    interval: weekly
-  commit-message:
-    prefix: 'GitHub Actions:'
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker)"
+
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker)"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"

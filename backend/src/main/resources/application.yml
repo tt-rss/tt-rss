@@ -1,0 +1,124 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: ttrss-backend
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ttrss}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+    default-property-inclusion: non_null
+
+# MyBatis-Plus Configuration
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.ttrss.module.**.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Spring Security Configuration
+spring.security:
+  filter:
+    order: -100
+
+# CORS Configuration
+cors:
+  allowed-origins:
+    - http://localhost:3000
+    - http://localhost:8080
+    - http://127.0.0.1:3000
+    - http://127.0.0.1:8080
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+  allowed-headers: Authorization,Content-Type,X-Requested-With,Accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+  allow-credentials: true
+  max-age: 3600
+
+# Security Endpoints Configuration
+security:
+  # 开放端点（不需要认证）
+  open-endpoints:
+    - /actuator/**
+    - /api/auth/**
+    - /swagger-ui/**
+    - /v3/api-docs/**
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:your-secret-key-change-in-production-minimum-32-characters-for-security}
+  expiration: 900000
+  refresh-expiration: 604800000
+  header: Authorization
+  prefix: Bearer 
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.ttrss: DEBUG
+    org.springframework.security: DEBUG
+
+# Feed Configuration
+feed:
+  # URL 验证配置
+  url-validation:
+    # 是否允许内网地址（开发环境可开启）
+    allow-private-addresses: false
+    # 允许的协议列表
+    allowed-protocols: http,https
+  # 订阅源限制配置
+  limits:
+    # 单用户最大订阅源数量
+    max-feeds-per-user: 500
+    # 标题最大长度
+    max-title-length: 255
+    # URL 最大长度
+    max-url-length: 2048
+  # 定时任务配置
+  scheduler:
+    # 是否启用定时任务
+    enabled: true
+    # 执行间隔（毫秒），默认 5 分钟
+    fixed-delay: 300000
+    # 初始延迟（毫秒），默认 1 分钟
+    initial-delay: 60000
+    # 默认更新间隔（分钟）
+    default-update-interval: 60
+    # 单个订阅源每次最大获取文章数
+    max-articles-per-feed: 100
+    # 并发控制 - 最大并发更新数
+    max-concurrent-updates: 5
+
+# Article Configuration
+article:
+  # 分页配置
+  pagination:
+    # 默认每页大小
+    default-size: 20
+    # 最大每页大小
+    max-size: 100

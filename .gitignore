@@ -1,20 +1,58 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Java/Gradle
+.gradle/
+build/
+*.jar
+*.ear
+*.war
+*.class
+*.log
+.mvn/timing.properties
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
 Thumbs.db
-/.env
-/docker-compose.override.yml
-/.app_is_ready
-/messages.mo
-/node_modules
-/locale/**/*.po~
-/plugins.local/*
-/themes.local/*
-/templates.local/*
-/config.php
-/feed-icons/*
-/cache/*/*
-/lock/*
-/.vscode/settings.json
-/vendor/**/.git
-/.phpunit.cache
-/.phpstan-tmp
-/.rector-tmp
-/.tools/
+
+# Environment
+.env
+.env.local
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Build output
+dist/
+
+# Database
+*.db
+*.sqlite

@@ -1,60 +1,135 @@
 #
-# simplified compose FOR LOCAL DEVELOPMENT.
+# Docker Compose 开发环境配置
+# 用于 tt-rss 本地开发，包含 PostgreSQL、后端 Spring Boot、前端 Vite
 #
-# please don't use this in production: it has no database persistence and maps to tt-rss source directly.
+# 使用方法:
+#   1. cp .env.example .env
+#   2. docker compose up -d
+#   3. 访问 http://localhost:3000 (前端) 或 http://localhost:8080 (后端 API)
 #
 
 services:
+  # ===========================================
+  # PostgreSQL 数据库
+  # ===========================================
   db:
-    image: postgres:15-alpine
+    image: postgres:${POSTGRES_VERSION:-15}-alpine
+    container_name: ttrss-db
     restart: unless-stopped
-    env_file:
-      - .env
     environment:
-      - POSTGRES_USER=${TTRSS_DB_USER}
-      - POSTGRES_PASSWORD=${TTRSS_DB_PASS}
-      - POSTGRES_DB=${TTRSS_DB_NAME}
-
-  app:
-    image: ghcr.io/tt-rss/tt-rss:latest
-    environment:
-      SKIP_RSYNC_ON_STARTUP: true
-    build:
-      dockerfile: .docker/app/Dockerfile
-      context: .
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - .:/var/www/html/tt-rss
-    depends_on:
-      - db
-
-  updater:
-    image: ghcr.io/tt-rss/tt-rss:latest
-    build:
-      dockerfile: .docker/app/Dockerfile
-      context: .
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - .:/var/www/html/tt-rss
-    depends_on:
-      - app
-    command: /opt/tt-rss/updater.sh
-
-  web-nginx:
-    image: ghcr.io/tt-rss/tt-rss-web-nginx:latest
-    build:
-      dockerfile: .docker/web-nginx/Dockerfile
-      context: .
-    restart: unless-stopped
-    env_file:
-      - .env
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-ttrss}
     ports:
-      - ${HTTP_PORT}:80
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
-      - .:/var/www/html/tt-rss:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-ttrss}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ttrss-network
+
+  # ===========================================
+  # 后端 Spring Boot 服务
+  # ===========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ttrss-backend
+    restart: unless-stopped
+    environment:
+      # Spring 配置
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: 8080
+      
+      # 数据库连接
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-ttrss}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      
+      # JPA/Hibernate 配置
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+      
+      # Actuator
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
     depends_on:
-      - app
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - ttrss-network
+    volumes:
+      # 挂载后端源代码，支持热更新（需要配置 Spring DevTools）
+      - ./backend/src:/app/src:ro
+
+  # ===========================================
+  # 前端 Vite 开发服务器
+  # ===========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ttrss-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://backend:8080
+      VITE_HOST: 0.0.0.0
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - backend
+    volumes:
+      # 挂载前端源代码，支持热更新
+      - ./frontend/src:/app/src:ro
+      - ./frontend/public:/app/public:ro
+      - ./frontend/index.html:/app/index.html:ro
+      - ./frontend/vite.config.ts:/app/vite.config.ts:ro
+    networks:
+      - ttrss-network
+
+  # ===========================================
+  # Nginx Web 服务器 (可选，用于生产环境模拟)
+  # ===========================================
+  web-nginx:
+    image: nginx:alpine
+    container_name: ttrss-nginx
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8280}:80"
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html:ro
+      - ./.docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - ttrss-network
+    profiles:
+      - nginx
+
+# ===========================================
+# 网络和数据卷配置
+# ===========================================
+networks:
+  ttrss-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local

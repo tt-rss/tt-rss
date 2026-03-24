@@ -1,4 +1,0 @@
-parameters:
-	ignoreErrors:
-		# yes, these are magic
-		- message: "#^Access to an undefined property chillerlan\\\\Settings\\\\SettingsContainerInterface\\:\\:\\$[\\w]+\\.$#"

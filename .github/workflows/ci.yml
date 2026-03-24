@@ -1,0 +1,186 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  # Allow manual triggering
+  workflow_dispatch:
+
+env:
+  FAIL_FAST: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Backend CI - Gradle build + test
+  backend:
+    name: Backend (Java ${{ matrix.java }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [17, 21]
+      fail-fast: true
+
+    defaults:
+      run:
+        working-directory: ./backend
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+
+    - name: Set up Java ${{ matrix.java }}
+      uses: actions/setup-java@v5
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: temurin
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle
+      run: ./gradlew build --no-daemon
+
+    - name: Run tests with Gradle
+      run: ./gradlew test --no-daemon
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: backend-test-results-java-${{ matrix.java }}
+        path: backend/build/test-results/
+        retention-days: 7
+        if-no-files-found: ignore
+
+  # Frontend CI - npm build + lint + test
+  frontend:
+    name: Frontend (Node 20)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+
+    - name: Set up Node.js 20
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run ESLint
+      run: npm run lint
+
+    - name: Run tests
+      run: npm run test:run
+
+    - name: Build
+      run: npm run build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: frontend-build
+        path: frontend/dist/
+        retention-days: 7
+        if-no-files-found: ignore
+
+  # Code quality checks
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+
+    # Backend code quality
+    - name: Set up Java 17
+      uses: actions/setup-java@v5
+      with:
+        java-version: 17
+        distribution: temurin
+        cache: gradle
+
+    - name: Backend - Gradle check
+      working-directory: ./backend
+      run: ./gradlew check --no-daemon
+
+    # Frontend code quality
+    - name: Set up Node.js 20
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+        cache: npm
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Frontend - Install dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Frontend - Run ESLint
+      working-directory: ./frontend
+      run: npm run lint
+
+  # Docker build verification
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v6
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build backend Dockerfile
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile.prod
+        push: false
+        load: true
+        tags: ttrss-backend:test
+
+    - name: Build frontend Dockerfile
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile.prod
+        push: false
+        load: true
+        tags: ttrss-frontend:test
+
+  # Aggregate job status
+  ci-status:
+    name: CI Status
+    runs-on: ubuntu-latest
+    needs: [backend, frontend, code-quality, docker]
+    if: always()
+
+    steps:
+    - name: Check if all jobs passed
+      run: |
+        if [[ "${{ needs.backend.result }}" == "failure" ]] || \
+           [[ "${{ needs.frontend.result }}" == "failure" ]] || \
+           [[ "${{ needs.code-quality.result }}" == "failure" ]] || \
+           [[ "${{ needs.docker.result }}" == "failure" ]]; then
+          echo "CI failed!"
+          exit 1
+        fi
+        echo "All CI checks passed!"

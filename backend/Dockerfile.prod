@@ -1,0 +1,56 @@
+# Backend Spring Boot Dockerfile (生产环境)
+# 多阶段构建，优化镜像大小和安全性
+
+# ===========================================
+# 构建阶段
+# ===========================================
+FROM eclipse-temurin:17-jdk-alpine AS build
+
+WORKDIR /app
+
+# 安装必要的构建工具
+RUN apk add --no-cache git
+
+# 复制 Gradle 配置文件
+COPY build.gradle gradlew settings.gradle ./
+COPY gradle gradle
+
+# 下载依赖（利用 Docker 缓存层）
+RUN chmod +x gradlew && ./gradlew dependencies --no-daemon || true
+
+# 复制源代码
+COPY src src
+
+# 构建生产版本（跳过测试）
+ARG PROD=true
+RUN ./gradlew bootJar -Pprod --no-daemon --exclude-task test
+
+# ===========================================
+# 运行阶段
+# ===========================================
+FROM eclipse-temurin:17-jre-alpine
+
+WORKDIR /app
+
+# 安装必要工具（用于健康检查）
+RUN apk add --no-cache curl
+
+# 从构建阶段复制 JAR 文件
+COPY --from=build /app/build/libs/*.jar app.jar
+
+# 创建非 root 用户（安全最佳实践）
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+# 暴露 Spring Boot 端口
+EXPOSE 8080
+
+# JVM 生产参数
+ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# 启动应用
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]

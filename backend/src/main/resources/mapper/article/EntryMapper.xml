@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttrss.module.article.mapper.EntryMapper">
+
+    <resultMap id="BaseResultMap" type="com.ttrss.module.article.entity.Entry">
+        <id column="id" property="id"/>
+        <result column="guid" property="guid"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="link" property="link"/>
+        <result column="updated" property="updated"/>
+        <result column="author" property="author"/>
+    </resultMap>
+
+    <select id="selectByGuid" resultMap="BaseResultMap">
+        SELECT id, guid, title, content, link, updated, author
+        FROM ttrss_entries
+        WHERE guid = #{guid}
+        LIMIT 1
+    </select>
+
+    <select id="selectByIds" resultMap="BaseResultMap">
+        SELECT id, guid, title, content, link, updated, author
+        FROM ttrss_entries
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        ORDER BY updated DESC
+    </select>
+
+    <select id="selectByLink" resultMap="BaseResultMap">
+        SELECT id, guid, title, content, link, updated, author
+        FROM ttrss_entries
+        WHERE link = #{link}
+        LIMIT 1
+    </select>
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttrss.module.label.mapper.UserLabelMapper">
+
+    <resultMap id="BaseResultMap" type="com.ttrss.module.label.entity.UserLabel">
+        <result column="label_id" property="labelId"/>
+        <result column="article_id" property="articleId"/>
+    </resultMap>
+
+    <select id="selectLabelIdsByArticleId" resultType="java.lang.Integer">
+        SELECT label_id
+        FROM ttrss_user_labels2
+        WHERE article_id = #{articleId}
+    </select>
+
+    <select id="selectLabelIdsByArticleIdAndOwnerUid" resultType="java.lang.Integer">
+        SELECT ul.label_id
+        FROM ttrss_user_labels2 ul
+        INNER JOIN ttrss_labels2 l ON ul.label_id = l.id
+        WHERE ul.article_id = #{articleId}
+          AND l.owner_uid = #{ownerUid}
+    </select>
+
+    <insert id="batchInsert">
+        INSERT INTO ttrss_user_labels2 (label_id, article_id)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.labelId}, #{item.articleId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByArticleId">
+        DELETE FROM ttrss_user_labels2
+        WHERE article_id = #{articleId}
+    </delete>
+
+    <delete id="deleteByArticleIdAndLabelId">
+        DELETE FROM ttrss_user_labels2
+        WHERE article_id = #{articleId}
+          AND label_id = #{labelId}
+    </delete>
+
+</mapper>

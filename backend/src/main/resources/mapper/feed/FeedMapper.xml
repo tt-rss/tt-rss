@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ttrss.module.feed.mapper.FeedMapper">
+
+    <resultMap id="BaseResultMap" type="com.ttrss.module.feed.entity.Feed">
+        <id column="id" property="id"/>
+        <result column="owner_uid" property="ownerUid"/>
+        <result column="title" property="title"/>
+        <result column="feed_url" property="feedUrl"/>
+        <result column="site_url" property="siteUrl"/>
+        <result column="cat_id" property="catId"/>
+        <result column="last_updated" property="lastUpdated"/>
+        <result column="last_error" property="lastError"/>
+        <result column="update_interval" property="updateInterval"/>
+        <result column="last_update_check" property="lastUpdateCheck"/>
+        <result column="is_updating" property="isUpdating"/>
+        <result column="update_stamp" property="updateStamp"/>
+    </resultMap>
+
+    <select id="selectByOwnerUid" resultMap="BaseResultMap">
+        SELECT id, owner_uid, title, feed_url, site_url, cat_id, last_updated, last_error,
+               update_interval, last_update_check, is_updating, update_stamp
+        FROM ttrss_feeds
+        WHERE owner_uid = #{ownerUid}
+        ORDER BY title ASC
+    </select>
+
+    <select id="selectByCatId" resultMap="BaseResultMap">
+        SELECT id, owner_uid, title, feed_url, site_url, cat_id, last_updated, last_error,
+               update_interval, last_update_check, is_updating, update_stamp
+        FROM ttrss_feeds
+        WHERE cat_id = #{catId}
+        ORDER BY title ASC
+    </select>
+
+    <select id="selectByFeedUrl" resultMap="BaseResultMap">
+        SELECT id, owner_uid, title, feed_url, site_url, cat_id, last_updated, last_error,
+               update_interval, last_update_check, is_updating, update_stamp
+        FROM ttrss_feeds
+        WHERE feed_url = #{feedUrl}
+        LIMIT 1
+    </select>
+
+    <select id="selectDueFeeds" resultMap="BaseResultMap">
+        SELECT id, owner_uid, title, feed_url, site_url, cat_id, last_updated, last_error,
+               update_interval, last_update_check, is_updating, update_stamp
+        FROM ttrss_feeds
+        WHERE is_updating = FALSE
+          AND (last_update_check IS NULL 
+               OR last_update_check + (update_interval || ' minutes')::INTERVAL &lt;= #{now})
+        ORDER BY last_update_check ASC NULLS FIRST
+    </select>
+
+    <update id="updateUpdatingStatus">
+        UPDATE ttrss_feeds
+        SET is_updating = #{isUpdating},
+            update_stamp = #{updateStamp}
+        WHERE id = #{feedId}
+    </update>
+
+</mapper>

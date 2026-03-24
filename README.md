@@ -1,56 +1,138 @@
-Tiny Tiny RSS (tt-rss)
-======================
+# tt-rss
 
-Tiny Tiny RSS (tt-rss) is a free, flexible, open-source, web-based news feed (RSS/Atom/other) reader and aggregator.
+Tiny Tiny RSS 现代化版本，基于 React + Spring Boot 技术栈。
 
-## Getting started
+> **注意**: 这是 tt-rss 的现代化重构版本，原始项目已停止维护。本版本由社区继续维护。
 
-Please refer to [the installation guide](https://tt-rss.org/docs/Installation-Guide.html).
+## 🚀 快速开始
 
-## Some notes about this project
+### 开发环境
 
-* The original tt-rss project, hosted at https://tt-rss.org/ and its various subdomains, was retired on 2025-11-01.
-  * Massive thanks to fox for creating tt-rss, and maintaining it (and absolutely everything else that went along with it) for so many years.
-* This project (https://github.com/tt-rss/tt-rss) is a fork of tt-rss as of 2025-10-03, created by one of its long-time contributors (`wn_`/`wn_name` on `tt-rss.org`, `supahgreg` on `github.com`).
-  * The goal is (as you might expect) to continue tt-rss development.
-  * No major breaking changes are planned.
-  * Like the original project:
-    * The minimum PHP version supported by tt-rss will match [what's in Debian's current `stable` release](https://packages.debian.org/stable/php).
-    * What's on the `main` branch (or `latest` and the most recent `sha-*` tag for the Docker images) is intended to be stable
-      and safe for use.  Like all software, however, bugs sometimes slip through; the goal is to address those bugs promptly.
-    * Using the latest code/image is strongly encouraged, and may be a prerequisite to getting support in certain situations.
-  * Developer note: Due to use of `invalid@email.com` on `supahgreg`'s pre-2025-10-03 commits (which were done on `tt-rss.org`) GitHub incorrectly shows `ivanivanov884`
-    (the GitHub user associated with that e-mail address) as the author instead of `wn_`/`supahgreg`.  Apologies for any confusion.  `¯\_(ツ)_/¯`
-* Docker images (for `linux/amd64` and `linux/arm64`; drop-in replacements for the old images;
-  see [the installation guide](https://tt-rss.org/docs/Installation-Guide.html)) are being built and published
-  ([via GitHub Actions](https://github.com/tt-rss/tt-rss/actions/workflows/publish.yml)) to:
-  * Docker Hub (as [supahgreg/tt-rss](https://hub.docker.com/r/supahgreg/tt-rss/) and [supahgreg/tt-rss-web-nginx](https://hub.docker.com/r/supahgreg/tt-rss-web-nginx/)).
-  * GitHub Container Registry (as [ghcr.io/tt-rss/tt-rss](https://github.com/orgs/tt-rss/packages/container/package/tt-rss)
-    and [ghcr.io/tt-rss/tt-rss-web-nginx](https://github.com/orgs/tt-rss/packages/container/package/tt-rss-web-nginx)).
-* Documentation from https://tt-rss.org has been recreated in https://github.com/tt-rss/tt-rss.github.io,
-  which is the new source for https://tt-rss.org content.
-  * The original project's repository that held content for https://tt-rss.org was mirrored to https://github.com/tt-rss/tt-rss-web-static .
-    Some content tweaks were made after mirroring (prior to the new repository being set up), and the repository is now archived.
-* Plugins that were under https://gitlab.tt-rss.org/tt-rss/plugins have been mirrored to `https://github.com/tt-rss/tt-rss-plugin-*`.
-  * Plugin repository names have changed to get a consistent `tt-rss-plugin-*` prefix.
+```bash
+# 1. 复制环境变量
+cp .env.example .env
 
-## Development and contributing
+# 2. 启动所有服务
+docker compose up -d
 
-Contributions (code, translations, reporting issues, etc.) are welcome. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+# 3. 访问应用
+# 前端：http://localhost:3000
+# API: http://localhost:8080
+# Swagger UI: http://localhost:8080/swagger-ui.html
+```
 
-## License
+### 生产环境
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+```bash
+# 1. 配置环境变量（必须修改 JWT_SECRET）
+vim .env
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+# 2. 执行部署脚本
+./scripts/deploy.sh
+```
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+详细部署指南请参考 [DEPLOYMENT.md](DEPLOYMENT.md)
 
-Copyright (c) 2005 Andrew Dolgov (unless explicitly stated otherwise).
+## 📁 项目结构
+
+```
+.
+├── backend/              # Spring Boot 后端
+│   ├── src/main/java/
+│   │   └── com/ttrss/
+│   │       ├── config/          # 配置类
+│   │       ├── module/          # 功能模块
+│   │       │   ├── auth/        # 认证模块
+│   │       │   ├── feed/        # 订阅源管理
+│   │       │   ├── article/     # 文章管理
+│   │       │   ├── label/       # 标签管理
+│   │       │   ├── opml/        # OPML 导入导出
+│   │       │   └── scheduler/   # 定时任务
+│   │       └── common/          # 通用工具
+│   └── src/main/resources/
+│       ├── application.yml      # 应用配置
+│       └── db/migration/        # 数据库迁移
+│
+├── frontend/             # React 前端
+│   ├── src/
+│   │   ├── components/        # React 组件
+│   │   ├── pages/             # 页面
+│   │   ├── hooks/             # 自定义 Hooks
+│   │   ├── stores/            # Zustand 状态管理
+│   │   ├── services/          # API 服务
+│   │   └── types/             # TypeScript 类型
+│   └── public/
+│
+├── scripts/              # 部署脚本
+│   ├── deploy.sh          # 生产环境部署
+│   ├── start.sh           # 开发环境启动
+│   └── init.sql           # 数据库初始化
+│
+├── docker-compose.yml          # 开发环境配置
+├── docker-compose.prod.yml     # 生产环境配置
+├── DEPLOYMENT.md               # 部署指南
+├── USER_GUIDE.md               # 用户文档
+└── PROJECT_SUMMARY.md          # 项目总结
+```
+
+## 🛠️ 技术栈
+
+### 后端
+- **框架**: Spring Boot 3.4
+- **语言**: Java 21
+- **ORM**: MyBatis-Plus 3.5
+- **安全**: Spring Security 6 + JWT
+- **数据库**: PostgreSQL 15
+- **RSS 解析**: Rome 2.1
+
+### 前端
+- **框架**: React 19
+- **语言**: TypeScript 5
+- **UI 库**: Mantine 7
+- **状态管理**: Zustand + TanStack Query
+- **构建**: Vite 6
+
+## ✨ 功能特性
+
+- ✅ 用户认证（JWT）
+- ✅ 订阅源管理（CRUD）
+- ✅ 分类管理
+- ✅ 文章阅读（列表/详情）
+- ✅ 标记已读/星标
+- ✅ 标签管理
+- ✅ OPML 导入导出
+- ✅ 全文搜索
+- ✅ 定时更新订阅源
+- ✅ 暗黑模式
+- ✅ 键盘快捷键
+
+## 📚 文档
+
+- [部署指南](DEPLOYMENT.md) - Docker 部署、环境变量、常见问题
+- [用户文档](USER_GUIDE.md) - 快速入门、功能说明、快捷键
+- [项目总结](PROJECT_SUMMARY.md) - 重构过程、技术决策
+
+## 🔧 开发
+
+### 后端
+
+```bash
+cd backend
+./gradlew bootRun
+```
+
+### 前端
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## 📝 许可证
+
+GNU General Public License v3.0
+
+## 🙏 致谢
+
+原始 tt-rss 项目由 Andrew Dolgov 创建和维护。

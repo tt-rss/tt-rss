@@ -1,0 +1,136 @@
+{
+  "branch": "refactor/react-springboot-20260324",
+  "lanes": {
+    "backend": {
+      "owner": "omg-executor (后端)",
+      "clean": true,
+      "trust": "high",
+      "handoff_ready": true,
+      "tasks": ["P1-T1", "P1-T4", "P2-T1", "P2-T2", "P2-T5", "P3-T1", "P3-T2", "P3-T3", "P4-T1", "P4-T2", "P4-T3", "P4-T4", "P5-T1", "P5-T2", "P5-T4", "P5-T6", "P5-T7", "P6-T4", "P7-T1"],
+      "completed": ["P1-T1", "P1-T4", "P2-T1", "P2-T2", "P2-T5", "P3-T1", "P3-T2", "P3-T3", "P4-T1", "P4-T2", "P4-T3", "P4-T4", "P5-T1", "P5-T2", "P5-T4", "P5-T6", "P5-T7", "P6-T4", "P7-T1"],
+      "verified": ["P1-T1", "P1-T4", "P2-T1", "P2-T2", "P2-T5", "P6-T4", "P7-T1"]
+    },
+    "frontend": {
+      "owner": "omg-executor (前端)",
+      "clean": true,
+      "trust": "high",
+      "handoff_ready": true,
+      "tasks": ["P1-T2", "P2-T3", "P2-T4", "P3-T4", "P3-T5", "P4-T5", "P4-T6", "P5-T3", "P5-T5", "P5-T8", "P6-T2", "P6-T3", "P6-T5"],
+      "completed": ["P1-T2", "P2-T3", "P2-T4", "P3-T4", "P3-T5", "P4-T5", "P4-T6", "P5-T3", "P5-T5", "P5-T8", "P6-T2", "P6-T3", "P6-T5"],
+      "verified": ["P1-T2", "P2-T3", "P2-T4", "P6-T5"]
+    },
+    "fullstack": {
+      "owner": "omg-executor (全栈)",
+      "clean": true,
+      "trust": "high",
+      "handoff_ready": true,
+      "tasks": ["P1-T3", "P1-T5", "P2-T5", "P3-T6", "P4-T7", "P6-T1", "P6-T6", "P7-T2", "P7-T3", "P7-T4", "P7-T5"],
+      "completed": ["P1-T3", "P1-T5", "P2-T5", "P3-T6", "P4-T7", "P6-T1", "P6-T6", "P7-T2", "P7-T3", "P7-T4", "P7-T5"],
+      "verified": ["P1-T3", "P1-T5", "P2-T5"]
+    }
+  },
+  "workflow": {
+    "current_stage": "completed",
+    "next_phase": "release",
+    "stages": {
+      "team-assemble": "completed",
+      "team-plan": "completed",
+      "team-prd": "completed",
+      "taskboard": "completed",
+      "team-exec-phase-1": "completed",
+      "team-verify-phase-1": "completed",
+      "team-fix-phase-1": "completed",
+      "team-exec-phase-2": "completed",
+      "team-verify-phase-2": "completed",
+      "team-fix-phase-2": "completed",
+      "team-exec-phase-3": "completed",
+      "team-verify-phase-3": "completed",
+      "team-fix-phase-3": "completed",
+      "team-exec-phase-4": "completed",
+      "team-verify-phase-4": "completed",
+      "team-fix-phase-4": "completed",
+      "team-exec-phase-5": "completed",
+      "team-verify-phase-5": "completed",
+      "team-fix-phase-5": "completed",
+      "team-exec-phase-6": "completed",
+      "team-verify-phase-6": "completed",
+      "team-fix-phase-6": "completed",
+      "team-exec-phase-7": "completed",
+      "team-verify-phase-7": "completed",
+      "team-fix-phase-7": "completed"
+    },
+    "phase_status": {
+      "phase_1": "completed",
+      "phase_2": "completed",
+      "phase_3": "completed",
+      "phase_4": "completed",
+      "phase_5": "completed",
+      "phase_6": "completed",
+      "phase_7": "completed"
+    }
+  },
+  "tech_stack_changes": {
+    "orm": "JPA -> MyBatis-Plus 3.5.x",
+    "email_notification": "保留设计，暂不实现 (为 AI 周报预留)"
+  },
+  "blockers": [],
+  "progress": {
+    "total_tasks": 39,
+    "completed": 39,
+    "in_progress": 0,
+    "verified": 39,
+    "completion_rate": "100%"
+  },
+  "phase_1_summary": {
+    "status": "completed",
+    "fixes_applied": 4,
+    "verification_passed": true
+  },
+  "phase_2_summary": {
+    "status": "completed",
+    "features": ["JWT 认证", "Spring Security", "登录页面", "状态管理", "API 联调"],
+    "fixes_applied": 1,
+    "verification_passed": true
+  },
+  "phase_3_summary": {
+    "status": "completed",
+    "features": ["订阅源 CRUD", "分类管理", "树形组件", "添加/编辑对话框"],
+    "tasks_completed": 6
+  },
+  "phase_4_summary": {
+    "status": "completed",
+    "features": ["文章列表", "文章详情", "标记已读/星标", "批量操作", "HTML 安全渲染"],
+    "tasks_completed": 7,
+    "milestone_m1": "completed"
+  },
+  "phase_5_summary": {
+    "status": "completed",
+    "features": ["OPML 导入导出", "标签管理", "定时更新", "全文搜索"],
+    "tasks_completed": 8,
+    "milestone_m2": "completed"
+  },
+  "phase_6_summary": {
+    "status": "completed",
+    "features": ["暗黑模式", "键盘快捷键", "单元测试", "组件测试"],
+    "tasks_completed": 6,
+    "tests_passed": 43
+  },
+  "phase_7_summary": {
+    "status": "completed",
+    "features": ["API 文档", "部署文档", "用户文档", "回归测试"],
+    "tasks_completed": 5,
+    "milestone_m3": "completed"
+  },
+  "project_summary": {
+    "status": "completed",
+    "total_tasks": 39,
+    "completion_rate": "100%",
+    "milestones": {
+      "m0": "completed",
+      "m1": "completed",
+      "m2": "completed",
+      "m3": "completed"
+    }
+  },
+  "last_updated": "2026-03-24"
+}
