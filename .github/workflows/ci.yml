@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - dev*
   pull_request:
     branches:
       - main
+      - dev*
   # Allow manual triggering
   workflow_dispatch:
 
@@ -19,12 +21,8 @@ permissions:
 jobs:
   # Backend CI - Gradle build + test
   backend:
-    name: Backend (Java ${{ matrix.java }})
+    name: Backend (Java 21)
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [17, 21]
-      fail-fast: true
 
     defaults:
       run:
@@ -32,12 +30,12 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
-    - name: Set up Java ${{ matrix.java }}
-      uses: actions/setup-java@v5
+    - name: Set up Java 21
+      uses: actions/setup-java@v4
       with:
-        java-version: ${{ matrix.java }}
+        java-version: '21'
         distribution: temurin
         cache: gradle
 
@@ -54,7 +52,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: backend-test-results-java-${{ matrix.java }}
+        name: backend-test-results
         path: backend/build/test-results/
         retention-days: 7
         if-no-files-found: ignore
@@ -70,10 +68,10 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Set up Node.js 20
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v4
       with:
         node-version: '20'
         cache: npm
@@ -106,13 +104,13 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     # Backend code quality
-    - name: Set up Java 17
-      uses: actions/setup-java@v5
+    - name: Set up Java 21
+      uses: actions/setup-java@v4
       with:
-        java-version: 17
+        java-version: '21'
         distribution: temurin
         cache: gradle
 
@@ -122,7 +120,7 @@ jobs:
 
     # Frontend code quality
     - name: Set up Node.js 20
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v4
       with:
         node-version: '20'
         cache: npm
@@ -143,7 +141,7 @@ jobs:
 
     steps:
     - name: Check out code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -156,6 +154,8 @@ jobs:
         push: false
         load: true
         tags: ttrss-backend:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: Build frontend Dockerfile
       uses: docker/build-push-action@v5
@@ -165,6 +165,8 @@ jobs:
         push: false
         load: true
         tags: ttrss-frontend:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
   # Aggregate job status
   ci-status:
