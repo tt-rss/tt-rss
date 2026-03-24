@@ -229,16 +229,16 @@ describe('LoginPage', () => {
     
     const submitButton = screen.getByRole('button', { name: /登录/ });
     await user.click(submitButton);
-    
+
     await waitFor(() => {
       expect(screen.getByText('登录失败')).toBeInTheDocument();
     });
-    
+
     // 关闭按钮是 Notification 组件的一部分
-    const closeButtons = screen.getAllByRole('button', { type: 'button' });
-    // 第一个 type="button" 的按钮是关闭按钮（第二个是提交按钮）
+    const closeButtons = screen.getAllByRole('button');
+    // 第一个 button 是关闭按钮（第二个是提交按钮）
     await user.click(closeButtons[0]);
-    
+
     await waitFor(() => {
       expect(screen.queryByText('登录失败')).not.toBeInTheDocument();
     });

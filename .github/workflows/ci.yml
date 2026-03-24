@@ -21,7 +21,7 @@ permissions:
 jobs:
   # Backend CI - Gradle build + test
   backend:
-    name: Backend (Java 21)
+    name: Backend (Java 17)
     runs-on: ubuntu-latest
 
     defaults:
@@ -32,10 +32,10 @@ jobs:
     - name: Check out code
       uses: actions/checkout@v4
 
-    - name: Set up Java 21
+    - name: Set up Java 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: temurin
         cache: gradle
 
@@ -107,10 +107,10 @@ jobs:
       uses: actions/checkout@v4
 
     # Backend code quality
-    - name: Set up Java 21
+    - name: Set up Java 17
       uses: actions/setup-java@v4
       with:
-        java-version: '21'
+        java-version: '17'
         distribution: temurin
         cache: gradle
 

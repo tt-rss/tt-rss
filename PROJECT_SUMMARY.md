@@ -29,7 +29,7 @@
 
 ### 后端
 - **框架**: Spring Boot 3.4.x
-- **语言**: Java 21 (LTS)
+- **语言**: Java 17 (LTS)
 - **ORM**: MyBatis-Plus 3.5.x
 - **安全**: Spring Security 6.x + JWT (jjwt 0.12.6)
 - **RSS 解析**: Rome 2.1.0

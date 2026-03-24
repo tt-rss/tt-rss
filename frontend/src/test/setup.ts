@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach } from 'vitest';
+import { vi } from 'vitest';
 
 // 每个测试后清理 React Testing Library
 afterEach(() => {
@@ -10,7 +11,7 @@ afterEach(() => {
 // Mock window.matchMedia for Mantine
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -32,10 +33,8 @@ class MockResizeObserver {
 window.ResizeObserver = MockResizeObserver;
 
 // Mock IntersectionObserver for infinite scroll
-class MockIntersectionObserver {
-  observe = vi.fn();
-  unobserve = vi.fn();
-  disconnect = vi.fn();
-}
-
-window.IntersectionObserver = MockIntersectionObserver;
+window.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
+})) as unknown as typeof IntersectionObserver;
