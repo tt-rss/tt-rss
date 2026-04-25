@@ -57,6 +57,7 @@ body.ttrss_main .post .header .row {
 }
 body.ttrss_main .post .header .comments {
   flex-grow: 2;
+  min-width: 0;
 }
 body.ttrss_main .post .header .date {
   white-space: nowrap;
@@ -70,11 +71,19 @@ body.ttrss_main .post .header i.material-icons {
 }
 body.ttrss_main .post .header .title {
   flex-grow: 2;
+  min-width: 0;
   font-size: 15px;
   font-weight: 600;
   text-rendering: optimizelegibility;
   font-family: system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
   word-break: break-all;
+  overflow-wrap: anywhere;
+}
+body.ttrss_main .post .header .author {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 body.ttrss_main .post .header .tags {
   max-width: 25%;
@@ -265,11 +274,18 @@ body.ttrss_main .hl .right i.material-icons {
 body.ttrss_main .hl .title {
   cursor: pointer;
   flex-grow: 2;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 body.ttrss_main .hl .author {
-  white-space: nowrap;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
   color: black;
   font-size: 11px;
   font-weight: normal;
@@ -1301,7 +1317,9 @@ body.ttrss_utility hr {
 }
 .cdm .header .titleWrap {
   flex-grow: 2;
+  min-width: 0;
   width: 0;
+  overflow-wrap: anywhere;
 }
 .cdm .header .updated {
   color: black;
@@ -1323,7 +1341,11 @@ body.ttrss_utility hr {
   color: black;
 }
 .cdm .header .author {
-  white-space: nowrap;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
   color: black;
   font-size: 11px;
   font-weight: normal;
@@ -1455,9 +1477,8 @@ body.ttrss_utility hr {
   display: none;
 }
 .cdm.expandable div.header span.titleWrap {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .cdm.expandable .excerpt {
   white-space: nowrap;

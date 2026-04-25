@@ -39,6 +39,7 @@ body.ttrss_main {
 
 			.comments {
 				flex-grow : 2;
+				min-width : 0;
 			}
 
 			.date {
@@ -54,11 +55,20 @@ body.ttrss_main {
 
 			.title {
 				flex-grow : 2;
+				min-width : 0;
 				font-size : 15px;
 				font-weight : 600;
 				text-rendering: optimizelegibility;
 				font-family : @fonts-ui;
 				word-break : break-all;
+				overflow-wrap : anywhere;
+			}
+
+			.author {
+				flex : 1 1 auto;
+				min-width : 0;
+				white-space : normal;
+				overflow-wrap : anywhere;
 			}
 
 			.tags {
@@ -292,12 +302,19 @@ body.ttrss_main {
 		.title {
 			cursor : pointer;
 			flex-grow : 2;
+			min-width : 0;
 			overflow : hidden;
 			text-overflow : ellipsis;
+			white-space : normal;
+			overflow-wrap : anywhere;
 		}
 
 		.author {
-			white-space : nowrap;
+			display : block;
+			min-width : 0;
+			max-width : 100%;
+			white-space : normal;
+			overflow-wrap : anywhere;
 			color : @default-text;
 			font-size : @font-size-small;
 			font-weight : normal;
@@ -1487,4 +1504,3 @@ body.ttrss_main, body.ttrss_utility {
 /* video::-webkit-media-controls-overlay-play-button {
 	display: none;
 } */
-

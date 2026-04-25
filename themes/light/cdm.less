@@ -45,7 +45,9 @@
 
 		.titleWrap {
 			flex-grow : 2;
+			min-width : 0;
 			width : 0;
+			overflow-wrap : anywhere;
 		}
 
 		.updated {
@@ -70,7 +72,11 @@
 		}
 
 		.author {
-			white-space : nowrap;
+			display : block;
+			min-width : 0;
+			max-width : 100%;
+			white-space : normal;
+			overflow-wrap : anywhere;
 			color : @default-text;
 			font-size : @font-size-small;
 			font-weight : normal;
@@ -244,9 +250,8 @@
 		}
 
 		div.header span.titleWrap {
-			white-space : nowrap;
-			text-overflow : ellipsis;
-			overflow : hidden;
+			white-space : normal;
+			overflow-wrap : anywhere;
 		}
 
 		.excerpt {
