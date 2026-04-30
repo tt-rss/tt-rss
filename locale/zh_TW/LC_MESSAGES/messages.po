@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Tiny Tiny RSS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-17 17:45+0000\n"
-"PO-Revision-Date: 2026-03-05 19:09+0000\n"
-"Last-Translator: TonyRL <TonyRL@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-05-01 01:10+0000\n"
+"Last-Translator: UDP <udp@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://hosted.weblate.org/"
 "projects/tt-rss/webui/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -29,23 +29,23 @@ msgstr "從不清理"
 
 #: backend.php:57
 msgid "1 week old"
-msgstr "1周前"
+msgstr "1 週前"
 
 #: backend.php:58
 msgid "2 weeks old"
-msgstr "2周前"
+msgstr "2 週前"
 
 #: backend.php:59
 msgid "1 month old"
-msgstr "1個月前"
+msgstr "1 個月前"
 
 #: backend.php:60
 msgid "2 months old"
-msgstr "2個月前"
+msgstr "2 個月前"
 
 #: backend.php:61
 msgid "3 months old"
-msgstr "3個月前"
+msgstr "3 個月前"
 
 #: backend.php:64
 msgid "Default interval"
@@ -57,11 +57,11 @@ msgstr "停用更新"
 
 #: backend.php:66 backend.php:76
 msgid "15 minutes"
-msgstr "每15分鐘"
+msgstr "每 15 分鐘"
 
 #: backend.php:67 backend.php:77
 msgid "30 minutes"
-msgstr "每30分鐘"
+msgstr "每 30 分鐘"
 
 #: backend.php:68 backend.php:78
 msgid "Hourly"
@@ -69,11 +69,11 @@ msgstr "每小時"
 
 #: backend.php:69 backend.php:79
 msgid "4 hours"
-msgstr "每4小時"
+msgstr "每 4 小時"
 
 #: backend.php:70 backend.php:80
 msgid "12 hours"
-msgstr "每12小時"
+msgstr "每 12 小時"
 
 #: backend.php:71 backend.php:81
 msgid "Daily"
@@ -81,7 +81,7 @@ msgstr "每天"
 
 #: backend.php:72 backend.php:82
 msgid "Weekly"
-msgstr "每周"
+msgstr "每週"
 
 #: backend.php:85 classes/Pref_Feeds.php:544 classes/Pref_Feeds.php:597
 msgid "Disabled"
@@ -519,11 +519,11 @@ msgstr "切換格狀檢視"
 
 #: classes/RPC.php:529
 msgid "Debug feed update"
-msgstr "調試摘要更新"
+msgstr "偵錯摘要更新"
 
 #: classes/RPC.php:530
 msgid "Debug viewfeed()"
-msgstr "調試 viewfeed()"
+msgstr "偵錯 viewfeed()"
 
 #: classes/RPC.php:531 js/FeedTree.js:166
 msgid "Mark all feeds as read"
@@ -612,7 +612,7 @@ msgstr "進階"
 
 #: classes/Pref_Prefs.php:89
 msgid "Debugging"
-msgstr "除錯"
+msgstr "偵錯"
 
 #: classes/Pref_Prefs.php:95
 msgid "Never apply these tags automatically (comma-separated list)."
@@ -1328,7 +1328,7 @@ msgstr "正在更新到版本 %d"
 #: classes/Handler_Public.php:722 classes/Handler_Public.php:749
 #: js/PrefHelpers.js:417 js/PrefHelpers.js:760
 msgid "Update"
-msgstr "更新列表"
+msgstr "更新清單"
 
 #: classes/Handler_Public.php:742
 #, php-format
@@ -1735,7 +1735,7 @@ msgstr "訂閱的摘要"
 
 #: classes/Pref_Users.php:64
 msgid "Stored articles"
-msgstr "存儲的文章"
+msgstr "儲存的文章"
 
 #: classes/Pref_Users.php:87 classes/UserHelper.php:258
 msgid "User not found"
@@ -2410,7 +2410,7 @@ msgstr "開啟網站"
 
 #: js/Headlines.js:1569 js/FeedTree.js:116
 msgid "Debug feed"
-msgstr "摘要除錯"
+msgstr "摘要偵錯"
 
 #: js/Headlines.js:1590
 msgid "Select articles in group"
@@ -2590,7 +2590,7 @@ msgstr "重設為預設狀態？"
 #: js/PrefHelpers.js:372
 #, java-printf-format, javascript-format
 msgid "Error while loading plugins list: %s."
-msgstr "載入擴充套件列表時發生錯誤：%s。"
+msgstr "載入擴充套件清單時發生錯誤：%s。"
 
 #: js/PrefHelpers.js:421
 msgid "Clear data"
@@ -2831,7 +2831,7 @@ msgstr "更新錯誤的摘要"
 
 #: js/CommonDialogs.js:256
 msgid "Debug selected feeds?"
-msgstr "除錯選取的摘要？"
+msgstr "偵錯選取的摘要？"
 
 #: js/CommonDialogs.js:257
 msgid "Opening debugger for selected feeds..."
