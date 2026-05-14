@@ -599,25 +599,16 @@ class Config {
 		}
 
 		if (!is_writable(self::get(Config::CACHE_DIR) . '/images'))
-			$errors[] = 'Image cache is not writable (chmod -R 777 ' . self::get(Config::CACHE_DIR) . '/images)';
+			$errors[] = 'Image cache is not writable (chmod -R u=rwX,g=rX,o=rX ' . self::get(Config::CACHE_DIR) . '/images)';
 
 		if (!is_writable(self::get(Config::CACHE_DIR) . '/upload'))
-			$errors[] = 'Upload cache is not writable (chmod -R 777 ' . self::get(Config::CACHE_DIR) . '/upload)';
+			$errors[] = 'Upload cache is not writable (chmod -R u=rwX,g=rX,o=rX ' . self::get(Config::CACHE_DIR) . '/upload)';
 
 		if (!is_writable(self::get(Config::CACHE_DIR) . '/export'))
-			$errors[] = 'Data export cache is not writable (chmod -R 777 ' . self::get(Config::CACHE_DIR) . '/export)';
-
-		if (!is_writable(self::get(Config::LOCAL_PLUGINS_DIR)))
-			$errors[] = 'Local plugin directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_PLUGINS_DIR) . ')';
-
-		if (!is_writable(self::get(Config::LOCAL_TEMPLATES_DIR)))
-			$errors[] = 'Local template directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_TEMPLATES_DIR) . ')';
-
-		if (!is_writable(self::get(Config::LOCAL_THEMES_DIR)))
-			$errors[] = 'Local theme directory is not writable (chmod -R 777 ' . self::get(Config::LOCAL_THEMES_DIR) . ')';
+			$errors[] = 'Data export cache is not writable (chmod -R u=rwX,g=rX,o=rX ' . self::get(Config::CACHE_DIR) . '/export)';
 
 		if (!is_writable(self::get(Config::LOCK_DIRECTORY)))
-			$errors[] = 'LOCK_DIRECTORY is not writable (chmod -R 777 ' . self::get(Config::LOCK_DIRECTORY) . ').';
+			$errors[] = 'LOCK_DIRECTORY is not writable (chmod -R u=rwX,g=rX,o=rX ' . self::get(Config::LOCK_DIRECTORY) . ').';
 
 		// ttrss_users won't be there on initial startup (before migrations are done)
 		if (!Config::is_migration_needed() && self::get(Config::SINGLE_USER_MODE)) {
