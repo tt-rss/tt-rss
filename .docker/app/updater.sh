@@ -66,4 +66,4 @@ done
 # - fatal error: could not open certificate file "/root/.postgresql/postgresql.crt": Permission denied
 chown -R app:app /root # /.postgresql
 
-sudo -E -u app "${TTRSS_PHP_EXECUTABLE}" $APP_INSTALL_BASE_DIR/tt-rss/update_daemon2.php "$@"
+exec sudo -E -u app "${TTRSS_PHP_EXECUTABLE}" $APP_INSTALL_BASE_DIR/tt-rss/update_daemon2.php "$@"
