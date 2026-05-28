@@ -35,7 +35,7 @@ jobs:
         php-version: '8.5'
         coverage: none
         # PHPUnit is installed to support PHPStan checking tests/
-        tools: phpstan/phpstan:^2.1, phpunit/phpunit:^12.4
+        tools: phpstan/phpstan:^2.2, phpunit/phpunit:^12.4
 
     # https://phpstan.org/user-guide/result-cache
     - name: Restore result cache
