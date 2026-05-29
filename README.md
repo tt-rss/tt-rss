@@ -1,4 +1,4 @@
-Tiny Tiny RSS (tt-rss)
+Tiny Tiny RSS (tt-rss) Non-Dockerize
 ======================
 
 Tiny Tiny RSS (tt-rss) is a free, flexible, open-source, web-based news feed (RSS/Atom/other) reader and aggregator.
