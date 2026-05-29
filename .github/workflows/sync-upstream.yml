@@ -83,6 +83,41 @@ jobs:
 PUBLISH
           echo "Updated publish.yml"
 
+      - name: Rebuild shell-code-quality.yml (no Docker)
+        run: |
+          cat > .github/workflows/shell-code-quality.yml << 'SHELLQC'
+name: Shell Code Quality
+
+on:
+  pull_request:
+    paths:
+    - 'lib/dojo-src/rebuild-dojo.sh'
+    - 'utils/**.sh'
+  workflow_dispatch:
+  workflow_call:
+
+env:
+  fail-fast: true
+
+permissions:
+  contents: read
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+    - name: Run ShellCheck
+      run: |
+        find lib/dojo-src utils -type f -name '*.sh' -exec \
+          docker run --rm -v "$PWD:/mnt" -w /mnt koalaman/shellcheck:stable --severity=warning --shell=bash {} +
+SHELLQC
+          echo "Updated shell-code-quality.yml"
+
       - name: Add feedly theme
         run: |
           FEEDLY_DIR="themes/feedly"
