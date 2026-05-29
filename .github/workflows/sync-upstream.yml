@@ -1,147 +1,42 @@
 name: Sync from upstream tt-rss
-
-on:
+'on':
   schedule:
-    - cron: '0 */6 * * *'   # every 6 hours
-  workflow_dispatch:
-
+  - cron: 0 */6 * * *
+  workflow_dispatch: null
 permissions:
   contents: write
-
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout this repo
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout this repo
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Configure git
+      run: 'git config user.name "github-actions[bot]"
 
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
+    - name: Fetch upstream
+      run: 'git remote add orig https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
 
-      - name: Fetch upstream
-        run: |
-          git remote add orig https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
-          git fetch orig main --tags
+        git fetch orig main --tags'
+    - name: Reset to upstream
+      run: 'git reset --hard orig/main
 
-      - name: Reset to upstream
-        run: |
-          git reset --hard orig/main
-          echo "Reset to upstream main"
+        echo "Reset to upstream main"'
+    - name: Remove Docker files
+      run: 'rm -rf .docker docker-compose.yml .env-dist .devcontainer
 
-      - name: Nondockerize
-        run: |
-          rm -rf .docker docker-compose.yml .env-dist .devcontainer
-          rm -f .github/workflows/docker-code-quality.yml
-          echo "Removed Docker files"
+        rm -f .github/workflows/docker-code-quality.yml
 
-      - name: Rebuild publish.yml (no Docker)
-        run: |
-          cat > .github/workflows/publish.yml << 'PUBLISH'
-name: Sync & Publish Versions
-
-on:
-  push:
-    branches: [main]
-    paths-ignore:
-    - '.devcontainer/**'
-    - '.vscode/**'
-    - 'tests/**'
-    - '.*'
-    - '*.js'
-    - '*.json'
-    - '*.lock'
-    - '*.md'
-    - '*.neon'
-    - '*.xml'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-jobs:
-  css-lint:
-    uses: ./.github/workflows/css-lint.yml
-  javascript-code-quality:
-    uses: ./.github/workflows/javascript-code-quality.yml
-  php-code-quality:
-    uses: ./.github/workflows/php-code-quality.yml
-  shell-code-quality:
-    uses: ./.github/workflows/shell-code-quality.yml
-  validate-sql:
-    needs: [css-lint, javascript-code-quality, php-code-quality, shell-code-quality]
-    uses: ./.github/workflows/validate-sql.yml
-  publish-version:
-    needs: [validate-sql]
-    uses: ./.github/workflows/publish-version-json.yml
-    permissions:
-      contents: write
-PUBLISH
-          echo "Updated publish.yml"
-
-      - name: Rebuild shell-code-quality.yml (no Docker)
-        run: |
-          cat > .github/workflows/shell-code-quality.yml << 'SHELLQC'
-name: Shell Code Quality
-
-on:
-  pull_request:
-    paths:
-    - 'lib/dojo-src/rebuild-dojo.sh'
-    - 'utils/**.sh'
-  workflow_dispatch:
-  workflow_call:
-
-env:
-  fail-fast: true
-
-permissions:
-  contents: read
-
-jobs:
-  shellcheck:
-    name: ShellCheck
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Check out code
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-    - name: Run ShellCheck
-      run: |
-        find lib/dojo-src utils -type f -name '*.sh' -exec \
-          docker run --rm -v "$PWD:/mnt" -w /mnt koalaman/shellcheck:stable --severity=warning --shell=bash {} +
-SHELLQC
-          echo "Updated shell-code-quality.yml"
-
-      - name: Add feedly theme
-        run: |
-          FEEDLY_DIR="themes/feedly"
-          mkdir -p "$FEEDLY_DIR/fonts" "$FEEDLY_DIR/src"
-          curl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist | tar -xz -C /tmp/
-          FEEDLY_SRC=$(ls -d /tmp/ashcoft-tt-rss-feedly-theme-* 2>/dev/null | tail -1)
-          if [ -n "$FEEDLY_SRC" ] && [ -d "$FEEDLY_SRC" ]; then
-            cp -rn "$FEEDLY_SRC/dist/"*  "$FEEDLY_DIR/" 2>/dev/null || true
-            cp -rn "$FEEDLY_SRC/feedly/fonts/"* "$FEEDLY_DIR/fonts/" 2>/dev/null || true
-            cp -rn "$FEEDLY_SRC/src/"*    "$FEEDLY_DIR/src/" 2>/dev/null || true
-            echo "Added feedly theme from dist branch"
-          else
-            echo "Warning: feedly theme download failed"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit and push
-        run: |
-          git add -A
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Sync: nondockerize + feedly theme as default"
-            git push upstream main
-            echo "Pushed to upstream main"
-          fi
+        echo "Docker files removed"'
+    - name: Write workflow files
+      run: "python3 -c \"\nimport base64, os\nos.makedirs(\".github/workflows\", exist_ok=True)\nwith open(\".github/workflows/publish.yml\", \"wb\") as f:\n    f.write(base64.b64decode(\"bmFtZTogU3luYyAmIFB1Ymxpc2ggVmVyc2lvbnMKCm9uOgogIHB1c2g6CiAgICBicmFuY2hlczogW21haW5dCiAgICBwYXRocy1pZ25vcmU6CiAgICAtICcuZGV2Y29udGFpbmVyLyoqJwogICAgLSAnLnZzY29kZS8qKicKICAgIC0gJ3Rlc3RzLyoqJwogICAgLSAnLionCiAgICAtICcqLmpzJwogICAgLSAnKi5qc29uJwogICAgLSAnKi5sb2NrJwogICAgLSAnKi5tZCcKICAgIC0gJyoubmVvbicKICAgIC0gJyoueG1sJwogIHdvcmtmbG93X2Rpc3BhdGNoOgoKcGVybWlzc2lvbnM6CiAgY29udGVudHM6IHJlYWQKCmpvYnM6CiAgY3NzLWxpbnQ6CiAgICB1c2VzOiAuLy5naXRodWIvd29ya2Zsb3dzL2Nzcy1saW50LnltbAoKICBqYXZhc2NyaXB0LWNvZGUtcXVhbGl0eToKICAgIHVzZXM6IC4vLmdpdGh1Yi93b3JrZmxvd3MvamF2YXNjcmlwdC1jb2RlLXF1YWxpdHkueW1sCgogIHBocC1jb2RlLXF1YWxpdHk6CiAgICB1c2VzOiAuLy5naXRodWIvd29ya2Zsb3dzL3BocC1jb2RlLXF1YWxpdHkueW1sCgogIHNoZWxsLWNvZGUtcXVhbGl0eToKICAgIHVzZXM6IC4vLmdpdGh1Yi93b3JrZmxvd3Mvc2hlbGwtY29kZS1xdWFsaXR5LnltbAoKICB2YWxpZGF0ZS1zcWw6CiAgICBuZWVkczogW2Nzcy1saW50LCBqYXZhc2NyaXB0LWNvZGUtcXVhbGl0eSwgcGhwLWNvZGUtcXVhbGl0eSwgc2hlbGwtY29kZS1xdWFsaXR5XQogICAgdXNlczogLi8uZ2l0aHViL3dvcmtmbG93cy92YWxpZGF0ZS1zcWwueW1sCgogIHB1Ymxpc2gtdmVyc2lvbjoKICAgIG5lZWRzOiBbdmFsaWRhdGUtc3FsXQogICAgdXNlczogLi8uZ2l0aHViL3dvcmtmbG93cy9wdWJsaXNoLXZlcnNpb24tanNvbi55bWwKICAgIHBlcm1pc3Npb25zOgogICAgICBjb250ZW50czogd3JpdGUK\"))\nprint(\"Created publish.yml\")\nwith open(\".github/workflows/shell-code-quality.yml\", \"wb\") as f:\n    f.write(base64.b64decode(\"bmFtZTogU2hlbGwgQ29kZSBRdWFsaXR5CgpvbjoKICBwdWxsX3JlcXVlc3Q6CiAgICBwYXRoczoKICAgIC0gJ2xpYi9kb2pvLXNyYy9yZWJ1aWxkLWRvam8uc2gnCiAgICAtICd1dGlscy8qKi5zaCcKICB3b3JrZmxvd19kaXNwYXRjaDoKICB3b3JrZmxvd19jYWxsOgoKZW52OgogIGZhaWwtZmFzdDogdHJ1ZQoKcGVybWlzc2lvbnM6CiAgY29udGVudHM6IHJlYWQKCmpvYnM6CiAgc2hlbGxjaGVjazoKICAgIG5hbWU6IFNoZWxsQ2hlY2sKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKCiAgICBzdGVwczoKICAgIC0gbmFtZTogQ2hlY2sgb3V0IGNvZGUKICAgICAgdXNlczogYWN0aW9ucy9jaGVja291dEBkZTBmYWMyZTQ1MDBkYWJlMDAwOWU2NzIxNGZmNWY1NDQ3Y2U4M2RkICMgdjYuMC4yCgogICAgLSBuYW1lOiBSdW4gU2hlbGxDaGVjawogICAgICBydW46IHwKICAgICAgICAjIFByb2plY3QgdXRpbGl0eSBzY3JpcHRzICh1c2Ugb2YgYmFzaCBvciBjb21wYXRpYmxlIGFzc3VtZWQpCiAgICAgICAgZmluZCBsaWIvZG9qby1zcmMgdXRpbHMgLXR5cGUgZiAtbmFtZSAnKi5zaCcgLWV4ZWMgXAogICAgICAgICAgZG9ja2VyIHJ1biAtLXJtIC12ICIkUFdEOi9tbnQiIC13IC9tbnQga29hbGFtYW4vc2hlbGxjaGVjazpzdGFibGUgLS1zZXZlcml0eT13YXJuaW5nIC0tc2hlbGw9YmFzaCB7fSArCg==\"))\nprint(\"Created shell-code-quality.yml\")\n\""
+    - name: Add feedly theme
+      run: "FEEDLY_DIR=\"themes/feedly\"\nmkdir -p \"/fonts\" \"/src\"\ncurl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist | tar -xz -C /tmp/\nFEEDLY_SRC=\nif [ -n \"\" ] && [ -d \"\" ]; then\n  cp -rn \"/dist/\"*  \"/\" 2>/dev/null || true\n  cp -rn \"/feedly/fonts/\"* \"/fonts/\" 2>/dev/null || true\n  cp -rn \"/src/\"*    \"/src/\" 2>/dev/null || true\n  echo \"Added feedly theme from dist branch\"\nelse\n  echo \"Warning: feedly theme download failed\"\nfi"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit and push
+      run: "git add -A\nif git diff --staged --quiet; then\n  echo \"No changes to commit\"\nelse\n  git commit -m \"Sync: nondockerize + feedly theme as default\"\n  git push upstream main\n  echo \"Pushed to upstream main\"\nfi"
