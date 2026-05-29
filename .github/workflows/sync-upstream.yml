@@ -1,0 +1,112 @@
+name: Sync from upstream tt-rss
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch upstream
+        run: |
+          git remote add orig https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
+          git fetch orig main --tags
+
+      - name: Reset to upstream
+        run: |
+          git reset --hard orig/main
+          echo "Reset to upstream main"
+
+      - name: Nondockerize
+        run: |
+          rm -rf .docker docker-compose.yml .env-dist .devcontainer
+          rm -f .github/workflows/docker-code-quality.yml
+          echo "Removed Docker files"
+
+      - name: Rebuild publish.yml (no Docker)
+        run: |
+          cat > .github/workflows/publish.yml << 'PUBLISH'
+name: Sync & Publish Versions
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+    - '.devcontainer/**'
+    - '.vscode/**'
+    - 'tests/**'
+    - '.*'
+    - '*.js'
+    - '*.json'
+    - '*.lock'
+    - '*.md'
+    - '*.neon'
+    - '*.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  css-lint:
+    uses: ./.github/workflows/css-lint.yml
+  javascript-code-quality:
+    uses: ./.github/workflows/javascript-code-quality.yml
+  php-code-quality:
+    uses: ./.github/workflows/php-code-quality.yml
+  shell-code-quality:
+    uses: ./.github/workflows/shell-code-quality.yml
+  validate-sql:
+    needs: [css-lint, javascript-code-quality, php-code-quality, shell-code-quality]
+    uses: ./.github/workflows/validate-sql.yml
+  publish-version:
+    needs: [validate-sql]
+    uses: ./.github/workflows/publish-version-json.yml
+    permissions:
+      contents: write
+PUBLISH
+          echo "Updated publish.yml"
+
+      - name: Add feedly theme
+        run: |
+          FEEDLY_DIR="themes/feedly"
+          mkdir -p "$FEEDLY_DIR/fonts" "$FEEDLY_DIR/src"
+          curl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist | tar -xz -C /tmp/
+          FEEDLY_SRC=$(ls -d /tmp/ashcoft-tt-rss-feedly-theme-* 2>/dev/null | tail -1)
+          if [ -n "$FEEDLY_SRC" ] && [ -d "$FEEDLY_SRC" ]; then
+            cp -rn "$FEEDLY_SRC/dist/"*  "$FEEDLY_DIR/" 2>/dev/null || true
+            cp -rn "$FEEDLY_SRC/feedly/fonts/"* "$FEEDLY_DIR/fonts/" 2>/dev/null || true
+            cp -rn "$FEEDLY_SRC/src/"*    "$FEEDLY_DIR/src/" 2>/dev/null || true
+            echo "Added feedly theme from dist branch"
+          else
+            echo "Warning: feedly theme download failed"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push
+        run: |
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Sync: nondockerize + feedly theme as default"
+            git push upstream main
+            echo "Pushed to upstream main"
+          fi

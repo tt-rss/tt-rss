@@ -1,0 +1,361 @@
+@import "_variables.less";
+
+body.ttrss_prefs {
+  :is(h1, h2, h3, h4) {
+    margin-top: 60px;
+
+    + :is(h1, h2, h3, h4) {
+      margin-top: 20px;
+    }
+  }
+  h2 {
+    padding-bottom: 4px;
+    border: 0 solid @border-darker;
+    border-width: 0 0 1px;
+  }
+
+  // qr code for authenticator
+  img[src^="data:image/png"] {
+    background-color: @white;
+  }
+
+  #header {
+    display: flex;
+    align-items: center;
+    margin-top: 1px;
+    padding: 0;
+
+    > a {
+      display: inline-flex;
+      gap: 4px;
+      margin-left: 8px;
+      padding: 6px 16px;
+      transition: background-color 0.2s;
+      border: 1px solid transparent;
+      color: @default-text;
+      font-size: @font-size-content;
+      text-decoration: none;
+
+      &::before {
+        content: "exit_to_app";
+        color: @color-accent;
+        font-family: "Material Icons";
+        font-size: 18px;
+        line-height: 1;
+      }
+    }
+  }
+  :is(#footer, #footer a) {
+    color: @fg-text-muted !important;
+  }
+
+  // ---------------------------------------------------------------------------
+  // mobile styling
+  // ---------------------------------------------------------------------------
+  .media(0, lg, {
+    // remove header icons, text from prefs exit button, main top tabs and feeds left tabs
+    :is(#header > a, #header > i, #pref-tabs_tablist .tabLabel, .dijitTabContainerLeft-tabs .tabLabel) {
+      gap: 0;
+      font-size: 0;
+    }
+    // event log
+    .event-log td.filename {
+      width: 0%;
+    }
+  });
+  .media(0, md, {
+    @checkbox-indent: 30px;
+
+    // general preferences
+    fieldset.prefs {
+      display: flex;
+      flex-wrap: wrap;
+
+      textarea {
+        max-width: 85vw;
+      }
+      // try to keep help text to the right of inputs but stretch it to available space
+      .help-text {
+        flex: 1;
+      }
+      // force to be in first row only together with checkbox
+      label:first-of-type {
+        flex-basis: calc(100% - @checkbox-indent);
+        min-width: 0;
+        margin-right: 0;
+
+        // pull checkboxes before the label
+        + .dijitCheckBox {
+          order: -1;
+          margin-right: 11px; // add 10px to default margin of 1px
+
+          // align start of help-text with checkbox label
+          ~ .help-text {
+            margin: 4px 0 4px @checkbox-indent;
+          }
+          // push  preview digest  button to the end
+          + .dijitButton {
+            order: 1;
+          }
+        }
+      }
+    }
+    // plugins
+    ul.prefs-plugin-list {
+      li {
+        justify-content: space-between;
+        line-height: unset;
+
+        label.checkbox {
+          flex-wrap: wrap;
+          gap: 0;
+          padding-left: 0;
+
+          .name {
+            min-width: 0 !important;
+            margin-inline: 10px 0;
+            text-align: left;
+          }
+          .description {
+            flex-basis: 100%;
+            margin: 4px 0 4px @checkbox-indent;
+          }
+        }
+        .actions {
+          display: flex;
+          flex-grow: 0;
+          padding-right: 0;
+        }
+      }
+    }
+    // event log
+    .event-log {
+      display: grid;
+      gap: 10px;
+      padding: 10px;
+
+      :is(tbody, tr, td) {
+        display: contents;
+      }
+      th {
+        display: none;
+      }
+      td::before {
+        content: attr(class);
+        grid-column: 1 / 2;
+        color: @default-text;
+        font-style: normal;
+        font-weight: bold;
+        text-transform: capitalize;
+      }
+      tr:not(:last-child) td:last-child:after {
+        content: "";
+        grid-column: 1 / 3;
+        margin: 10px 0;
+        border-top: 1px solid @border-default;
+      }
+    }
+  });
+  .media(0, sm, {
+    // users list
+    .users-list {
+      :is(th, td):nth-child(n+4) {
+        display: none;
+      }
+    }
+  });
+
+  // ---------------------------------------------------------------------------
+  // additional styling
+  // ---------------------------------------------------------------------------
+  #app_passwords_holder {
+    .dijitToolbar {
+      margin-bottom: 0 !important;
+      border-bottom: none;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .panel {
+      margin-bottom: 8px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+    + hr {
+      display: none;
+    }
+    ~ .dijitButton {
+      float: none !important;
+    }
+  }
+  #filterEditDlg .dijitToolbar + .dijitContentPane {
+    padding-block: 0;
+  }
+  // adapted from night_base.less
+  #filterNewRuleDlg {
+    .dijitValidationTextAreaError {
+      background-color: mix(@red, @bg-input, @fade4);
+    }
+    .dijitValidationTextArea:not(.dijitValidationTextAreaError) {
+      background-color: mix(@green, @bg-input, @fade4);
+    }
+  }
+  #filterDlg_regExp {
+    width: 100% !important;
+    resize: vertical;
+  }
+  :is(#filterTree .filterRules li, #filterDlg_Matches .filterRule) {
+    color: darken(@green, 15%);
+
+    &.inverse {
+      color: @red;
+    }
+  }
+  #filterTree {
+    .dijitTreeRowSelected .filterRules li {
+      color: @white;
+    }
+
+    .filterRules {
+      margin-block: 0;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // visual fixes
+  // ---------------------------------------------------------------------------
+  // some icons rendered too wide in top tabs
+  #pref-tabs > .dijitTabPaneWrapper {
+    border-radius: 0;
+  }
+  // preferences > personal > app passwords
+  #app_passwords_holder .dijitToolbar {
+    margin: 0 0 8px;
+  }
+  // preferences > preferences main tab content
+  #prefsTab #dijit_layout_AccordionPane_1 {
+    padding: 0;
+  }
+  // re-add language selector margin removed via inline style
+  label[for="CB_USER_LANGUAGE"] + .dijitSelect {
+    margin: 4px 4px 4px 0 !important;
+  }
+  fieldset.prefs {
+    .help-text-bottom {
+      margin-top: 0;
+    }
+  }
+  ul.prefs-plugin-list li {
+    line-height: unset;
+  }
+  :is(.plugin-installer-list, .plugin-updater-list) {
+    margin: 0;
+
+    h3 .material-icons {
+      width: 18px;
+    }
+  }
+  // broken focus outline of buttons in plugin installer
+  .plugin-installer-list li > .dijitButton {
+    margin-top: 8px;
+    padding: 0;
+  }
+  #feedTree {
+    // allow truncating feed label
+    .dijitTreeContent {
+      display: inline;
+      margin-left: 0;
+
+      > * {
+        vertical-align: top;
+      }
+    }
+    // my feeds tree row right text
+    .feedParam {
+      margin-inline: 8px 10px;
+      opacity: unit((@fade6 / @fade8));
+      font-size: 0.857em;
+    }
+  }
+  // labels tree row icons
+  .dijitTreeRow .icon-label {
+    margin: 1px 4px;
+    vertical-align: top;
+  }
+
+  // ---------------------------------------------------------------------------
+  // phpinfo
+  // ---------------------------------------------------------------------------
+  .phpinfo {
+    img {
+      display: block;
+      background-color: transparent;
+    }
+    // colored text for syntax highlighting
+    font {
+      padding: 0 5px;
+      border-radius: 4px;
+      background-color: @white;
+    }
+    a:not([href]) {
+      color: unset;
+      text-decoration: none;
+    }
+    :is(h1, h2, table) {
+      margin-bottom: 20px;
+    }
+    :is(h1, h2) {
+      padding-left: 12px;
+    }
+    table :is(h1, h2) {
+      padding-left: 0;
+    }
+    h1 {
+      font-size: 2em;
+    }
+    h2 {
+      padding-block: 50px 0;
+      border-width: 1px 0 0;
+      font-size: 1.414em;
+    }
+    &.phpinfo :is(th, td) {
+      padding: 8px 12px;
+      border-color: @border-default;
+      vertical-align: top;
+    }
+    .p {
+      margin: 1em 0;
+      font: unset;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    :is(.p, .v) {
+      color: @color-fade7;
+    }
+    td.v {
+      font-family: @fonts-mono;
+      font-size: 0.857em;
+      line-height: 1.333;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // plugins
+  // ---------------------------------------------------------------------------
+  // plugin "effective config"
+  #config-items-list {
+    :is(th, td) {
+      padding: 8px 12px;
+    }
+    :is(tr:hover, td.gray) {
+      background-color: @color-fade2;
+    }
+    th,
+    td:not(:last-child) {
+      border-color: @border-darker;
+    }
+    :is(.envvar_prefix, td.redacted) {
+      opacity: 1;
+      color: @color-fade5;
+    }
+  }
+}

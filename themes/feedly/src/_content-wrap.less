@@ -1,0 +1,940 @@
+@import "_variables.less";
+
+@keyframes card-overlay {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+#content-wrap#content-wrap {
+  @expanded-gap: calc(@base-spacing / 5 + 10px);
+  @title-padding: ~"((@{headline-height} - 17px) / 2)";
+  @collapse-bar-height: ~"(@{expanded-detail-padding-y} + @{title-padding} / 2)";
+  @title-level: var(--title-level, 0);
+
+  margin-left: -5px;
+  overflow: visible;
+
+  .media(0, lg, {
+    --title-level: 1;
+  });
+  .media(0, md, {
+    --title-level: 2;
+  });
+  .media(0, xs, {
+    --title-level: 3;
+  });
+
+  &:not(.dijitSplitterActive + *) {
+    transition: left 0.2s;
+  }
+
+  #feeds-holder_splitter[style*="none"] + & {
+    margin-left: 0;
+  }
+
+  #headlines-frame {
+    padding: @headline-height calc(@content-spacing-right) 0 calc(@content-spacing-left);
+    transform: none;
+
+    // move headlines-frame up and children down so cdm header doesn't stick too early
+    // especially exclude cards from transform so the overlay keeps working
+    &.cdm:not([data-enable-grid="true"][data-is-cdm-expanded="false"]) {
+      padding-block: 0 @headline-height;
+
+      > * {
+        transform: translateY(@headline-height);
+      }
+    }
+  }
+
+  // target #headlines-frame and #content-insert
+  .dijitContentPane {
+    background-color: @default-bg;
+  }
+
+  :is(.material-icons, .dijitCheckBox) {
+    opacity: 1;
+  }
+
+  .icon-score {
+    color: @green;
+
+    &[title^="-"] {
+      color: @red;
+    }
+    &[title="0"] {
+      .interactive-icon();
+    }
+  }
+
+  .label {
+    padding: 0 4px;
+    border-radius: 99px;
+    color: @default-text;
+    font-weight: normal;
+    vertical-align: 1px;
+  }
+
+  // ---------------------------------------------------------------------------
+  // split detail header, combined expanded footer
+  // ---------------------------------------------------------------------------
+  :is(.post .row, .cdm .footer) {
+    height: auto; // override .cdm .footer
+    padding-left: 0; // override .cdm .footer padding-left
+    border: none; // override .cdm.expanded .footer
+    color: @fg-text-muted;
+    font-size: @font-size-small;
+
+    &,
+    :is(.left, .right) {
+      align-items: flex-start;
+    }
+    // cdm footer comments
+    .left > a[target] {
+      white-space: nowrap;
+    }
+    .right {
+      flex-shrink: 0;
+    }
+    &,
+    :is(.material-icons, .tags + a) {
+      line-height: 16px; // for consistency with title and icon alignment with text
+    }
+    .icon-close-article {
+      order: 1;
+      transform: scale(1.167); // 18px => 21px without changing dimensions
+    }
+    .tags {
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      // TODO: after submodule update, reset change of b7a6c948d078a59739f14de8454e0e7237d0722e
+      // and check if `overflow: hidden` and `text-overflow: ellipsis` are still needed
+      // max-width: none;
+      // white-space: normal;
+
+      + a {
+        .interactive-icon();
+        display: flex;
+        font-family: "Material Icons";
+        font-size: 0;
+        -webkit-font-smoothing: antialiased;
+        text-decoration: none;
+
+        &::after {
+          content: "add";
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // split detail
+  // ---------------------------------------------------------------------------
+  .post {
+    container-type: inline-size;
+
+    :is(.header, .content) {
+      padding: calc(@title-padding) calc(@content-spacing-right + 6px) calc(@title-padding)
+        calc(@content-spacing-left + 6px);
+    }
+    .header {
+      background-color: mix(@default-fg, @default-bg, @fade1);
+    }
+    .row ~ .row {
+      @row-gap: calc(@title-padding / 2);
+      margin: @row-gap 0 0;
+
+      // tags icon
+      > .material-icons {
+        display: none;
+      }
+      // if there's little available width (widescreen mode, mobile) and at least one tag is applied,
+      // move tags and add button to a new row between title/date and other meta info
+      .container(0, 700px, {
+        &:has(.tags a) {
+          display: grid;
+          grid-template-areas:
+            "tags tags tags tags add-tag"
+            "first second comments right right"
+            ". . . . ."; // explicitly add a row so lightningcss does not remove `grid-template-rows`
+          grid-template-columns: auto auto 1fr auto auto;
+          grid-template-rows: auto auto 0; // bury extra whitespace in a 3rd zero-height row
+  
+          :is(.tags, .tags + a) {
+            align-self: center;
+            margin-bottom: @row-gap; // use margin instead of grid gap to hide the 3rd grid row
+            text-align: right;
+          }
+        }
+      });
+    }
+    .title {
+      font-size: @font-size-main;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+    :is(.author, .tags) {
+      margin-right: 4px;
+    }
+    .comments {
+      grid-area: second;
+      white-space: nowrap;
+    }
+    .row:has(.author:empty) .comments {
+      grid-area: first;
+    }
+    .author:not(:empty) {
+      grid-area: first;
+      order: -1;
+    }
+    .right {
+      position: relative;
+      left: 4px;
+      grid-area: right;
+
+      .material-icons {
+        .interactive-icon();
+      }
+    }
+    .tags {
+      grid-area: tags;
+      text-align: right;
+
+      + a {
+        grid-area: add-tag;
+        margin-left: 4px;
+      }
+    }
+    .media(0, sm, {
+      .content {
+        padding-bottom: 88px; // 56px FAB height + 2 x 16px FAB margin
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // single row layout for combined collapsed header and horizontally split list item
+  // ---------------------------------------------------------------------------
+  :where(.cdm .header, .hl) {
+    display: grid;
+    grid-template-areas: "feed title updated icon actions";
+    grid-template-columns: clamp(150px, 20%, 250px) 1fr auto auto auto;
+
+    .media(0, lg, {
+      grid-template-areas:
+        "feed updated icon actions"
+        "title title title title";
+      grid-template-columns: minmax(0, 1fr) auto auto auto;
+    });
+
+    > * {
+      align-items: center;
+      min-height: calc(@headline-height - 2px);
+      padding: 1px 0;
+    }
+    > .feed {
+      grid-area: feed;
+    }
+    > :is(.title, .titleWrap) {
+      grid-area: title;
+      width: auto;
+      min-height: 0;
+      padding: calc(@title-padding) 5px;
+
+      .media(0, lg, {
+        grid-row-start: 1;
+        padding-top: @headline-height;
+      });
+    }
+    // date
+    > :nth-child(4) {
+      grid-area: updated;
+      min-height: 0;
+      pointer-events: none;
+    }
+    > .right {
+      z-index: 1;
+      grid-area: icon;
+      line-height: 1;
+    }
+    > .left {
+      position: relative;
+      grid-area: actions;
+      flex-direction: row-reverse;
+      padding-right: 2px;
+    }
+    .updated {
+      padding: 0 3px 0 5px;
+      pointer-events: none;
+    }
+  }
+  .hl {
+    > * {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
+    }
+    :is(.title .hl-content) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // shared feed icon and name styles for all layouts
+  // ---------------------------------------------------------------------------
+  .icon-feed {
+    position: absolute;
+    left: 1px;
+  }
+  .icon-no-feed {
+    color: @color-fade6;
+    font-size: 18px;
+  }
+  :is(a.feed, .feed a) {
+    box-sizing: border-box;
+    max-width: calc(100% - 31px);
+    min-height: 0;
+    margin-left: 26px;
+    padding: 1px 6px;
+    overflow: hidden;
+    border: 1px solid @color-fade1;
+    border-radius: 99px;
+    color: @default-text;
+    font-style: normal;
+    text-overflow: ellipsis;
+  }
+  a.feed {
+    display: block; // don't hide feed in expanded grid view
+    justify-self: start;
+  }
+  // for backward-compatibility with tt-rss before https://git.tt-rss.org/fox/tt-rss.git/commit/?id=df7b2e79849419fcc278c0549fdf10c094991558
+  div.feed {
+    display: flex;
+    max-width: 100%;
+  }
+
+  // ---------------------------------------------------------------------------
+  // combined collapsed, split list for single feed: hide feed name
+  // ---------------------------------------------------------------------------
+  #headlines-frame[is-vfeed="0"] {
+    :is(.header, .hl) {
+      grid-template-columns: auto 1fr auto auto auto;
+    }
+    .feed {
+      display: none;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // content for combined collapsed/expanded item and split list item
+  // ---------------------------------------------------------------------------
+  :is(.cdm[data-article-id], .hl) {
+    position: relative;
+    margin-bottom: -1px;
+    border: 1px solid;
+    border-inline-color: transparent;
+    background-color: @bg-read;
+    color: @border-default;
+
+    &:where(.Unread) {
+      background-color: @bg-unread;
+    }
+    :is(.author, .excerpt, .hl-content, .preview, .titleWrap, .updated) {
+      color: @fg-text-muted;
+    }
+    .preview {
+      padding-left: 0;
+      font-size: @font-size-small;
+    }
+    .title {
+      color: @fg-text-muted;
+      font-size: @font-size-main;
+      text-decoration: none;
+    }
+    &.Unread .title {
+      color: @default-text;
+    }
+    .dijitCheckBox {
+      .interactive-icon();
+      width: 21px;
+      height: 21px;
+      margin: 0 0 0 2px;
+      padding: 2px;
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+
+      &::before {
+        content: "check_box";
+        color: unset;
+        font-family: "Material Icons";
+        font-size: 21px;
+      }
+      &.dijitChecked {
+        color: @color-selected;
+      }
+    }
+    &:not(.marked) .marked-pic,
+    &:not(.published) .pub-pic,
+    :is(.icon-anchor, .icon-grid-span),
+    .right .material-icons:not(.icon-no-feed):not(.icon-score):not(.icon-grid-span) {
+      .interactive-icon();
+    }
+    // fine tuning: improve optical icon spacing
+    .pub-pic {
+      transform: translateX(1px);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // content for combined collapsed item and split list item
+  // ---------------------------------------------------------------------------
+  .cdm.expandable:not(.active),
+  .hl {
+    &.marked {
+      z-index: 1;
+      background-color: mix(@color-marked, @default-bg, @fade3);
+      color: mix(@color-marked, @default-bg, @fade6);
+    }
+    &.published {
+      z-index: 1;
+      background-color: mix(@color-published, @default-bg, @fade3);
+      color: mix(@color-published, @default-bg, @fade6);
+    }
+    &:is(.active, .Selected) {
+      z-index: 1;
+      background-color: mix(@color-selected, @default-bg, @fade3) !important; // override `.hl .active` accent bg
+      color: mix(@color-selected, @default-bg, @fade6);
+    }
+    @media (hover: hover) {
+      &:not(.marked) .marked-pic,
+      &:not(.published) .pub-pic,
+      &:not(.Selected) .dijitCheckBox,
+      .icon-score[title="0"] {
+        display: none;
+      }
+      // don't style :focus-within because it's conflicting with tt-rss keyboard shortcuts and would be confusing
+      &:hover {
+        > * {
+          background-color: @color-fade1;
+        }
+        :is(.marked-pic, .pub-pic, .dijitCheckBox, .icon-score) {
+          display: block;
+        }
+        .updated {
+          display: none;
+        }
+      }
+    }
+    .media(0, sm, {
+      .dijitCheckBox {
+        display: none !important;
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // combined expanded
+  // ---------------------------------------------------------------------------
+  .cdm {
+    --expanded-border-color: mix(@default-fg, @default-bg, alpha(@border-default) * 100%);
+
+    &.active {
+      --expanded-border-color: mix(@default-fg, @default-bg, alpha(@border-darker) * 100%);
+
+      &:not(.Unread) .title {
+        color: @color-link;
+      }
+    }
+    .title {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      width: fit-content;
+      max-width: 100%;
+      overflow: hidden;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+    &:where([data-enable-grid="false"]) .expandable:not(.active) .title {
+      display: inline;
+    }
+    &:is(.expanded, .expandable.active) {
+      margin-bottom: @expanded-gap;
+      border-color: var(--expanded-border-color);
+      background-color: transparent !important;
+
+      .media(0, sm, {
+        border-inline-color: transparent;
+        border-bottom-color: transparent;
+
+        &.expanded .header {
+          padding-right: 0;
+        }
+      });
+      .header {
+        @icon-height: 25px;
+        @icon-width: 27px;
+        @shift: ~"((@{headline-height} - @{icon-height}) / 2 + @{title-padding})";
+
+        top: calc(-1 * @headline-height - @expanded-detail-padding-y - @shift);
+        padding: @expanded-detail-padding-y @icon-width 0 @expanded-detail-padding-x;
+
+        .dijitCheckBox {
+          display: none !important;
+        }
+        :is(.icon-feed, .feed, .updated, .left, .collapse) {
+          transition: transform 0.2s;
+        }
+        .right > * {
+          transition: transform 0.2s, color 0.2s; // to keep icon hover transition working
+        }
+        &[data-is-stuck="true"] {
+          border: none;
+          box-shadow: 0 calc(@expanded-detail-padding-x + 1px) 0 calc(-1 * @expanded-detail-padding-x)
+            var(--expanded-border-color);
+
+          :is(.icon-feed, .feed, .updated, .left, .right > *) {
+            transform: translateY(calc(@shift));
+          }
+          .collapse {
+            visibility: hidden;
+            transform: translateY(calc(@shift + (@collapse-bar-height + @headline-height - @title-padding) / 2));
+
+            i::after {
+              visibility: visible;
+            }
+          }
+        }
+      }
+      .content {
+        padding: @font-size-post @expanded-detail-padding-x @expanded-detail-padding-y;
+      }
+      .content-inner {
+        margin: 0 5px;
+      }
+      .titleWrap {
+        pointer-events: none;
+
+        :is(a, i) {
+          pointer-events: all;
+        }
+      }
+      .title {
+        .heading-font-size(@title-level);
+        font-family: @fonts-heading;
+        -webkit-font-smoothing: antialiased;
+        font-weight: bold;
+        text-rendering: optimizeLegibility;
+
+        @media (hover: hover) {
+          &:is(:hover, :focus-visible) {
+            .color-link-hover(10%);
+            text-decoration: underline;
+          }
+        }
+        .media(0, lg, {
+          margin-top: calc(@title-padding);
+        });
+      }
+      .icon-feed {
+        left: calc(@expanded-detail-padding-x + 1px);
+      }
+    }
+    &.expandable:not(.active) {
+      cursor: unset;
+
+      :is(.titleWrap, .title) {
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .media(0, lg, {
+        :is(.titleWrap, .title, .excerpt) {
+          white-space: normal;
+        }
+        .title {
+          display: -webkit-box;
+        }
+      });
+    }
+    .collapse {
+      position: absolute;
+      inset: 0 0 auto;
+
+      i {
+        display: flex;
+        z-index: 1;
+        align-items: center;
+        justify-content: flex-end;
+        height: calc(@collapse-bar-height);
+        padding: 0 4px;
+        transition: background-color 0.5s, color 0.2s;
+        color: @color-icon;
+        font-size: 0;
+
+        &::after {
+          content: "close";
+          font-size: 21px;
+        }
+      }
+      // nothing to focus here...
+      &:hover i {
+        background-color: @color-fade1;
+        color: @color-fade8;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // layout for vertically split list item, card and combined expanded header
+  // ---------------------------------------------------------------------------
+  :is(
+      #headlines-frame[data-is-wide-screen="true"] .hl,
+      #headlines-frame.cdm[data-enable-grid="true"] .header,
+      .cdm.expanded .header,
+      .cdm.expandable.active .header
+    ) {
+    grid-template-areas:
+      "feed feed updated icon actions"
+      "title title title title title";
+    grid-template-columns: auto 1fr auto auto auto;
+    grid-template-rows: auto 1fr;
+
+    > :is(.title, .titleWrap) {
+      box-sizing: border-box;
+      width: 100%;
+    }
+  }
+
+  // single feed: move updated to the left and always show action icons
+  :is(
+      #headlines-frame[is-vfeed="0"][data-is-wide-screen="true"] .hl,
+      #headlines-frame[is-vfeed="0"][data-enable-grid="true"] .cdm .header,
+      #headlines-frame[is-vfeed="0"] .cdm.expanded .header,
+      #headlines-frame[is-vfeed="0"] .cdm.expandable.active .header
+    ) {
+    grid-template-areas:
+      "updated updated updated icon actions"
+      "title title title title title";
+
+    :is(.marked-pic, .pub-pic, .dijitCheckBox, .icon-score, .updated) {
+      display: block;
+    }
+  }
+
+  // widescreen mode extra adjustments
+  #headlines-frame[data-is-wide-screen="true"][data-is-cdm="false"] {
+    container-type: inline-size;
+
+    // show action icons in vertically split list items if they are wide enough
+    .container(500px, {
+      .hl :is(.marked-pic, .pub-pic, .dijitCheckBox, .icon-score, .updated) {
+        display: block;
+      }
+    });
+    // if detail is opened, use smaller content spacing on the right
+    &:has(~ #content-insert) {
+      padding-right: calc(@content-spacing-left);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // vertically split list item and detail overrides
+  // ---------------------------------------------------------------------------
+  #headlines-frame[data-is-wide-screen="true"] {
+    .hl {
+      > .title {
+        grid-row-start: 1;
+        padding-top: @headline-height;
+      }
+      > :not(.title) {
+        background-color: transparent;
+      }
+    }
+    ~ #content-insert .header {
+      position: sticky;
+      z-index: 1;
+      top: 0;
+    }
+    span.feed {
+      pointer-events: none;
+
+      a {
+        pointer-events: all;
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // cards/grid shared styles
+  // ---------------------------------------------------------------------------
+  #headlines-frame.cdm[data-enable-grid="true"] {
+    gap: 0 @expanded-gap;
+    padding-bottom: 0;
+
+    .media(0, lg, {
+      grid-template-columns: minmax(0, 1fr);
+
+      .icon-grid-span {
+        display: none;
+      }
+    });
+
+    .cdm {
+      display: flex;
+      flex-direction: column;
+    }
+    :is(.header, .content) {
+      border: none;
+    }
+    .content {
+      flex: 1;
+      background-color: transparent;
+    }
+    :is(.feed-title, .whiteBox, #headlines-spacer) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // cards view with overlay for detail
+  // ---------------------------------------------------------------------------
+  #headlines-frame.cdm[data-enable-grid="true"][data-is-cdm-expanded="false"] {
+    @cards-width: ~"(@{card-max-column-count} * (@{card-target-column-width} + @{expanded-gap}) - @{expanded-gap})";
+    @frame-width: ~"(100% - @{content-spacing-left} - @{content-spacing-right} - 4px)"; // 4px scrollbar
+    @extra-padding: ~"max(0px, (@{frame-width} - @{cards-width}) / 2)";
+
+    display: grid;
+    padding-inline: calc(@content-spacing-left + @extra-padding) calc(@content-spacing-right + @extra-padding);
+
+    .media(md, {
+      grid-template-columns: repeat(auto-fit, minmax(@card-min-column-width, 1fr));
+    });
+
+    .titleWrap {
+      height: 100%;
+    }
+    .cdm {
+      &:not(.active) {
+        .media(md, {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: @expanded-gap;
+          border-color: @border-default !important;
+  
+          .header {
+            grid-template-columns: auto 1fr auto auto auto;
+            flex: 1;
+            padding: 5px calc(@title-padding);
+          }
+          .titleWrap {
+            grid-row-start: 1;
+            padding-top: @headline-height;
+          }
+          .title {
+            font-family: @fonts-heading;
+            font-size: @font-size-post;
+            white-space: normal;
+          }
+          .icon-feed {
+            left: calc(@title-padding + 1px);
+          }
+          .excerpt {
+            display: block;
+            margin-top: calc(@title-padding / 2);
+            white-space: normal;
+            font-size: @font-size-card-excerpt;
+            line-height: 1.333;
+            text-indent: -1.25em; // remove leading `— ` including space
+          }
+        });
+      }
+      &.active {
+        @width: ~"clamp(75vw, (@{font-size-post} * @{reading-width}), 100vw + 1px)"; // add 1px to push border out
+        @padding-x: ~"max((15vw - 100px), @{content-spacing})";
+        @title-line-height: .heading-font-size(@title-level) [ @line-height];
+        // header-height: sum of expanded-detail-padding on top; 2 * title-line-height because it's clamped to 2 lines;
+        // 1st base-spacing: feed, date, icons; 2nd base-spacing: title padding + author/labels/time-to-read
+        @header-height: calc(@expanded-detail-padding-y + 2 * (@title-line-height + @base-spacing));
+
+        #main:has(&) {
+          // hide dijitSplitter between feeds-holder and content-wrap when overlay is active
+          > .dijitSplitter {
+            visibility: hidden;
+          }
+          #toolbar-frame {
+            z-index: 2;
+          }
+          // don't cut overlay in Safari
+          @supports (-webkit-hyphens: none) {
+            #headlines-wrap-inner,
+            #headlines-frame {
+              overflow: visible;
+            }
+          }
+        }
+        &::before,
+        :is(.header, .content) {
+          position: fixed !important;
+          z-index: 20;
+          right: 0;
+          box-sizing: border-box;
+          animation: card-overlay 0.35s ease-out;
+        }
+        // backdrop
+        &::before {
+          content: "";
+          top: 0;
+          bottom: 0;
+          left: -50px; // card-overlay animation travel
+          background-color: fade(@black, @fade6);
+        }
+        .titleWrap {
+          box-shadow: inset 0 -1px 0 @border-darker;
+        }
+        .title {
+          -webkit-line-clamp: 2;
+        }
+        :is(.header, .content) {
+          width: @width;
+          padding-inline: @padding-x;
+          border-left: 1px solid @border-default;
+          background-color: @default-bg !important;
+          backdrop-filter: none;
+        }
+        .header {
+          top: 0;
+          height: @header-height;
+
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            top: calc(@collapse-bar-height);
+            right: 30px; // for mobile, allow tapping on right edge of the header to close detail view
+            bottom: 0;
+            left: 0;
+          }
+          // reset sticky shift
+          :is(.icon-feed, .feed, .updated, .left, .right > *, .collapse) {
+            transform: none;
+          }
+          .media(0, sm, {
+            .left {
+              margin-right: 20px; // keep some space for close button
+            }
+          });
+        }
+        .content {
+          top: @header-height;
+          bottom: 0;
+          overflow: auto;
+        }
+        .collapse {
+          visibility: visible;
+          position: fixed;
+          z-index: -1;
+          inset: 0;
+
+          i {
+            align-items: flex-start;
+            height: 100%;
+            padding: 10px;
+            background-color: transparent;
+          }
+        }
+        .icon-feed {
+          left: calc(@padding-x + 1px);
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // group by feed
+  // ---------------------------------------------------------------------------
+  .feed-title {
+    display: flex;
+    padding: @headline-height 0 calc(@headline-height - 16px);
+    border: none;
+
+    > * {
+      padding: 0 6px;
+      line-height: 1;
+    }
+    .title {
+      padding-top: 2px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // initial loading (.whiteBox)
+  // ---------------------------------------------------------------------------
+  :is(.whiteBox, #headlines-spacer > *) {
+    padding: calc(@title-padding); // align with 2nd headline text
+    border: none;
+  }
+  :is(.whiteBox, #headlines-spacer) {
+    &,
+    :not(a) {
+      color: @fg-text-muted;
+      font-size: @font-size-main;
+      line-height: 1.5;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // end of feed, loading next headlines
+  // ---------------------------------------------------------------------------
+  #headlines-spacer {
+    position: relative;
+    box-sizing: border-box;
+    height: calc(100vh - 44px); // Samsung Internet and Opera < 94 still need vh fallback
+    height: calc(100svh - 44px); // exclude #toolbar height and browser ui on mobile
+    padding-top: calc(@headline-height + 1px);
+
+    // loading next headlines
+    > span {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .icon-three-dots {
+        order: 1;
+        margin-top: 10px;
+      }
+    }
+    &::after {
+      content: "The End";
+      position: absolute;
+      inset: auto 0 0;
+      padding: calc(@base-spacing);
+      color: @color-fade5;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // plugins
+  // ---------------------------------------------------------------------------
+  .time-to-read {
+    all: unset;
+    font-size: @font-size-small;
+  }
+  .author:not(:empty) ~ .time-to-read::before {
+    content: "\2014\a0";
+  }
+}

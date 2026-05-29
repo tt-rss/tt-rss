@@ -1,0 +1,19 @@
+@import "../lib/flat-ttrss/flat_combined_dark.css";
+@import "_variables.less";
+
+@color-accent: #b87d2c;
+
+.icon-three-dots,
+.loadingNode,
+#feed_add_spinner {
+  filter: invert(1);
+}
+
+body.flat {
+  .dijitAccordionInnerContainer.dijitSelected :is(.dijitAccordionTitle, .dijitAccordionTitle .material-icons) {
+    color: @black;
+  }
+  .dijitCheckBox.dijitChecked {
+    background-color: darken(@color-accent, 5%);
+  }
+}

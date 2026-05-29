@@ -1,0 +1,28 @@
+@import "_variables.less";
+
+#overlay {
+  #overlay_inner {
+    display: grid;
+    place-content: center;
+    height: 100%;
+    margin: 0;
+    color: @color-fade5;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  #loading_bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100% !important;
+    height: 5px;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  #loading_bar_label {
+    display: none;
+  }
+}

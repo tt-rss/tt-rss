@@ -16,7 +16,7 @@ Here are some ideas to get you started:
   * Related: If something shows up in tt-rss and isn't making its way into Weblate, [report the issue](https://github.com/tt-rss/tt-rss/issues)
     so translation coverage can (potentially) be improved.
 * Help improve the code.
-  * Development primarily happens in https://github.com/tt-rss/tt-rss, but some plugins are in their own repository under https://github.com/tt-rss/.
+  * Development primarily happens in https://github.com/ashcoft/tt-rss, but some plugins are in their own repository under https://github.com/ashcoft/.
   * Keep in mind major changes (particularly to the user experience) are unlikely to be accepted unless discussed and agreed upon beforehand.
     Plugins, etc. are generally preferred over modifying the core project when customization is desired.
   * If there are any questions about whether something would be accepted, it'd be best to first

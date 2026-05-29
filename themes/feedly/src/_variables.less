@@ -1,0 +1,252 @@
+// -----------------------------------------------------------------------------
+// theme custumization
+// -----------------------------------------------------------------------------
+
+// `html` instead of `:root` for lower specificity => reliable override, fixes regression introduced in af82dde
+html {
+  --base-spacing: 45px; // works best with a value between 30px and 75px
+  --font-size-post: 16px;
+  --fonts-ui: "Helvetica Neue", Arial, Helvetica, "Liberation Sans", "Nimbus Sans L", FreeSans, sans-serif;
+  --fonts-content: var(--fonts-ui);
+  --fonts-heading: sans-serif-condensed, SansCn; // sans-serif-condensed to get Roboto Condensed on Android, others use SansCn
+  --fonts-mono: "Fira Code", Menlo, Monaco, Consolas, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono",
+    "Bitstream Vera Sans Mono", "Courier New", monospace;
+  --reading-width: 45; // use a unitless `em` value
+  --card-max-column-count: 10;
+  --card-min-column-width: 300px;
+}
+
+// -----------------------------------------------------------------------------
+// variables
+//
+// *1: values used in tt-rss default styles
+// *2: values reused from from tt-rss default styles
+// -----------------------------------------------------------------------------
+
+// dynamic values
+@base-spacing: var(--base-spacing);
+@card-max-column-count: var(--card-max-column-count);
+@card-min-column-width: var(--card-min-column-width);
+@card-target-column-width: ~"(var(--card-min-column-width) * 1.15)";
+@content-spacing: var(--content-spacing, var(--base-spacing));
+@content-spacing-right: var(--content-spacing, ~"(@{base-spacing} + 4px)");
+@content-spacing-left: var(--content-spacing, ~"(@{base-spacing} - 4px)");
+@expanded-detail-padding-x: var(--expanded-detail-padding-x, 25px);
+@expanded-detail-padding-y: 25px;
+@feeds-toggle-width: var(--feeds-toggle-width, @base-spacing);
+@feeds-spacing: var(--content-spacing, calc(@feeds-toggle-width - 8px));
+@font-size-post: var(--font-size-post);
+@font-size-content: var(--font-size-prefs, 14px); // *1, most content in prefs
+@font-size-main: var(--font-size-main, 13px); // main view ui elements
+@font-size-toolbar: @font-size-main; // *1, toolbars, menu popups
+@font-size-card-excerpt: var(--font-size-card-excerpt, 12px);
+@font-size-small: var(--font-size-small, 11px); // *1, feed name, date, author, tags
+@font-size-tiny: var(--font-size-tiny, 9px); // *1, feeds holder unread counter, labels
+@fonts-ui: var(--fonts-ui); // *1
+@fonts-content: var(--fonts-content);
+@fonts-heading: var(--fonts-heading);
+@fonts-mono: var(--fonts-mono);
+@headline-height: @base-spacing;
+@reading-width: var(--reading-width);
+
+// base colors
+@red: #d45;
+@orange: #e84;
+@amber: #ea2;
+@yellow: #db0;
+@green: #6b5;
+@blue: #39c;
+@black: #000;
+@white: #fff;
+@default-fg: @black; // *1
+@default-bg: @white; // *1
+
+// opacities, color fades
+@fade1: (55% / 15);
+@fade2: (100% / 15);
+@fade3: (200% / 15);
+@fade4: (300% / 15);
+@fade5: (400% / 15);
+@fade6: (600% / 15);
+@fade7: (900% / 15);
+@fade8: (1100% / 15);
+@fade9: 100%;
+
+// fades of default fg color
+@color-fade0: fade(@default-fg, 0%);
+@color-fade1: fade(@default-fg, @fade1);
+@color-fade2: fade(@default-fg, @fade2);
+@color-fade3: fade(@default-fg, @fade3);
+@color-fade4: fade(@default-fg, @fade4);
+@color-fade5: fade(@default-fg, @fade5);
+@color-fade6: fade(@default-fg, @fade6);
+@color-fade7: fade(@default-fg, @fade7);
+@color-fade8: fade(@default-fg, @fade8);
+
+// application of default fg color fades
+@color-panel-bg: @color-fade2; // *1
+@border-default: @color-fade2; // *1
+@border-darker: @color-fade3;
+@color-feeds-icon: @color-fade4;
+@color-icon: @color-fade5; // *1
+@color-icon-hover: @color-fade6;
+@fg-text-muted: @color-fade6; // *1
+@feeds-text: @color-fade7;
+@default-text: @color-fade8; // *1
+
+// other colors
+@bg-button: mix(@default-fg, @default-bg, @fade2);
+@bg-button-hover: mix(@default-fg, @default-bg, @fade3);
+@bg-button-active: shade(@default-bg, @fade4);
+@bg-input: lighten(@default-bg, @fade1);
+@bg-read: @default-bg;
+@bg-unread: @default-bg;
+@color-scrollbar: @color-accent;
+@color-checked: @color-accent; // *1
+@color-marked: @green; // *1
+@color-published: @orange; // *1
+@color-selected: @yellow;
+@color-error: @red;
+@colors-alert: {
+  danger: @red;
+  error: @red;
+  info: @blue;
+  success: @green;
+  warning: @amber;
+};
+
+@breakpoint-xs: 480px;
+
+@is-night: boolean(luma(@default-fg) > 50%);
+
+// selects all dijit buttons, excluding:
+// .dijitComboBox .dijitButtonNode,
+// .dijitSelect .dijitButtonContents,
+// .dijitSelect .dijitButtonNode,
+// .dijitSpinner .dijitArrowButton,
+@button-selector: ~":is(.dijitButton, .dijitComboButton, .dijitDropDownButton, .dijitToggleButton) .dijitButtonNode";
+
+// -----------------------------------------------------------------------------
+// mixins
+// -----------------------------------------------------------------------------
+.color-buttons(@bg-color) {
+  &@{button-selector} {
+    background-color: @bg-color;
+  }
+  &:not(.dijitComboButton):is(.dijitFocused, .dijitHover)@{button-selector},
+  &.dijitComboButton :is(.dijitButtonNodeHover, .dijitDownArrowButtonFocused, .dijitDownArrowButtonHover),
+  &.dijitComboButton .dijitButtonNode:has(.dijitButtonContentsFocused) {
+    background-color: shade(@bg-color, 12%);
+  }
+  &:not(.dijitComboButton).dijitActive@{button-selector},
+  &.dijitComboButton :is(.dijitButtonNodeActive.dijitButtonNodeActive, .dijitDownArrowButtonActive) {
+    background-color: shade(@bg-color, 25%);
+  }
+}
+
+.color-link-hover(@amount) {
+  color: if(@is-night, lighten(@color-link, @amount), darken(@color-link, @amount));
+}
+
+.heading-font-size(@level: 0) {
+  @font-size: ~"(@{font-size-post} + 10px - @{level} * 2px)";
+  @line-height: ~"(@{font-size} + 6px)";
+
+  font-size: calc(@font-size);
+  line-height: calc(@line-height);
+}
+
+.reading-width() {
+  max-width: calc(@font-size-post * @reading-width);
+}
+
+.interactive-icon(@color: @color-icon) {
+  transition: color 0.2s;
+  color: @color;
+
+  @media (hover: hover) {
+    &:is(:hover, :focus-visible) {
+      color: @color-icon-hover;
+    }
+  }
+}
+
+.media(@from, @rules) {
+  .media(@from, @to: 0, @rules);
+}
+.media(@from, @to, @rules) {
+  @breakpoints: {
+    @0: 0;
+    @xs: @breakpoint-xs; // custom addition
+    @sm: @breakpoint-sm; // *2
+    @md: @breakpoint-md; // *2
+    @lg: @breakpoint-lg; // *2
+    @xl: @breakpoint-xl; // *2
+  };
+  .return() when (@from = 0) {
+    @media (max-width: @breakpoints[@@to]) {
+      @rules();
+    }
+  }
+  .return() when (@to = 0) {
+    @media (min-width: @breakpoints[@@from] + 1) {
+      @rules();
+    }
+  }
+  .return() when (default()) {
+    @media (min-width: @breakpoints[@@from] + 1) and (max-width: @breakpoints[@@to]) {
+      @rules();
+    }
+  }
+  .return();
+}
+
+// TODO: rework once https://github.com/less/less.js/issues/3766 is solved
+// mixin to add whole selector chain to @contaier query to work around less not inheriting the selector
+// using plugin https://github.com/seven-phases-max/less-plugin-reflections to save selector to a variable
+// as suggested here: https://github.com/less/less.js/issues/3053#issuecomment-299707813
+@plugin 'reflections'; // this implements `current-selector()`
+.container(@from, @rules) {
+  .container(@from, @to: 0, @rules);
+}
+.container(@from, @to, @rules) {
+  @selector: current-selector();
+
+  .return(@selector) when (@from = 0) {
+    @container (max-width: @to) {
+      @{selector} {
+        @rules();
+      }
+    }
+  }
+  .return(@selector) when (@to = 0) {
+    @container (min-width: @from) {
+      @{selector} {
+        @rules();
+      }
+    }
+  }
+  .return(@selector) when (default()) {
+    @container (min-width: @from) and (max-width: @to) {
+      @{selector} {
+        @rules();
+      }
+    }
+  }
+  .return(@selector);
+}
+
+// based on https://bitbucket.org/pixelass/homeless/src/master/src/repeat/repeat.less
+.repeat(@string, @n, @rules) {
+  .repeat(@string, "", @n, @rules);
+}
+.repeat(@string, @separator, @n, @rules) {
+  .reduce(@acc, @cur, @separator, @i) when (@i > 0) {
+    .return(@result, @i) when (@i = 1) {
+      @rules();
+    }
+    .return(e(@acc), @i);
+    .reduce("@{acc}@{separator}@{cur}", @cur, @separator, @i - 1);
+  }
+  .reduce(@string, @string, @separator, @n);
+}

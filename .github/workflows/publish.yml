@@ -1,35 +1,27 @@
-name: Publish
+name: Sync & Publish Versions
 
 on:
   push:
     branches: [main]
     paths-ignore:
     - '.devcontainer/**'
-    - '.github/**'
     - '.vscode/**'
     - 'tests/**'
     - '.*'
-    - '*.*-dist'
     - '*.js'
     - '*.json'
     - '*.lock'
     - '*.md'
     - '*.neon'
     - '*.xml'
-  # Allow manual triggering
   workflow_dispatch:
-
 
 permissions:
   contents: read
 
-
 jobs:
   css-lint:
     uses: ./.github/workflows/css-lint.yml
-
-  docker-code-quality:
-    uses: ./.github/workflows/docker-code-quality.yml
 
   javascript-code-quality:
     uses: ./.github/workflows/javascript-code-quality.yml
@@ -40,106 +32,12 @@ jobs:
   shell-code-quality:
     uses: ./.github/workflows/shell-code-quality.yml
 
-  publish:
-    name: Publish Docker image ${{ matrix.image.name }}
-    needs:
-    - css-lint
-    - docker-code-quality
-    - javascript-code-quality
-    - php-code-quality
-    - shell-code-quality
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    strategy:
-      matrix:
-        image:
-        - name: app
-          dockerfile: ./.docker/app/Dockerfile
-          repository_dockerhub: supahgreg/tt-rss
-          repository_ghcr: ghcr.io/tt-rss/tt-rss
-        - name: web-nginx
-          dockerfile: ./.docker/web-nginx/Dockerfile
-          repository_dockerhub: supahgreg/tt-rss-web-nginx
-          repository_ghcr: ghcr.io/tt-rss/tt-rss-web-nginx
-
-    steps:
-    - name: Check out code
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-    - name: Get commit timestamp
-      run: |
-        COMMIT_TIMESTAMP="$(git show -s --format=%cI HEAD)"
-        echo "COMMIT_TIMESTAMP=$COMMIT_TIMESTAMP" >> "$GITHUB_ENV"
-
-    - name: Get commit short SHA
-      run: |
-        COMMIT_SHORT_SHA="$(git rev-parse --short=8 HEAD)"
-        echo "COMMIT_SHORT_SHA=$COMMIT_SHORT_SHA" >> "$GITHUB_ENV"
-
-    - name: Log in to GitHub Container Registry
-      uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-    - name: Extract metadata
-      id: meta
-      uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
-      with:
-        images: |
-          ${{ matrix.image.repository_dockerhub }}
-          ${{ matrix.image.repository_ghcr }}
-        tags: |
-          # update 'latest'
-          type=raw,value=latest
-          # short SHA with a 'sha-' prefix (e.g. sha-abc123)
-          type=sha
-          # date of the associated commit (e.g. 20251126-133700)
-          type=raw,value={{commit_date 'YYYYMMDD-HHmmss'}}
-
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
-
-    - name: Build and push to image registries
-      id: push
-      uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
-      with:
-        context: .
-        file: ${{ matrix.image.dockerfile }}
-        platforms: linux/arm64,linux/amd64
-        cache-from: |
-          type=gha,scope=${{ matrix.image.name }}
-          type=registry,ref=${{ matrix.image.repository_ghcr }}:cache
-        cache-to: |
-          type=gha,scope=${{ matrix.image.name }},mode=max
-          type=registry,ref=${{ matrix.image.repository_ghcr }}:cache,mode=max
-        # TODO: clean up build arg and environment variable naming.
-        build-args: |
-          CI_COMMIT_BRANCH=${{ github.ref_name }}
-          CI_COMMIT_SHA=${{ github.sha }}
-          CI_COMMIT_SHORT_SHA=${{ env.COMMIT_SHORT_SHA }}
-          CI_COMMIT_TIMESTAMP=${{ env.COMMIT_TIMESTAMP }}
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
-        provenance: true
-        sbom: true
-        push: true
+  validate-sql:
+    needs: [css-lint, javascript-code-quality, php-code-quality, shell-code-quality]
+    uses: ./.github/workflows/validate-sql.yml
 
   publish-version:
-    needs:
-    - publish
+    needs: [validate-sql]
     uses: ./.github/workflows/publish-version-json.yml
     permissions:
       contents: write
