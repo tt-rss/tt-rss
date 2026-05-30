@@ -19,11 +19,13 @@ jobs:
 
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"'
     - name: Fetch upstream
-      run: 'git remote add orig https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
+      run: 'git remote add upstream https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
 
-        git fetch orig main --tags'
+        git remote set-url origin https://github.com/ashcoft/tt-rss-non-dockerize.git 2>/dev/null || true
+
+        git fetch upstream main --tags'
     - name: Reset to upstream
-      run: 'git reset --hard orig/main
+      run: 'git reset --hard upstream/main
 
         echo "Reset to upstream main"'
     - name: Remove Docker files
@@ -49,4 +51,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Commit and push
-      run: "git add -A\nif git diff --staged --quiet; then\n  echo \"No changes to commit\"\nelse\n  git commit -m \"Sync: nondockerize + feedly theme as default\"\n  git push upstream main\n  echo \"Pushed to upstream main\"\nfi"
+      run: "git add -A\nif git diff --staged --quiet; then\n  echo \"No changes to commit\"\nelse\n  git commit -m \"Sync: nondockerize + feedly theme as default\"\n  git push origin main\n  echo \"Pushed to origin main\"\nfi"
