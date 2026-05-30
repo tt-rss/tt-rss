@@ -19,13 +19,15 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
     - name: Fetch upstream
-      run: |
-        git remote add upstream https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
-        git fetch upstream main --tags
+      run: 'git remote add upstream https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
+
+        git remote set-url origin https://github.com/ashcoft/tt-rss-non-dockerize.git 2>/dev/null || true
+
+        git fetch upstream main --tags'
     - name: Reset to upstream
-      run: |
-        git reset --hard upstream/main
-        echo "Reset to upstream main"
+      run: 'git reset --hard upstream/main
+
+        echo "Reset to upstream main"'
     - name: Remove Docker files
       run: |
         rm -rf .docker docker-compose.yml .env-dist .devcontainer
