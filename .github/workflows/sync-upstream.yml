@@ -35,7 +35,17 @@ jobs:
     - name: Write workflow files
       run: "python3 -c \"\nimport base64, os\nos.makedirs(\".github/workflows\", exist_ok=True)\nwith open(\".github/workflows/publish.yml\", \"wb\") as f:\n    f.write(base64.b64decode(\"bmFtZTogU3luYyAmIFB1Ymxpc2ggVmVyc2lvbnMKCm9uOgogIHB1c2g6CiAgICBicmFuY2hlczogW21haW5dCiAgICBwYXRocy1pZ25vcmU6CiAgICAtICcuZGV2Y29udGFpbmVyLyoqJwogICAgLSAnLnZzY29kZS8qKicKICAgIC0gJ3Rlc3RzLyoqJwogICAgLSAnLionCiAgICAtICcqLmpzJwogICAgLSAnKi5qc29uJwogICAgLSAnKi5sb2NrJwogICAgLSAnKi5tZCcKICAgIC0gJyoubmVvbicKICAgIC0gJyoueG1sJwogIHdvcmtmbG93X2Rpc3BhdGNoOgoKcGVybWlzc2lvbnM6CiAgY29udGVudHM6IHJlYWQKCmpvYnM6CiAgY3NzLWxpbnQ6CiAgICB1c2VzOiAuLy5naXRodWIvd29ya2Zsb3dzL2Nzcy1saW50LnltbAoKICBqYXZhc2NyaXB0LWNvZGUtcXVhbGl0eToKICAgIHVzZXM6IC4vLmdpdGh1Yi93b3JrZmxvd3MvamF2YXNjcmlwdC1jb2RlLXF1YWxpdHkueW1sCgogIHBocC1jb2RlLXF1YWxpdHk6CiAgICB1c2VzOiAuLy5naXRodWIvd29ya2Zsb3dzL3BocC1jb2RlLXF1YWxpdHkueW1sCgogIHNoZWxsLWNvZGUtcXVhbGl0eToKICAgIHVzZXM6IC4vLmdpdGh1Yi93b3JrZmxvd3Mvc2hlbGwtY29kZS1xdWFsaXR5LnltbAoKICB2YWxpZGF0ZS1zcWw6CiAgICBuZWVkczogW2Nzcy1saW50LCBqYXZhc2NyaXB0LWNvZGUtcXVhbGl0eSwgcGhwLWNvZGUtcXVhbGl0eSwgc2hlbGwtY29kZS1xdWFsaXR5XQogICAgdXNlczogLi8uZ2l0aHViL3dvcmtmbG93cy92YWxpZGF0ZS1zcWwueW1sCgogIHB1Ymxpc2gtdmVyc2lvbjoKICAgIG5lZWRzOiBbdmFsaWRhdGUtc3FsXQogICAgdXNlczogLi8uZ2l0aHViL3dvcmtmbG93cy9wdWJsaXNoLXZlcnNpb24tanNvbi55bWwKICAgIHBlcm1pc3Npb25zOgogICAgICBjb250ZW50czogd3JpdGUK\"))\nprint(\"Created publish.yml\")\nwith open(\".github/workflows/shell-code-quality.yml\", \"wb\") as f:\n    f.write(base64.b64decode(\"bmFtZTogU2hlbGwgQ29kZSBRdWFsaXR5CgpvbjoKICBwdWxsX3JlcXVlc3Q6CiAgICBwYXRoczoKICAgIC0gJ2xpYi9kb2pvLXNyYy9yZWJ1aWxkLWRvam8uc2gnCiAgICAtICd1dGlscy8qKi5zaCcKICB3b3JrZmxvd19kaXNwYXRjaDoKICB3b3JrZmxvd19jYWxsOgoKZW52OgogIGZhaWwtZmFzdDogdHJ1ZQoKcGVybWlzc2lvbnM6CiAgY29udGVudHM6IHJlYWQKCmpvYnM6CiAgc2hlbGxjaGVjazoKICAgIG5hbWU6IFNoZWxsQ2hlY2sKICAgIHJ1bnMtb246IHVidW50dS1sYXRlc3QKCiAgICBzdGVwczoKICAgIC0gbmFtZTogQ2hlY2sgb3V0IGNvZGUKICAgICAgdXNlczogYWN0aW9ucy9jaGVja291dEBkZTBmYWMyZTQ1MDBkYWJlMDAwOWU2NzIxNGZmNWY1NDQ3Y2U4M2RkICMgdjYuMC4yCgogICAgLSBuYW1lOiBSdW4gU2hlbGxDaGVjawogICAgICBydW46IHwKICAgICAgICAjIFByb2plY3QgdXRpbGl0eSBzY3JpcHRzICh1c2Ugb2YgYmFzaCBvciBjb21wYXRpYmxlIGFzc3VtZWQpCiAgICAgICAgZmluZCBsaWIvZG9qby1zcmMgdXRpbHMgLXR5cGUgZiAtbmFtZSAnKi5zaCcgLWV4ZWMgXAogICAgICAgICAgZG9ja2VyIHJ1biAtLXJtIC12ICIkUFdEOi9tbnQiIC13IC9tbnQga29hbGFtYW4vc2hlbGxjaGVjazpzdGFibGUgLS1zZXZlcml0eT13YXJuaW5nIC0tc2hlbGw9YmFzaCB7fSArCg==\"))\nprint(\"Created shell-code-quality.yml\")\n\""
     - name: Add feedly theme
-      run: "FEEDLY_DIR=\"themes/feedly\"\nmkdir -p \"/fonts\" \"/src\"\ncurl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist | tar -xz -C /tmp/\nFEEDLY_SRC=\nif [ -n \"\" ] && [ -d \"\" ]; then\n  cp -rn \"/dist/\"*  \"/\" 2>/dev/null || true\n  cp -rn \"/feedly/fonts/\"* \"/fonts/\" 2>/dev/null || true\n  cp -rn \"/src/\"*    \"/src/\" 2>/dev/null || true\n  echo \"Added feedly theme from dist branch\"\nelse\n  echo \"Warning: feedly theme download failed\"\nfi"
+      run: |
+        FEEDLY_DIR="themes/feedly"
+        mkdir -p "$FEEDLY_DIR"
+        curl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist | tar -xz -C /tmp/
+        FEEDLY_SRC=$(tar -tzf /tmp/*.tar.gz 2>/dev/null | head -1 | cut -d/ -f1 | head -c 100)
+        if [ -n "$FEEDLY_SRC" ] && [ -d "/tmp/$FEEDLY_SRC" ]; then
+          cp -rn "/tmp/$FEEDLY_SRC/"* "$FEEDLY_DIR/" 2>/dev/null || true
+          echo "Added feedly theme from dist branch"
+        else
+          echo "Warning: feedly theme download failed"
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Commit and push
