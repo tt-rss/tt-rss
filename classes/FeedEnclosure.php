@@ -1,5 +1,5 @@
 <?php
-class FeedEnclosure {
+class FeedEnclosure implements \Stringable {
 	public string $link = '';
 	public string $type = '';
 	public string $length = '';
