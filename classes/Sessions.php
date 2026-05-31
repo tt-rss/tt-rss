@@ -49,6 +49,17 @@ class Sessions implements \SessionHandlerInterface {
 		return true;
 	}
 
+	public static function exists(string $id): bool {
+		$sth = Db::pdo()->prepare('SELECT COUNT(*) AS found FROM ttrss_sessions WHERE id=?');
+		$sth->execute([$id]);
+
+		if ($row = $sth->fetch()) {
+			return $row["found"] > 0;
+		} else {
+			return false;
+		}
+	}
+
 	public function read(string $id): false|string {
 		$sth = Db::pdo()->prepare('SELECT data FROM ttrss_sessions WHERE id=?');
 		$sth->execute([$id]);
