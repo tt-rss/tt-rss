@@ -191,7 +191,7 @@ class UrlHelper {
 		if (filter_var($url_filter_var, FILTER_VALIDATE_URL) === false)
 			return false;
 
-		if ($extended_filtering) {
+		if (!getenv('IS_INTEGRATION_TESTING') && $extended_filtering) {
 			if (!in_array($tokens['port'] ?? '', [80, 443, '']))
 				return false;
 

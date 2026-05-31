@@ -1586,10 +1586,14 @@ class Feeds extends Handler_Protected {
 					$ssth->execute([$feed, $owner_uid]);
 					$row = $ssth->fetch();
 
-					$feed_title = $row["title"];
-					$feed_site_url = $row["site_url"];
-					$last_error = $row["last_error"];
-					$last_updated = $row["last_updated"];
+					if ($row) {
+						$feed_title = $row["title"];
+						$feed_site_url = $row["site_url"];
+						$last_error = $row["last_error"];
+						$last_updated = $row["last_updated"];
+					} else {
+						$feed_title = "Unknown feed ($feed)";
+					}
 				} else {
 					$feed_title = self::_get_title($feed, $owner_uid);
 				}

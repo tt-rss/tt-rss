@@ -184,6 +184,105 @@ class Prefs {
 		//
 	}
 
+	    /** @returns ID of profile if exists or -1 */
+	static function get_profile_id(int $owner_uid, string $title): int {
+		$sth = Db::pdo()->prepare("SELECT id FROM ttrss_settings_profiles
+			WHERE owner_uid = :uid AND title = :title");
+		$sth->execute(["uid" => $owner_uid, "title" => $title]);
+
+		if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+			return (int) $row["id"];
+		}
+
+		return -1;
+	}
+
+	/** @returns true if profile_id exists for user */
+	static function profile_exists(int $owner_uid, int $profile_id): bool {
+		$sth = Db::pdo()->prepare("SELECT id FROM ttrss_settings_profiles
+			WHERE owner_uid = :uid AND id = :id");
+		$sth->execute(["uid" => $owner_uid, "id" => $profile_id]);
+
+		if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/** @returns ID of created profile if successful, -1 otherwise */
+	static function create_profile(int $owner_uid, string $title): int {
+		if (self::get_profile_id($owner_uid, $title) != -1)
+			return -1;
+
+		$sth = Db::pdo()->prepare("INSERT INTO ttrss_settings_profiles (owner_uid, title) VALUES (:uid, :title)");
+
+		if ($sth->execute(["uid" => $owner_uid, "title" => $title])) {
+			return (int) Db::pdo()->lastInsertId();
+		}
+
+		return -1;
+	}
+
+	/** @returns ID of created profile if successful, -1 otherwise */
+	static function clone_profile(int $owner_uid, int $old_profile_id, string $new_title): int {
+
+		if (!self::profile_exists($owner_uid, $old_profile_id))
+			return -1;
+
+		$new_profile_id = self::create_profile($owner_uid, $new_title);
+
+		if ($new_profile_id <= 0) {
+			return -1;
+		}
+
+		$sth = Db::pdo()->prepare("INSERT INTO ttrss_user_prefs2
+			(owner_uid, pref_name, profile, value)
+			SELECT
+					:uid,
+					pref_name,
+					:new_profile,
+					value
+			FROM ttrss_user_prefs2
+			WHERE owner_uid = :uid AND profile = :old_profile");
+
+		$clone_res = $sth->execute([
+			"uid" => $owner_uid,
+			"new_profile" => $new_profile_id,
+			"old_profile" => $old_profile_id,
+		]);
+
+		if ($clone_res)
+			return $new_profile_id;
+		else
+			return -1;
+	}
+
+	static function remove_profile(int $owner_uid, int $profile_id): bool {
+		if (!self::profile_exists($owner_uid, $profile_id))
+			return false;
+
+		$sth = Db::pdo()->prepare("DELETE FROM ttrss_settings_profiles
+			WHERE owner_uid = :uid AND id = :id");
+
+		return $sth->execute(["uid" => $owner_uid, "id" => $profile_id]);
+	}
+
+	/** @param int[] $profile_ids
+	 * @param int $current_profile is not removed (if passed)
+	 */
+	static function remove_profiles(int $owner_uid, array $profile_ids, int $current_profile = 0): bool {
+		if (empty($profile_ids)) {
+			return false;
+		}
+
+		return ORM::for_table('ttrss_settings_profiles')
+			->where('owner_uid', $owner_uid)
+			->where_in('id', $profile_ids)
+			->where_not_equal('id', $current_profile)
+			->delete_many();
+	}
+
 	/**
 	 * @return array<int, array{pref_name: string, value: bool|int|string|null, type_hint: Config::T_*}>
 	 */
