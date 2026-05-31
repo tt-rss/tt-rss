@@ -18,23 +18,44 @@ class RSSUtils {
 	 * @param array<string, mixed> $article
 	 */
 	static function calculate_article_hash(array $article, PluginHost $pluginhost): string {
-		$tmp = "";
+		$ignored_fields = [
+			// Details about the parent feed aren't relevant.
+			'feed',
+			'owner_uid',
 
-		$ignored_fields = [ "feed", "guid", "guid_hashed", "owner_uid", "force_catchup" ];
+			// GUIDs uniquely identify articles, so no point in including them when detecting changes.
+			'guid',
+			'guid_hashed',
+
+			// Labels are a tt-rss concept, and not directly sourced from article data.
+			//
+			// This exclusion is primarily to prevent filters from re-executing and potentially reapplying
+			// labels a user intentionally removed.
+			//
+			// In theory plugins might rely upon label-related article hash changes, but no instances of that
+			// have been found.
+			'labels',
+
+			// Only present in $article to allow plugins to indicate it should be marked as read.
+			'force_catchup',
+		];
+
+		$tmp = '';
 
 		foreach ($article as $k => $v) {
-			if (in_array($k, $ignored_fields))
+			if (!isset($v) || in_array($k, $ignored_fields))
 				continue;
 
-			if ($k != "feed" && isset($v)) {
-				$x = strip_tags(
-					is_array($v) ? implode(",", array_keys($v)) : $v);
+			$x = match ($k) {
+				'content' => strip_tags((string) $v),
+				'tags', 'enclosures' => implode(',', $v),
+				default => (string) $v,
+			};
 
-				$tmp .= sha1("$k:" . sha1($x));
-			}
+			$tmp .= sha1("$k:" . sha1($x));
 		}
 
-		return sha1(implode(",", $pluginhost->get_plugin_names()) . $tmp);
+		return sha1(implode(',', $pluginhost->get_plugin_names()) . $tmp);
 	}
 
 	static function cleanup_feed_icons(): void {
