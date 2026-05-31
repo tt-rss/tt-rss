@@ -34,7 +34,7 @@ abstract class DbTestCase extends TestCase {
 
 		try {
 			$pdo->rollBack();
-		} catch (\Throwable $e) {
+		} catch (\Throwable) {
 			//
 		}
     }

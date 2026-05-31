@@ -19,8 +19,6 @@ abstract class IntegrationTestCase extends TestCase {
 
         $this->setUp();
         $this->login();
-
-        parent::__construct($name);
     }
 
     /**

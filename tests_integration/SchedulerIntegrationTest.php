@@ -10,7 +10,7 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $result = $scheduler->add_scheduled_task(
             'test_task',
             '@daily',
-            function() { return 0; }
+            fn() => 0
         );
 
         $this->assertTrue($result);
@@ -22,13 +22,12 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'hourly_task',
             '0 * * * *',
-            function() { return 0; }
+            fn() => 0
         );
 
         // Reflect to inspect private property
         $ref = new ReflectionClass($scheduler);
         $prop = $ref->getProperty('scheduled_tasks');
-        $prop->setAccessible(true);
         $tasks = $prop->getValue($scheduler);
 
         $this->assertArrayHasKey('hourly_task', $tasks);
@@ -42,12 +41,11 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'UPPERCASE_TASK',
             '@daily',
-            function() { return 0; }
+            fn() => 0
         );
 
         $ref = new ReflectionClass($scheduler);
         $prop = $ref->getProperty('scheduled_tasks');
-        $prop->setAccessible(true);
         $tasks = $prop->getValue($scheduler);
 
         $this->assertArrayHasKey('uppercase_task', $tasks);
@@ -62,16 +60,16 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'dup_task',
             '@daily',
-            function() { return 0; }
+            fn() => 0
         );
 
         // Suppress the user_error warning
-        set_error_handler(function() { return true; });
+        set_error_handler(fn() => true);
 
         $result = $scheduler->add_scheduled_task(
             'dup_task',
             '@hourly',
-            function() { return 0; }
+            fn() => 0
         );
 
         restore_error_handler();
@@ -82,12 +80,12 @@ final class SchedulerIntegrationTest extends DbTestCase {
     public function test_add_scheduled_task_invalid_cron_returns_false(): void {
         $scheduler = new Scheduler('test-scheduler');
 
-        set_error_handler(function() { return true; });
+        set_error_handler(fn() => true);
 
         $result = $scheduler->add_scheduled_task(
             'bad_cron_task',
             'not-a-cron-expression',
-            function() { return 0; }
+            fn() => 0
         );
 
         restore_error_handler();
@@ -102,7 +100,6 @@ final class SchedulerIntegrationTest extends DbTestCase {
 
         $ref = new ReflectionClass($scheduler);
         $prop = $ref->getProperty('name');
-        $prop->setAccessible(true);
 
         $this->assertEquals('original-name', $prop->getValue($scheduler));
 
@@ -143,7 +140,7 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'record_task',
             '@daily',
-            function() { return 42; }
+            fn() => 42
         );
 
         $pdo = Db::pdo();
@@ -172,7 +169,7 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'new_task',
             '@weekly',
-            function() { return 0; }
+            fn() => 0
         );
 
         // No existing DB record — task should be created
@@ -231,7 +228,7 @@ final class SchedulerIntegrationTest extends DbTestCase {
         ");
 
         // Suppress warnings from user_error
-        set_error_handler(function() { return true; });
+        set_error_handler(fn() => true);
 
         $scheduler->run_due_tasks();
 
@@ -250,7 +247,7 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'keep_me',
             '@daily',
-            function() { return 0; }
+            fn() => 0
         );
 
         $pdo = Db::pdo();
@@ -272,14 +269,11 @@ final class SchedulerIntegrationTest extends DbTestCase {
         // Use reflection to invoke the private purge_orphaned_tasks method
         $ref = new ReflectionClass($scheduler);
         $purgeMethod = $ref->getMethod('purge_orphaned_tasks');
-        $purgeMethod->setAccessible(true);
 
         $purgeResult = $scheduler->add_scheduled_task(
             'purge_trigger',
             '@daily',
-            function() use ($purgeMethod, $scheduler) {
-                return $purgeMethod->invoke($scheduler);
-            }
+            fn() => $purgeMethod->invoke($scheduler)
         );
         $this->assertTrue($purgeResult);
 
@@ -302,20 +296,17 @@ final class SchedulerIntegrationTest extends DbTestCase {
         $scheduler->add_scheduled_task(
             'keep_me',
             '@daily',
-            function() { return 0; }
+            fn() => 0
         );
 
         // Use reflection to invoke the private purge_orphaned_tasks method
         $ref = new ReflectionClass($scheduler);
         $purgeMethod = $ref->getMethod('purge_orphaned_tasks');
-        $purgeMethod->setAccessible(true);
 
         $purgeResult = $scheduler->add_scheduled_task(
             'purge_trigger',
             '@daily',
-            function() use ($purgeMethod, $scheduler) {
-                return $purgeMethod->invoke($scheduler);
-            }
+            fn() => $purgeMethod->invoke($scheduler)
         );
         $this->assertTrue($purgeResult);
 
@@ -332,7 +323,6 @@ final class SchedulerIntegrationTest extends DbTestCase {
 
         $ref = new ReflectionClass($scheduler);
         $prop = $ref->getProperty('scheduled_tasks');
-        $prop->setAccessible(true);
         $tasks = $prop->getValue($scheduler);
 
         $this->assertArrayHasKey('purge_orphaned_scheduled_tasks', $tasks);
@@ -343,7 +333,6 @@ final class SchedulerIntegrationTest extends DbTestCase {
 
         $ref = new ReflectionClass($scheduler);
         $prop = $ref->getProperty('name');
-        $prop->setAccessible(true);
 
         $this->assertEquals(Scheduler::DEFAULT_NAME, $prop->getValue($scheduler));
     }

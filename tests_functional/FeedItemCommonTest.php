@@ -687,7 +687,6 @@ final class FeedItemCommonTest extends TestCase {
         $common = $items[0];
         // Use reflection to access protected count_children
         $ref = new ReflectionMethod($common, "count_children");
-        $ref->setAccessible(true);
         $this->assertEquals(0, $ref->invoke($common, $root));
     }
 
@@ -704,7 +703,6 @@ final class FeedItemCommonTest extends TestCase {
         $items = $parser->get_items();
         $common = $items[0];
         $ref = new ReflectionMethod($common, "count_children");
-        $ref->setAccessible(true);
         $this->assertEquals(3, $ref->invoke($common, $parent));
     }
 
@@ -722,7 +720,6 @@ final class FeedItemCommonTest extends TestCase {
         $items = $parser->get_items();
         $common = $items[0];
         $ref = new ReflectionMethod($common, "subtree_or_text");
-        $ref->setAccessible(true);
         $result = $ref->invoke($common, $node);
         $this->assertEquals("Simple Title", $result);
     }
@@ -742,7 +739,6 @@ final class FeedItemCommonTest extends TestCase {
         $items = $parser->get_items();
         $common = $items[0];
         $ref = new ReflectionMethod($common, "subtree_or_text");
-        $ref->setAccessible(true);
         $result = $ref->invoke($common, $node);
         $this->assertNotEquals("Hello world", $result);
         // Should return c14n serialized XML, not plain text

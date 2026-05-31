@@ -101,13 +101,13 @@ final class FeedsIntegrationTest extends DbTestCase {
 
     public function test_get_title_category_existing(): void {
         // seed.sql inserts categories with ids 1 and 2
-        $this->assertEquals("Technology", Feeds::_get_title(1, $_SESSION['uid'], 1, true));
-        $this->assertEquals("Science & Nature", Feeds::_get_title(2, $_SESSION['uid'], 1, true));
+        $this->assertEquals("Technology", Feeds::_get_title(1, $_SESSION['uid'], 1));
+        $this->assertEquals("Science & Nature", Feeds::_get_title(2, $_SESSION['uid'], 1));
     }
 
     public function test_get_title_category_missing(): void {
         // Category id 999 does not exist in seed.sql
-        $this->assertEquals("UNKNOWN", Feeds::_get_title(999, $_SESSION['uid'], 1, true));
+        $this->assertEquals("UNKNOWN", Feeds::_get_title(999, $_SESSION['uid'], 1));
     }
 
     // ── Owner UID parameter ──

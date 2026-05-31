@@ -18,7 +18,6 @@ final class LoggerSqlTest extends DbTestCase {
     private function resetLoggerSingleton(): void {
         $ref = new ReflectionClass(Logger::class);
         $prop = $ref->getProperty('instance');
-        $prop->setAccessible(true);
         $prop->setValue(null, null);
     }
 

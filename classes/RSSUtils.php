@@ -1585,7 +1585,7 @@ class RSSUtils {
 	 * @return array<int, array{'type': string, 'param': string}> An array of filter actions of type $filter_action_type
 	 */
 	static function find_article_filter_actions(array $filter_actions, string $filter_action_type): array {
-		return array_filter($filter_actions, fn(array $fa) => $fa['type'] === $filter_action_type);
+		return array_values(array_filter($filter_actions, fn(array $fa) => $fa['type'] === $filter_action_type));
 	}
 
 	/**

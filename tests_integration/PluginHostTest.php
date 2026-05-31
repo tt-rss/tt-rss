@@ -11,7 +11,6 @@ final class PluginHostTest extends DbTestCase {
 
         $ref = new ReflectionClass($host);
         $uidProp = $ref->getProperty('owner_uid');
-        $uidProp->setAccessible(true);
         $uidProp->setValue($host, 1);
 
         return $host;
@@ -105,9 +104,7 @@ final class PluginHostTest extends DbTestCase {
         $host->add_hook(PluginHost::HOOK_ARTICLE_FILTER, $plugin1, 50);
         $host->add_hook(PluginHost::HOOK_ARTICLE_FILTER, $plugin2, 60);
 
-        $host->run_hooks_callback(PluginHost::HOOK_ARTICLE_FILTER, function($result) {
-            return $result === 'stop';
-        });
+        $host->run_hooks_callback(PluginHost::HOOK_ARTICLE_FILTER, fn($result) => $result === 'stop');
 
         $this->assertTrue($plugin1->hookCalled);
         $this->assertFalse($plugin2->hookCalled);
@@ -190,7 +187,7 @@ final class PluginHostTest extends DbTestCase {
         // Verify it's gone from DB
         $pdo = Db::pdo();
         $row = $pdo->prepare("SELECT count(*) FROM ttrss_plugin_storage WHERE name = ? AND owner_uid = ?");
-        $row->execute([get_class($plugin), 1]);
+        $row->execute([$plugin::class, 1]);
         $this->assertEquals(0, (int) $row->fetchColumn());
     }
 
@@ -323,7 +320,7 @@ final class PluginHostTest extends DbTestCase {
         $host->add_filter_action($plugin, 'custom_action', 'Custom action description');
 
         $actions = $host->get_filter_actions();
-        $pluginClass = get_class($plugin);
+        $pluginClass = $plugin::class;
 
         $this->assertArrayHasKey($pluginClass, $actions);
         $this->assertCount(1, $actions[$pluginClass]);
