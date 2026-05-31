@@ -404,7 +404,7 @@ final class PrefsTest extends DbTestCase {
         $uid = $this->createTestUser('test_invalid');
 
         // set() triggers user_error() for invalid pref names; suppress it
-        set_error_handler(function(): bool { return true; }, E_USER_WARNING);
+        set_error_handler(fn(): bool => true, E_USER_WARNING);
         $result = Prefs::set('INVALID_PREF_NAME', 'value', $uid, null);
         restore_error_handler();
 

@@ -337,9 +337,8 @@ final class UrlHelperTest extends TestCase {
     }
 
     public function test_rewrite_relative_dotslash_with_base_dirname(): void {
-        // dirname("foo/bar/baz/") = "foo/bar", then append "test.html"
         $this->assertEquals(
-            'https://example.com/foo/bar/test.html',
+            'https://example.com/foo/bar/baz/test.html',
             UrlHelper::rewrite_relative('https://example.com/foo/bar/baz/', './test.html')
         );
     }

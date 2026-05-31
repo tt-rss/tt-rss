@@ -645,7 +645,7 @@ final class FeedItemAtomTest extends TestCase {
         $items = $parser->get_items();
         /** @var \FeedItem_Atom $item */
         $item = $items[0];
-        $this->assertEquals("https://example.com/relative/path", $item->get_link());
+        $this->assertEquals("https://example.com/base/relative/path", $item->get_link());
     }
 
     public function test_get_link_trims_whitespace(): void {

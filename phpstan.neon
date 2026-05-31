@@ -12,5 +12,7 @@ parameters:
         - node_modules (?)
         - plugins.local
         - tests
+        - tests_functional
+        - tests_integration
         - vendor
         - rector.php

@@ -339,7 +339,7 @@ final class FunctionsTest extends TestCase {
     }
 
     public function test_implements_interface_instance(): void {
-        $test = new self();
+        $test = new self("foo");
         // PHPUnit\Framework\TestCase implements Test, Reorderable, SelfDescribing
         $this->assertTrue(implements_interface($test, "PHPUnit\Framework\Test"));
         $this->assertFalse(implements_interface($test, "NonExistentInterface"));

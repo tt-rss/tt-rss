@@ -3,22 +3,25 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/latest/phpunit.xsd"
     bootstrap="tests_functional/bootstrap.php"
-    verbose="true">
+    cacheDirectory=".phpunit.cache"
+    displayDetailsOnPhpunitDeprecations="true"
+    failOnPhpunitDeprecation="true"
+    failOnRisky="true"
+    failOnWarning="true">
     <testsuites>
         <testsuite name="tests">
             <directory>tests_functional</directory>
         </testsuite>
     </testsuites>
-    <coverage>
+    <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
             <directory suffix=".php">classes</directory>
             <directory suffix=".php">lib</directory>
         </include>
         <exclude>
-            <directory suffix=".php">classes/Plugin_*</directory>
             <directory suffix=".php">lib/gettext</directory>
         </exclude>
-    </coverage>
+    </source>
     <php>
         <const name="IS_TESTING" value="true"/>
     </php>

@@ -327,6 +327,10 @@ class Config {
 
 	private Db_Migrations $migrations;
 
+	function __construct() {
+		$this->reload();
+	}
+
 	public static function get_instance() : Config {
 		if (self::$instance == null)
 			self::$instance = new self();
@@ -338,8 +342,8 @@ class Config {
 		//
 	}
 
-    /** load data from environment variables */
-    function reload(): void {
+	/** load data from environment variables */
+	function reload(): void {
 		$ref = new ReflectionClass(static::class);
 
 		foreach ($ref->getConstants() as $const => $cvalue) {
@@ -351,31 +355,24 @@ class Config {
 				$this->params[$cvalue] = [ self::cast_to($override !== false ? $override : $defval, $deftype), $deftype ];
 			}
 		}
-    }
+	}
 
-    /** this is primarily needed for tests, normally global config is not changed at runtime */
-    static function set(string $key, mixed $value): bool {
-        if (!getenv('IS_INTEGRATION_TESTING') && !getenv('IS_TESTING')) {
-            user_error("This method is only available for tests.", E_USER_WARNING);
+	/** this is primarily needed for tests, normally global config is not changed at runtime */
+	static function set(string $key, mixed $value): bool {
+			if (!getenv('IS_INTEGRATION_TESTING') && !getenv('IS_TESTING')) {
+				user_error("This method is only available for tests.", E_USER_WARNING);
+				return false;
+			}
 
-            return false;
-        } if (array_key_exists($key, self::_DEFAULTS)) {
-            list ($defval, $deftype) = self::_DEFAULTS[$key];
-
-            self::get_instance()->params[$key] = [self::cast_to($value, $deftype), $deftype];
-
-            return true;
-        } else {
-            user_error("Requested to set unknown global config variable: {$key}", E_USER_WARNING);
-
-            return false;
-        }
-    }
-
-    function __construct() {
-        $this->reload();
-    }
-
+			if (array_key_exists($key, self::_DEFAULTS)) {
+				[$defval, $deftype] = self::_DEFAULTS[$key];
+				self::get_instance()->params[$key] = [self::cast_to($value, $deftype), $deftype];
+				return true;
+			} else {
+				user_error("Requested to set unknown global config variable: {$key}", E_USER_WARNING);
+				return false;
+			}
+	}
 
 	/** determine tt-rss version (using git)
 	 *
