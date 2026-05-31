@@ -14,7 +14,7 @@ Thumbs.db
 /lock/*
 /.vscode/settings.json
 /vendor/**/.git
-/.phpunit.cache
+/.phpunit*cache
 /.phpstan-tmp
 /.rector-tmp
 /.tools/

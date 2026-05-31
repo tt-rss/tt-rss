@@ -1,0 +1,219 @@
+<?php
+/** @group integration */
+final class UpdateRssFeedIntegrationTest extends DbTestCase {
+
+    /**
+     * Feed URL pointing to PHP Server 2 (mock outgoing requests).
+     *
+     * @var string
+     */
+    private string $mock_feed_url;
+
+    /**
+     * ID of the mock feed inserted in setUp().
+     *
+     * @var int
+     */
+    private int $mock_feed_id = 0;
+
+    protected function setUp(): void {
+        parent::setUp();
+
+        $this->mock_feed_url = getenv('APP_URL') . '/tests_integration/feed.xml';
+        $this->mock_feed_id = $this->insertMockFeed();
+
+        Debug::set_enabled(true);
+        # Debug::set_loglevel(Debug::LOG_VERBOSE);
+    }
+
+    protected function tearDown(): void {
+        if ($this->mock_feed_id) {
+            $pdo = Db::pdo();
+            $pdo->exec("DELETE FROM ttrss_feeds WHERE id = {$this->mock_feed_id}");
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * Insert a feed record pointing to the mock server's feed.xml.
+     *
+     * @return int The inserted feed's ID.
+     */
+    private function insertMockFeed(): int {
+        $pdo = Db::pdo();
+        $pdo->exec("
+            INSERT INTO ttrss_feeds
+                (owner_uid, title, feed_url, update_interval, site_url)
+            VALUES
+                (1, 'Mock Atom Feed', '" . addslashes($this->mock_feed_url) . "', 30, 'http://localhost:9081')
+        ");
+
+        $stmt = $pdo->query("SELECT currval(pg_get_serial_sequence('ttrss_feeds', 'id'))");
+        return (int) $stmt->fetchColumn();
+    }
+
+    // ── Happy path ──────────────────────────────────────────────────────────
+
+    public function test_successful_update_returns_true(): void {
+        $result = RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $this->assertTrue($result);
+    }
+
+    public function test_successful_update_inserts_articles(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT COUNT(*) FROM ttrss_entries WHERE link LIKE '%fakecake.org%'"
+        );
+        $stmt->execute();
+        $this->assertEquals(1, $stmt->fetchColumn());
+    }
+
+    public function test_successful_update_creates_user_entry(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT COUNT(*) FROM ttrss_user_entries WHERE feed_id = ?"
+        );
+        $stmt->execute([$this->mock_feed_id]);
+        $this->assertEquals(1, $stmt->fetchColumn());
+    }
+
+    public function test_successful_update_clears_feed_error(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT last_error, last_updated, last_unconditional, last_successful_update FROM ttrss_feeds WHERE id = ?"
+        );
+        $stmt->execute([$this->mock_feed_id]);
+        $row = $stmt->fetch();
+
+        $this->assertEquals('', $row['last_error']);
+        $this->assertNotNull($row['last_updated']);
+        $this->assertNotNull($row['last_unconditional']);
+        $this->assertNotNull($row['last_successful_update']);
+    }
+
+    public function test_article_has_correct_metadata(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT title, link, content, author, updated, lang FROM ttrss_entries WHERE link LIKE '%fakecake.org%'"
+        );
+        $stmt->execute();
+        $row = $stmt->fetch();
+
+        $this->assertNotNull($row);
+        $this->assertEquals('x-21may2020', $row['title']);
+        $this->assertStringContainsString('clouds.png', $row['link']);
+        $this->assertStringContainsString('...', $row['content']);
+        $this->assertEmpty($row['author']);
+        $this->assertNotNull($row['updated']);
+    }
+
+    // ── Idempotency / dedup ─────────────────────────────────────────────────
+
+    public function test_duplicate_update_skips_existing_articles(): void {
+        // First update — should insert 1 article
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT COUNT(*) FROM ttrss_entries WHERE link LIKE '%fakecake.org%'"
+        );
+        $stmt->execute();
+        $this->assertEquals(1, $stmt->fetchColumn());
+
+        // Second update — same feed, same content
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        // Should still be exactly 1 article (no dupes)
+        $stmt->execute();
+        $this->assertEquals(1, $stmt->fetchColumn());
+    }
+
+    public function test_duplicate_update_updates_date_updated(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT date_updated FROM ttrss_entries WHERE link LIKE '%fakecake.org%'"
+        );
+        $stmt->execute();
+        $first_updated = $stmt->fetchColumn();
+
+        // Small delay to ensure time-based comparison is meaningful
+        usleep(1_100_000); // ~1.1 seconds
+
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $stmt->execute();
+        $second_updated = $stmt->fetchColumn();
+
+        $this->assertNotEquals($first_updated, $second_updated);
+    }
+
+    // ── Error paths ─────────────────────────────────────────────────────────
+
+    public function test_nonexistent_feed_returns_false(): void {
+        $result = RSSUtils::update_rss_feed(9999);
+
+        $this->assertFalse($result);
+    }
+
+    public function test_readonly_user_cannot_update_feed(): void {
+        $pdo = Db::pdo();
+
+        // Create a readonly user
+        $pdo->exec("
+            INSERT INTO ttrss_users (login, pwd_hash, access_level)
+            VALUES ('readonly_test', 'SHA1:5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8', -1)
+        ");
+
+        $readonly_user_id = (int) $pdo->query("SELECT currval(pg_get_serial_sequence('ttrss_users', 'id'))")->fetchColumn();
+
+        // Insert a feed owned by the readonly user
+        $pdo->exec("
+            INSERT INTO ttrss_feeds (owner_uid, title, feed_url, update_interval, site_url)
+            VALUES ({$readonly_user_id}, 'Readonly Feed', '" . addslashes($this->mock_feed_url) . "', 30, 'http://localhost:9081')
+        ");
+
+        $readonly_feed_id = (int) $pdo->query("SELECT currval(pg_get_serial_sequence('ttrss_feeds', 'id'))")->fetchColumn();
+
+        // Run as readonly user
+        $_SESSION['uid'] = $readonly_user_id;
+
+        $result = RSSUtils::update_rss_feed($readonly_feed_id);
+
+        $this->assertFalse($result);
+
+        // Cleanup
+        $_SESSION['uid'] = 1;
+        $pdo->exec("DELETE FROM ttrss_feeds WHERE id = {$readonly_feed_id}");
+        $pdo->exec("DELETE FROM ttrss_users WHERE login = 'readonly_test'");
+    }
+
+    // ── Feed metadata after update ──────────────────────────────────────────
+
+    public function test_feed_metadata_updated_after_successful_update(): void {
+        RSSUtils::update_rss_feed($this->mock_feed_id);
+
+        $pdo = Db::pdo();
+        $stmt = $pdo->prepare(
+            "SELECT last_modified, favicon_last_checked FROM ttrss_feeds WHERE id = ?"
+        );
+        $stmt->execute([$this->mock_feed_id]);
+        $row = $stmt->fetch();
+
+        // last_modified should be set from the HTTP response
+        $this->assertNotNull($row['last_modified']);
+        // favicon_last_checked should be set (favicon check runs on every update)
+        $this->assertNotNull($row['favicon_last_checked']);
+    }
+}

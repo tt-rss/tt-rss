@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "lint:css": "stylelint 'lib/flat-ttrss/**/*.css' 'plugins/**/*.css' 'themes/**/*.less'",
-    "lint:js": "eslint js plugins"
+    "lint:js": "eslint js plugins",
+    "phpunit": "XDEBUG_MODE=coverage ./vendor/bin/phpunit",
+    "phpunit:integration": "./tests_integration/run.sh"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.4.0",

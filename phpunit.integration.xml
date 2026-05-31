@@ -1,12 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     stderr="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/latest/phpunit.xsd"
-    bootstrap="tests_functional/bootstrap.php"
+    bootstrap="tests_integration/bootstrap.php"
     verbose="true">
     <testsuites>
-        <testsuite name="tests">
-            <directory>tests_functional</directory>
+        <testsuite name="integration">
+            <directory>tests_integration</directory>
         </testsuite>
     </testsuites>
     <coverage>
@@ -21,5 +22,6 @@
     </coverage>
     <php>
         <const name="IS_TESTING" value="true"/>
+        <const name="IS_INTEGRATION_TESTING" value="true"/>
     </php>
 </phpunit>

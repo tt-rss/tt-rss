@@ -338,7 +338,8 @@ class Config {
 		//
 	}
 
-	function __construct() {
+    /** load data from environment variables */
+    function reload(): void {
 		$ref = new ReflectionClass(static::class);
 
 		foreach ($ref->getConstants() as $const => $cvalue) {
@@ -350,7 +351,31 @@ class Config {
 				$this->params[$cvalue] = [ self::cast_to($override !== false ? $override : $defval, $deftype), $deftype ];
 			}
 		}
-	}
+    }
+
+    /** this is primarily needed for tests, normally global config is not changed at runtime */
+    static function set(string $key, mixed $value): bool {
+        if (!getenv('IS_INTEGRATION_TESTING') && !getenv('IS_TESTING')) {
+            user_error("This method is only available for tests.", E_USER_WARNING);
+
+            return false;
+        } if (array_key_exists($key, self::_DEFAULTS)) {
+            list ($defval, $deftype) = self::_DEFAULTS[$key];
+
+            self::get_instance()->params[$key] = [self::cast_to($value, $deftype), $deftype];
+
+            return true;
+        } else {
+            user_error("Requested to set unknown global config variable: {$key}", E_USER_WARNING);
+
+            return false;
+        }
+    }
+
+    function __construct() {
+        $this->reload();
+    }
+
 
 	/** determine tt-rss version (using git)
 	 *
