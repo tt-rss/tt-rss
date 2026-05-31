@@ -1,7 +1,7 @@
 name: Sync from upstream tt-rss
 'on':
   schedule:
-  - cron: '0 */6 * * *'
+  - cron: '0 */48 * * *'
   workflow_dispatch: null
 permissions:
   contents: write
