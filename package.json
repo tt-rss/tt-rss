@@ -16,6 +16,8 @@
     "gulp-touch-fd": "^2.0.0",
     "less": "^4.4.1",
     "stylelint": "^16.12.0",
-    "stylelint-config-standard": "^37.0.0"
+    "stylelint-config-standard": "^37.0.0",
+    "@changesets/cli": "^2.27.1",
+    "@changesets/changelog-github": "^0.4.8"
   }
 }

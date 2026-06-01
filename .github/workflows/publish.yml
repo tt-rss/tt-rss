@@ -7,13 +7,11 @@ on:
     - '.devcontainer/**'
     - '.vscode/**'
     - 'tests/**'
-    - '.*'
-    - '*.js'
-    - '*.json'
-    - '*.lock'
     - '*.md'
     - '*.neon'
     - '*.xml'
+    # Note: .changeset/** is intentionally NOT ignored - changeset files need to be committed
+    # Note: package.json is NOT ignored - changeset dependencies need to be installed
   workflow_dispatch:
 
 permissions:
@@ -41,3 +39,41 @@ jobs:
     uses: ./.github/workflows/publish-version-json.yml
     permissions:
       contents: write
+
+  release:
+    needs: [validate-sql]
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    # Only run on push to main with changesets or manual dispatch
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[[skip ci]]') == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@09d3f1d91e4da3fc3e1a6c9a7c6f53c2e28c2e77 # v4.4.0
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Add changeset (create changeset file if changes exist)
+        uses: changesets/action@v1
+        with:
+          # This expects CHANGESETS_TOKEN to be set in repo secrets (or GITHUB_TOKEN works by default)
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Commit the changeset files created by the user
+          commitMessage: "chore: add changeset"
+          # Title for the auto-created PR
+          title: "Release Changes"
+          # Label to add to the PR
+          labels: "release"
+          # Create a summary file for the release
+          createReleases: "github"
+        env:
+          # GITHUB_TOKEN is automatically provided by GitHub Actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
