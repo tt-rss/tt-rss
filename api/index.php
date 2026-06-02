@@ -11,6 +11,21 @@
 	ini_set('session.use_cookies', "0");
 	ini_set("session.gc_maxlifetime", "86400");
 
+	// Block requests explicitly initiated by a web browser environment
+	// or with an invalid content type
+	if (isset($_SERVER['HTTP_SEC_FETCH_MODE'])
+		|| !in_array($_SERVER['CONTENT_TYPE'] ?? '', ['text/json', 'application/json'])) {
+		header('Content-Type: application/json');
+
+		print json_encode([
+			'seq' => -1,
+			'status' => API::STATUS_ERR,
+			'content' => ['error' => API::E_INCORRECT_USAGE],
+		]);
+
+		return;
+	}
+
 	ob_start();
 
 	$_REQUEST = json_decode((string)file_get_contents("php://input"), true);
