@@ -13,8 +13,8 @@
 
 	// Block requests explicitly initiated by a web browser environment
 	// or with an invalid content type
-	if (isset($_SERVER['HTTP_SEC_FETCH_MODE'])) {
-		// || !in_array($_SERVER['CONTENT_TYPE'] ?? '', ['text/json', 'application/json'])) {
+	if (isset($_SERVER['HTTP_SEC_FETCH_MODE'])
+		|| !preg_match('%^(?:application|text)/json(?:\s*;|$)%i', $_SERVER['CONTENT_TYPE'] ?? '')) {
 		header('Content-Type: application/json');
 
 		print json_encode([
