@@ -6,7 +6,7 @@ class Pref_Feeds extends Handler_Protected {
 	const E_ICON_UPLOAD_SUCCESS = 'E_ICON_UPLOAD_SUCCESS';
 
 	function csrf_ignore(string $method): bool {
-		return in_array($method, ['index', 'getfeedtree', 'savefeedorder']);
+		return in_array($method, ['index', 'getfeedtree']);
 	}
 
 	/**
