@@ -1,6 +1,6 @@
 'use strict';
 
-/* global __, Article, Headlines, Filters, fox */
+/* global require, __, Article, Headlines, Filters, fox */
 /* global xhr, PluginHost, Notify, Feeds, Cookie */
 /* global CommonDialogs, Plugins */
 
@@ -715,7 +715,13 @@ const App = {
       const a = document.createElement('audio');
       return a.canPlayType(ctype);
    },
-   init: function(parser, is_prefs) {
+	init: function(parser, is_prefs) {
+		require(['dojo/aspect'], function(aspect) {
+			aspect.before(dojo, 'xhrPost', function(args) {
+				return [{...args, content: { ...args?.content, csrf_token: __csrf_token }}];
+			});
+		});
+
       this.is_prefs = is_prefs;
       window.onerror = this.Error.onWindowError;
 

@@ -49,7 +49,7 @@ class Pref_Filters extends Handler_Protected {
 	}
 
 	function csrf_ignore(string $method): bool {
-		return in_array($method, ['index', 'getfiltertree', 'savefilterorder']);
+		return in_array($method, ['index', 'getfiltertree']);
 	}
 
 	function filtersortreset(): void {
