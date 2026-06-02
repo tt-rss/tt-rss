@@ -247,14 +247,20 @@ class Sanitizer {
 
 		/** @var DOMElement $entry */
 		foreach ($entries as $entry) {
-			if (!self::iframe_whitelisted($entry)) {
-				$entry->setAttribute('sandbox', 'allow-scripts');
+			if (self::iframe_whitelisted($entry)) {
+				// The only known use of HOOK_IFRAME_WHITELISTED is Af_Youtube_Embed, so this "expanded access" is modeled
+				// off of what the Internet generally seems to recommend for YouTube.
+				$entry->setAttribute('allow',
+					'accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share');
+				$entry->setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+
+				$entry_src = $entry->getAttribute('src');
+
+				if (self::is_prefix_https() && str_starts_with($entry_src, 'http://'))
+					$entry->setAttribute('src', str_replace('http://', 'https://', $entry_src));
 			} else {
-				if (self::is_prefix_https()) {
-					$entry->setAttribute("src",
-						str_replace("http://", "https://",
-							$entry->getAttribute("src")));
-				}
+				// Set a more restrictive sandbox for everything else.
+				$entry->setAttribute('sandbox', 'allow-scripts');
 			}
 		}
 

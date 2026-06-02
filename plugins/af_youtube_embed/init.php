@@ -30,7 +30,9 @@ class Af_Youtube_Embed extends Plugin {
 					title='YouTube video player'
 					src=\"https://www.youtube-nocookie.com/embed/$vid_id\"
 					referrerpolicy='strict-origin-when-cross-origin'
-					allowfullscreen frameborder='0'></iframe>
+					allow='accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share'
+					sandbox='allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox'
+					frameborder='0'></iframe>
 				</div>";
 
 		}
