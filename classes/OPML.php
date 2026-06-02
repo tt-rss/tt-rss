@@ -2,7 +2,7 @@
 class OPML extends Handler_Protected {
 
 	function csrf_ignore(string $method): bool {
-		return in_array($method, ['export', 'import']);
+		return in_array($method, ['export']);
 	}
 
 	/**
