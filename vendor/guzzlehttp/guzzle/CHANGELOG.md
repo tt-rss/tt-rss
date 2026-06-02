@@ -3,6 +3,40 @@
 Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version.
 
 
+## 7.11.0 - 2026-06-02
+
+### Added
+
+- Added support for providing the `proxy` request option's `no` value as a comma-delimited string
+- Added the `protocols` request option to restrict allowed URI schemes for request transfers
+- Added `cert_type` and `ssl_key_type` request options for TLS certificate and private-key file types
+- Added PHP stream handler support for the `ssl_key` request option
+- Added transport sharing via the `transport_sharing` client and cURL handler options
+
+### Changed
+
+- Adjusted `guzzlehttp/promises` version constraint to `^2.5`
+- Adjusted `guzzlehttp/psr7` version constraint to `^2.11`
+- Allowed domainless `SetCookie` instances to be stored without wildcard request matching
+- Changed no-proxy matching to respect request ports for host-and-port rules
+- Prevented `CurlMultiHandler` destructors from throwing during cleanup
+- Improved invalid response handling across handlers
+
+### Deprecated
+
+- Deprecated non-iterable `Pool` request collections, which will be rejected in 8.0
+- Deprecated non-uppercase easy request methods; 8.0 preserves method casing
+- Deprecated non-string `headers` request option values, which will be rejected in 8.0
+- Deprecated empty `headers` request option value arrays, which will be rejected in 8.0
+- Deprecated empty and malformed request protocol versions, which will be rejected in 8.0
+- Deprecated conflicting raw cURL request options, including `CURLOPT_SHARE`, which will be rejected in 8.0
+- Deprecated scalar-coerced `idn_conversion` request option values, which will be rejected in 8.0
+- Deprecated invalid documented request option value types, which will be rejected in 8.0
+- Deprecated selected request options ignored by incompatible built-in handlers, which will be rejected in 8.0
+- Deprecated `RequestException::wrapException()`, which will be removed in 8.0
+- Deprecated `RetryMiddleware::exponentialDelay()`, which will be removed in 8.0
+
+
 ## 7.10.6 - 2026-06-01
 
 ### Fixed
@@ -990,7 +1024,7 @@ interfaces.
 ## 4.0.0 - 2014-03-29
 
 * For information on changes and upgrading, see:
-  https://github.com/guzzle/guzzle/blob/master/UPGRADING.md#3x-to-40
+  https://github.com/guzzle/guzzle/blob/4.x/UPGRADING.md#3x-to-40
 * Added `GuzzleHttp\batch()` as a convenience function for sending requests in
   parallel without needing to write asynchronous code.
 * Restructured how events are added to `GuzzleHttp\ClientInterface::sendAll()`.
@@ -1023,7 +1057,7 @@ interfaces.
 
 ## 4.0.0-rc.1 - 2014-03-15
 
-* See https://github.com/guzzle/guzzle/blob/master/UPGRADING.md#3x-to-40
+* See https://github.com/guzzle/guzzle/blob/4.x/UPGRADING.md#3x-to-40
 
 ## 3.8.1 - 2014-01-28
 

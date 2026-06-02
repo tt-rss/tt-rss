@@ -7,8 +7,9 @@ namespace Composer\Autoload;
 class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '1c27df0e838db1c8a6427db7c5db3db2' => __DIR__ . '/../..' . '/include/functions.php',
     );
@@ -21,6 +22,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         ),
         'S' =>
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Soundasleep\\' => 12,
         ),
         'P' =>
@@ -54,6 +56,10 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'chillerlan\\QRCode\\' =>
         array (
             0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
+        ),
+        'Symfony\\Polyfill\\Php80\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Soundasleep\\' =>
         array (
@@ -105,6 +111,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
     public static $classMap = array (
         'API' => __DIR__ . '/../..' . '/classes/API.php',
         'Article' => __DIR__ . '/../..' . '/classes/Article.php',
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Auth_Base' => __DIR__ . '/../..' . '/classes/Auth_Base.php',
         'Cache_Adapter' => __DIR__ . '/../..' . '/classes/Cache_Adapter.php',
         'Cache_Local' => __DIR__ . '/../..' . '/classes/Cache_Local.php',
@@ -160,6 +167,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'GuzzleHttp\\Handler\\CurlFactoryInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlFactoryInterface.php',
         'GuzzleHttp\\Handler\\CurlHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlHandler.php',
         'GuzzleHttp\\Handler\\CurlMultiHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlMultiHandler.php',
+        'GuzzleHttp\\Handler\\CurlShareHandleState' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlShareHandleState.php',
         'GuzzleHttp\\Handler\\EasyHandle' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/EasyHandle.php',
         'GuzzleHttp\\Handler\\HeaderProcessor' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/HeaderProcessor.php',
         'GuzzleHttp\\Handler\\MockHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/MockHandler.php',
@@ -206,6 +214,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'GuzzleHttp\\Psr7\\Query' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Query.php',
         'GuzzleHttp\\Psr7\\Request' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Request.php',
         'GuzzleHttp\\Psr7\\Response' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Response.php',
+        'GuzzleHttp\\Psr7\\Rfc3986' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Rfc3986.php',
         'GuzzleHttp\\Psr7\\Rfc7230' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Rfc7230.php',
         'GuzzleHttp\\Psr7\\ServerRequest' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/ServerRequest.php',
         'GuzzleHttp\\Psr7\\Stream' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Stream.php',
@@ -221,6 +230,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'GuzzleHttp\\RequestOptions' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RequestOptions.php',
         'GuzzleHttp\\RetryMiddleware' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RetryMiddleware.php',
         'GuzzleHttp\\TransferStats' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransferStats.php',
+        'GuzzleHttp\\TransportSharing' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransportSharing.php',
         'GuzzleHttp\\Utils' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Utils.php',
         'Handler' => __DIR__ . '/../..' . '/classes/Handler.php',
         'Handler_Administrative' => __DIR__ . '/../..' . '/classes/Handler_Administrative.php',
@@ -271,6 +281,7 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'ParagonIE\\ConstantTime\\Encoding' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Encoding.php',
         'ParagonIE\\ConstantTime\\Hex' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/Hex.php',
         'ParagonIE\\ConstantTime\\RFC4648' => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src/RFC4648.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'Plugin' => __DIR__ . '/../..' . '/classes/Plugin.php',
         'PluginHandler' => __DIR__ . '/../..' . '/classes/PluginHandler.php',
         'PluginHost' => __DIR__ . '/../..' . '/classes/PluginHost.php',
@@ -306,10 +317,15 @@ class ComposerStaticInit3d9cc0dde921ac59d5cf4410e518276f
         'Sessions' => __DIR__ . '/../..' . '/classes/Sessions.php',
         'Soundasleep\\Html2Text' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2Text.php',
         'Soundasleep\\Html2TextException' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2TextException.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
+        'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
         'Templator' => __DIR__ . '/../..' . '/classes/Templator.php',
         'TimeHelper' => __DIR__ . '/../..' . '/classes/TimeHelper.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'UrlHelper' => __DIR__ . '/../..' . '/classes/UrlHelper.php',
         'UserHelper' => __DIR__ . '/../..' . '/classes/UserHelper.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'chillerlan\\QRCode\\Common\\BitBuffer' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/BitBuffer.php',
         'chillerlan\\QRCode\\Common\\ECICharset' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/ECICharset.php',
         'chillerlan\\QRCode\\Common\\EccLevel' => __DIR__ . '/..' . '/chillerlan/php-qrcode/src/Common/EccLevel.php',
