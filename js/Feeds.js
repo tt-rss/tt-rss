@@ -212,6 +212,7 @@ const	Feeds = {
 					const is_cat = id.match("^CAT:");
 					const feed = id.substr(id.indexOf(":") + 1);
 					Feeds.open({feed: feed, is_cat: is_cat});
+					App.toggleSidebar(false); // collapse the drawer after picking a feed (narrow layout)
 					return false;
 				},
 				openOnClick: false,
