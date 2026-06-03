@@ -254,10 +254,8 @@ class Sanitizer {
 					'accelerometer; autoplay; clipboard-write; encrypted-media; fullscreen *; gyroscope; picture-in-picture; web-share');
 				$entry->setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
 
-				$entry_src = $entry->getAttribute('src');
-
-				if (self::is_prefix_https() && str_starts_with($entry_src, 'http://'))
-					$entry->setAttribute('src', str_replace('http://', 'https://', $entry_src));
+				if (self::is_prefix_https() && preg_match('%^http://(.+)%i', ltrim($entry->getAttribute('src')), $matches))
+					$entry->setAttribute('src', 'https://' . $matches[1]);
 			} else {
 				// Set a more restrictive sandbox for everything else.
 				$entry->setAttribute('sandbox', 'allow-scripts');
