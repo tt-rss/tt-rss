@@ -866,6 +866,14 @@ const App = {
 
          Headlines.initScrollHandler();
 
+         // If the viewport grows back to the docked layout (the hamburger
+         // toggle is hidden there), make sure the drawer isn't left open.
+         window.addEventListener("resize", () => {
+            const toggle = document.querySelector(".sidebar-toggle");
+            if (toggle && window.getComputedStyle(toggle).display === "none")
+               this.toggleSidebar(false);
+         });
+
          if (this.getInitParam('check_for_updates')) {
 			window.setTimeout(() => {
               this.checkForUpdates();
@@ -1003,6 +1011,19 @@ const App = {
       if (article_id) Article.view(article_id);
 
       xhr.post("backend.php", {op: "RPC", method: "setWidescreen", wide: wide ? 1 : 0});
+   },
+   // Open/close the feed sidebar drawer (narrow/phone layout only). The
+   // .feeds-drawer-open styles that slide the sidebar in are gated behind a
+   // media query, so toggling the class is a no-op on the docked desktop layout.
+   toggleSidebar: function(force) {
+      const open = typeof force === "boolean" ?
+         force : !document.body.classList.contains("feeds-drawer-open");
+
+      document.body.classList.toggle("feeds-drawer-open", open);
+
+      const toggle = document.querySelector(".sidebar-toggle");
+      if (toggle)
+         toggle.setAttribute("aria-expanded", open ? "true" : "false");
    },
    initHotkeyActions: function() {
       if (this.is_prefs) {
