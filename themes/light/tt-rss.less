@@ -811,6 +811,75 @@ body.ttrss_main {
 		}
 	}
 
+	// Narrow / phone layout: wrap each article row onto two lines — the title
+	// claims the whole first line, and the feed name, date and icons wrap onto
+	// a second line below it. Applies to both list (.hl) and combined (.cdm)
+	// rows, which share the same left | title | feed | date | right flex layout.
+	@media (max-width: @breakpoint-md) {
+		.hl,
+		.cdm .header {
+			flex-wrap : wrap;
+		}
+
+		.hl > .title,
+		.cdm .header > .titleWrap {
+			flex-basis : 100%;
+			order : -1;
+		}
+
+		// keep the trailing icons flush with the right edge of the second line
+		.hl > .right,
+		.cdm .header > .right {
+			margin-left : auto;
+		}
+
+		// In aggregate/virtual feeds, promote the per-row feed icon to a larger,
+		// right-aligned avatar spanning both lines so rows from different feeds
+		// are easy to tell apart (matching its normal right-side position).
+		// Single-feed views already hide
+		// .feed / .icon-feed, so the avatar and its gutter only appear where they
+		// add value.
+		#headlines-frame[data-is-vfeed="true"] {
+			// Give each row its own positioning context for the absolute feed
+			// icon. In collapsed CDM the .header is position:static (it's only
+			// the sticky containing block when expanded), so without a relative
+			// row the icons would resolve against #headlines-frame and stack on
+			// top of one another.
+			.hl,
+			.cdm {
+				position : relative;
+			}
+
+			.hl,
+			.cdm .header {
+				padding-right : 48px;
+			}
+
+			.hl .icon-feed,
+			.cdm .header .icon-feed {
+				position : absolute;
+				right : 8px;
+				top : 50%;
+				transform : translateY(-50%);
+				margin : 0;
+				padding : 0;
+			}
+
+			.hl .icon-feed img.icon,
+			.cdm .header .icon-feed img.icon {
+				width : 32px;
+				height : 32px;
+				border-radius : 4px;
+			}
+
+			.hl .icon-feed i.icon-no-feed,
+			.cdm .header .icon-feed i.icon-no-feed {
+				font-size : 32px;
+				opacity : 0.4;
+			}
+		}
+	}
+
 	#headlines-frame:not([data-headlines-count="0"])[data-is-cdm="true"][data-is-cdm-expanded="true"][data-enable-grid="true"] {
 		display : grid;
 		grid-template-columns: repeat(auto-fit, minmax(@cdm-grid-col-width, 1fr));
