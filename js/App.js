@@ -869,6 +869,8 @@ const App = {
 
          Headlines.initScrollHandler();
 
+         this.initPullToRefresh();
+
          // If the viewport grows back to the docked layout (the hamburger
          // toggle is hidden there), make sure the drawer isn't left open.
          window.addEventListener("resize", () => {
@@ -1100,6 +1102,119 @@ const App = {
 
       // Keep the Back-gesture history entries in sync with the drawer state.
       this.reconcileOverlayHistory();
+   },
+   // Pull-to-refresh for the article list on the narrow/phone layout: a downward
+   // drag while scrolled to the very top reloads the current feed once it passes
+   // a threshold -- the same ForceUpdate reload as re-selecting the feed. A small
+   // spinner badge slides down from the top edge to follow the gesture. The badge
+   // lives in #headlines-wrap-inner rather than #headlines-frame because the
+   // latter's innerHTML is rebuilt on every feed load (Headlines.onLoaded), which
+   // would delete a child of it.
+   initPullToRefresh: function() {
+      const frame = document.getElementById("headlines-frame");
+      const wrap = document.getElementById("headlines-wrap-inner");
+      if (!frame || !wrap)
+         return;
+
+      const badge = document.createElement("div");
+      badge.id = "headlines-ptr";
+      badge.innerHTML = "<i class='material-icons'>refresh</i>";
+      wrap.appendChild(badge);
+      const icon = badge.firstElementChild;
+
+      const THRESHOLD = 64;   // px of pull (pre-damping) needed to fire a refresh
+      const MAX = 96;         // clamp the badge travel so it can't be hauled off the list
+
+      let start_y = 0;
+      let pulling = false;    // a qualifying downward drag from the top is active
+      let refreshing = false; // a refresh fired; awaiting the feed to finish loading
+      let safety_timeout = 0;
+
+      // Past the threshold the pull gets progressively heavier (rubber-banding).
+      const damp = (d) => d < THRESHOLD ? d : Math.min(MAX, THRESHOLD + (d - THRESHOLD) * 0.4);
+
+      const moveTo = (travel) => {
+         const progress = Math.min(1, travel / THRESHOLD);
+         badge.style.transform = `translate(-50%, ${travel}px)`;
+         badge.style.opacity = progress;
+         icon.style.transform = `rotate(${progress * 180}deg)`;
+         badge.classList.toggle("ready", travel >= THRESHOLD);
+      };
+
+      // Drop all inline overrides so the badge eases back to its parked CSS state.
+      const settle = () => {
+         badge.classList.remove("dragging", "ready");
+         badge.style.transform = "";
+         badge.style.opacity = "";
+         icon.style.transform = "";
+      };
+
+      const stopRefreshing = () => {
+         if (!refreshing)
+            return;
+         refreshing = false;
+         window.clearTimeout(safety_timeout);
+         badge.classList.remove("spinning");
+         settle();
+      };
+
+      frame.addEventListener("touchstart", (ev) => {
+         if (refreshing || pulling || ev.touches.length !== 1)
+            return;
+         if (!this.isNarrowLayout() || frame.scrollTop > 0)
+            return;
+         start_y = ev.touches[0].clientY;
+         pulling = true;
+      }, {passive: true});
+
+      frame.addEventListener("touchmove", (ev) => {
+         if (!pulling)
+            return;
+         const dist = ev.touches[0].clientY - start_y;
+         // Moved up, or the list managed to scroll: hand back to native scrolling.
+         if (dist <= 0 || frame.scrollTop > 0) {
+            pulling = false;
+            settle();
+            return;
+         }
+         // A genuine downward pull at the top: take over from native scroll so the
+         // browser's own overscroll/refresh doesn't also fire.
+         ev.preventDefault();
+         badge.classList.add("dragging");
+         moveTo(damp(dist));
+      }, {passive: false});
+
+      frame.addEventListener("touchend", (ev) => {
+         if (!pulling)
+            return;
+         pulling = false;
+         badge.classList.remove("dragging");
+         const touch = ev.changedTouches && ev.changedTouches[0];
+         const travel = touch ? damp(touch.clientY - start_y) : 0;
+         if (travel >= THRESHOLD) {
+            refreshing = true;
+            badge.classList.remove("ready");
+            badge.classList.add("spinning");
+            badge.style.opacity = 1;
+            badge.style.transform = `translate(-50%, ${THRESHOLD}px)`;
+            icon.style.transform = "";
+            // If the load never reports back (e.g. a network error), retract anyway.
+            safety_timeout = window.setTimeout(stopRefreshing, 15 * 1000);
+            Feeds.reloadCurrent();
+         } else {
+            settle();
+         }
+      }, {passive: true});
+
+      frame.addEventListener("touchcancel", () => {
+         if (pulling) {
+            pulling = false;
+            settle();
+         }
+      }, {passive: true});
+
+      // The reloaded feed has rendered -- stop and retract the spinner.
+      PluginHost.register(PluginHost.HOOK_FEED_LOADED, stopRefreshing);
    },
    initHotkeyActions: function() {
       if (this.is_prefs) {

@@ -647,6 +647,9 @@ body.ttrss_main #feeds-holder-backdrop {
     left: 0 ! important;
     width: 100% ! important;
   }
+  body.ttrss_main #headlines-frame {
+    overscroll-behavior-y: contain;
+  }
   body.ttrss_main #feeds-holder_splitter {
     display: none ! important;
   }
@@ -683,6 +686,41 @@ body.ttrss_main #feeds-holder-backdrop {
     opacity: 1;
     visibility: visible;
   }
+}
+body.ttrss_main #headlines-ptr {
+  position: absolute;
+  top: -48px;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: white;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  color: #257aa7;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: transform 0.25s ease, opacity 0.25s ease, background-color 0.15s ease, color 0.15s ease;
+}
+body.ttrss_main #headlines-ptr .material-icons {
+  font-size: 22px;
+}
+body.ttrss_main #headlines-ptr.dragging {
+  transition: none;
+}
+body.ttrss_main #headlines-ptr.ready {
+  background: #257aa7;
+  border-color: #257aa7;
+  color: white;
+}
+body.ttrss_main #headlines-ptr.spinning .material-icons {
+  animation: ttrss-ptr-spin 0.7s linear infinite;
 }
 @media (max-width: 768px) {
   body.ttrss_main .hl,
@@ -1354,6 +1392,14 @@ body.ttrss_utility hr {
 }
 ::-webkit-scrollbar-track {
   background-color: #eee;
+}
+@keyframes ttrss-ptr-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 /* video::-webkit-media-controls-overlay-play-button {
 	display: none;
