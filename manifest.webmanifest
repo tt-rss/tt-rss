@@ -1,0 +1,17 @@
+{
+	"name": "Tiny Tiny RSS",
+	"short_name": "tt-rss",
+	"description": "Web-based news feed (RSS/Atom) reader and aggregator.",
+	"id": "./",
+	"start_url": "index.php",
+	"scope": "./",
+	"display": "standalone",
+	"orientation": "any",
+	"background_color": "#ffffff",
+	"theme_color": "#257aa7",
+	"icons": [
+		{ "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+		{ "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+		{ "src": "images/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+	]
+}

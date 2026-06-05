@@ -48,6 +48,16 @@
 	<link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
 	<link rel="icon" type="image/png" sizes="72x72" href="images/favicon-72px.png" />
 
+	<!-- Progressive Web App: installable, launches standalone on mobile. -->
+	<link rel="manifest" href="manifest.webmanifest"/>
+	<meta name="theme-color" content="#257aa7" media="(prefers-color-scheme: light)"/>
+	<meta name="theme-color" content="#303030" media="(prefers-color-scheme: dark)"/>
+	<link rel="apple-touch-icon" href="images/icon-192.png"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+	<meta name="apple-mobile-web-app-title" content="Tiny Tiny RSS"/>
+
 	<script>
 		dojoConfig = {
 			async: true,
