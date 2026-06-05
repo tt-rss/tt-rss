@@ -34,8 +34,9 @@ jobs:
       with:
         php-version: '8.5'
         coverage: none
+        # Temporarily pinning PHPStan to 2.2.1 (potential bug(s) in 2.2.2).
         # PHPUnit is installed to support PHPStan checking tests/
-        tools: phpstan/phpstan:^2.2, phpunit/phpunit:^12.4
+        tools: phpstan/phpstan:2.2.1, phpunit/phpunit:^12.4
 
     # https://phpstan.org/user-guide/result-cache
     - name: Restore result cache
