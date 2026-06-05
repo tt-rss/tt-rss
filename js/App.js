@@ -12,6 +12,9 @@ const App = {
 	hotkey_prefix_timeout: 0,
    global_unread: -1,
    _widescreen_mode: false,
+   _overlay_stack: [],
+   _suppress_popstate: 0,
+   _suppress_reconcile: false,
    _loading_progress: 0,
    _night_mode_retry_timeout: false,
    hotkey_actions: {},
@@ -874,6 +877,35 @@ const App = {
                this.toggleSidebar(false);
          });
 
+         // Device Back gesture / browser Back dismisses the topmost phone-layout
+         // overlay (the feed drawer first, then an open article) instead of
+         // leaving the app — see reconcileOverlayHistory(). A history.back() we
+         // triggered ourselves (an overlay closed by other means) also lands
+         // here, so those are skipped via _suppress_popstate.
+         window.addEventListener("popstate", () => {
+            if (this._suppress_popstate > 0) {
+               this._suppress_popstate--;
+               return;
+            }
+            if (this._overlay_stack.length === 0)
+               return;
+
+            // The browser already popped the top entry; tear down that overlay
+            // without touching history again (_suppress_reconcile).
+            const name = this._overlay_stack.pop();
+            this._suppress_reconcile = true;
+            try {
+               if (name === "drawer")
+                  this.toggleSidebar(false);
+               else if (this.isCombinedMode())
+                  Article.cdmUnsetActive();
+               else
+                  Article.close();
+            } finally {
+               this._suppress_reconcile = false;
+            }
+         });
+
          if (this.getInitParam('check_for_updates')) {
 			window.setTimeout(() => {
               this.checkForUpdates();
@@ -1012,6 +1044,47 @@ const App = {
 
       xhr.post("backend.php", {op: "RPC", method: "setWidescreen", wide: wide ? 1 : 0});
    },
+   // True on the narrow/phone layout, where the hamburger toggle is visible.
+   // Mirrors the media query that drives the responsive styles, so we use it
+   // to gate phone-only behaviour (e.g. the Back gesture closing an article).
+   isNarrowLayout: function() {
+      const toggle = document.querySelector(".sidebar-toggle");
+      return !!toggle && window.getComputedStyle(toggle).display !== "none";
+   },
+   // Phone-layout overlays — an open article (expanded row in combined mode, or
+   // the 3-panel pane; both set the active row) and the feed drawer — each get a
+   // history entry so the device Back gesture dismisses them one at a time
+   // instead of leaving the app. This reconciles our pushed entries with what is
+   // actually open. The drawer always opens on top of an article (you can't tap
+   // a row while it covers the list), so the stack is [article, drawer] and Back
+   // closes the drawer first. Called whenever either overlay's state can change
+   // (Article.setActive/cdmUnsetActive, toggleSidebar).
+   reconcileOverlayHistory: function() {
+      if (this._suppress_reconcile)
+         return;
+
+      const open = [];
+      if (this.isNarrowLayout()) {
+         if (Article.getActive() !== 0) open.push("article");
+         if (document.body.classList.contains("feeds-drawer-open")) open.push("drawer");
+      }
+
+      // Pop our top entries that are no longer open. Each history.back() fires a
+      // popstate that isn't the user pressing Back, so count it to skip it.
+      while (this._overlay_stack.length &&
+             !open.includes(this._overlay_stack[this._overlay_stack.length - 1])) {
+         this._overlay_stack.pop();
+         this._suppress_popstate++;
+         window.history.back();
+      }
+
+      // Push entries for newly-open overlays (article below drawer).
+      for (const name of open)
+         if (!this._overlay_stack.includes(name)) {
+            this._overlay_stack.push(name);
+            window.history.pushState({ttrss_overlay: name}, "");
+         }
+   },
    // Open/close the feed sidebar drawer (narrow/phone layout only). The
    // .feeds-drawer-open styles that slide the sidebar in are gated behind a
    // media query, so toggling the class is a no-op on the docked desktop layout.
@@ -1024,6 +1097,9 @@ const App = {
       const toggle = document.querySelector(".sidebar-toggle");
       if (toggle)
          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+      // Keep the Back-gesture history entries in sync with the drawer state.
+      this.reconcileOverlayHistory();
    },
    initHotkeyActions: function() {
       if (this.is_prefs) {

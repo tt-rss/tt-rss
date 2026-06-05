@@ -92,6 +92,9 @@ const Article = {
 		if (row) {
 			row.classList.remove('active');
 
+			// Reconcile the Back-gesture history entry now that nothing is active.
+			App.reconcileOverlayHistory();
+
 			if (event)
 				event.stopPropagation();
 
@@ -442,6 +445,9 @@ const Article = {
 				PluginHost.run(PluginHost.HOOK_ARTICLE_SET_ACTIVE, parseInt(row.getAttribute('data-article-id')));
 			}
 		}
+
+		// Reconcile the Back-gesture history entries with the open/closed state.
+		App.reconcileOverlayHistory();
 	},
 	getActive: function () {
 		const row = document.querySelector("#headlines-frame > div[id*=RROW][class*=active]");
