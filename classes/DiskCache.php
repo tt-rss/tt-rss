@@ -323,10 +323,22 @@ class DiskCache implements Cache_Adapter {
 		}
 
 		$file_mtime = $this->get_mtime($filename);
-		$gmt_modified = gmdate("D, d M Y H:i:s", (int)$file_mtime) . " GMT";
+		$gmt_modified = gmdate('D, d M Y H:i:s', (int)$file_mtime) . ' GMT';
+
+		$stamp_expires = gmdate('D, d M Y H:i:s',
+			(int)$this->get_mtime($filename) + 86400 * Config::get(Config::CACHE_MAX_DAYS)) . ' GMT';
 
 		if (($_SERVER['HTTP_IF_MODIFIED_SINCE'] ?? '') == $gmt_modified || ($_SERVER['HTTP_IF_NONE_MATCH'] ?? '') == $file_mtime) {
 			header('HTTP/1.1 304 Not Modified');
+
+			// Send HTTP 200-equivalent headers (i.e. the ones used further below).
+			//
+			// This has the added benefit of overriding PHP's cache limiter headers (set after session startup), which
+			// were causing cached content to be invalidated (see `session_cache_limiter()`).
+			header("Expires: $stamp_expires", true);
+			header("Last-Modified: $gmt_modified", true);
+			header('Cache-Control: no-cache', true);
+			header("ETag: $file_mtime", true);
 
 			return false;
 		}
@@ -359,9 +371,6 @@ class DiskCache implements Cache_Adapter {
 		$size = $this->get_size($filename);
 		if ($size && $size > 0)
 			header("Content-Length: $size");
-
-		$stamp_expires = gmdate("D, d M Y H:i:s",
-			(int)$this->get_mtime($filename) + 86400 * Config::get(Config::CACHE_MAX_DAYS)) . " GMT";
 
 		header("Expires: $stamp_expires", true);
 		header("Last-Modified: $gmt_modified", true);
