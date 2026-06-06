@@ -6,7 +6,8 @@
 function stylesheet_tag(string $filename, array $attributes = []): string {
 
 	$attributes_str = \Controls\attributes_to_string([
-		'href' => "$filename?" . filemtime($filename),
+		'href' => $filename
+			. (preg_match('/\?\d+$/', $filename) || !is_file($filename) ? '' : '?' . filemtime($filename)),
 		'rel' => 'stylesheet',
 		'type' => 'text/css',
 		'data-orig-href' => $filename,

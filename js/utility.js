@@ -12,7 +12,7 @@ window.addEventListener("load", function() {
             if (link) {
                 const css_override = is_night ? dark_theme : light_theme;
 
-                link.setAttribute("href", css_override + "?" + Date.now());
+                link.setAttribute('href', css_override);
             }
         },
         setup_night_mode: function() {

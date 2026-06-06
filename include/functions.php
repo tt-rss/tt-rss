@@ -472,14 +472,14 @@
 		return false;
 	}
 
-	function get_theme_path(string $theme, string $default = ""): string {
-		$check = "themes/$theme";
-		if (file_exists($check)) return $check;
+	function get_theme_path(string $theme, string $default = ''): string {
+		foreach (['themes', Config::get(Config::LOCAL_THEMES_DIR)] as $d) {
+			$f = "$d/$theme";
+			if (is_file($f))
+				return $f . '?' . filemtime($f);
+		}
 
-		$check = Config::get(Config::LOCAL_THEMES_DIR) . "/$theme";
-		if (file_exists($check)) return $check;
-
-		return $default;
+		return $default . (is_file($default) ? '?' . filemtime($default) : '');
 	}
 
 	function theme_exists(string $theme): bool {

@@ -190,7 +190,7 @@ const App = {
 			xhr.post("backend.php", {op: "RPC", method: "getRuntimeInfo"}, () => {
 				const css_override = is_night ? App.getInitParam("default_dark_theme") : App.getInitParam("default_light_theme");
 
-				link.setAttribute("href", css_override + "?" + Date.now());
+				link.setAttribute('href', css_override);
 
 				window.clearTimeout(this._night_mode_retry_timeout);
 			});
