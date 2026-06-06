@@ -775,9 +775,11 @@ body.ttrss_main {
 
 		// Our own pull-to-refresh (App.initPullToRefresh()) owns the downward
 		// overscroll at the top of the list; keep it from chaining out to the
-		// browser's native pull-to-refresh as well.
+		// browser's native pull-to-refresh as well. overflow-x:hidden clips the
+		// swipe-to-read affordance and slid-off rows (App.initSwipeToRead()).
 		#headlines-frame {
 			overscroll-behavior-y : contain;
+			overflow-x : hidden;
 		}
 
 		// The splitter is meaningless while the sidebar is an overlay.
@@ -870,6 +872,58 @@ body.ttrss_main {
 
 		&.spinning .material-icons {
 			animation : ttrss-ptr-spin 0.7s linear infinite;
+		}
+	}
+
+	// Swipe-to-dismiss affordance for the article list (narrow/phone layout,
+	// driven by App.initSwipeToRead()). A horizontal drag across a row marks it
+	// read and slides it out; the row content tracks the finger while this layer
+	// — parked just off the dragged-toward edge — rides into the opening gap
+	// behind it, showing a "mark read" icon that brightens past the threshold.
+	.hl.swiping,
+	.cdm.swiping {
+		position : relative;
+	}
+
+	// Easing for the release: a snap-back, or the fly-out plus height collapse
+	// that lets the rows below slide up into the gap.
+	.hl.swipe-anim,
+	.cdm.swipe-anim {
+		transition : transform 0.2s ease, height 0.2s ease, opacity 0.2s ease,
+			margin 0.2s ease, padding 0.2s ease;
+	}
+
+	.hl-swipe-action {
+		position : absolute;
+		top : 0;
+		bottom : 0;
+		width : 100%;
+		display : flex;
+		align-items : center;
+		box-sizing : border-box;
+		padding : 0 28px;
+		background : desaturate(@color-checked, 20%);
+		color : white;
+
+		// Parked just off the edge the row is dragged toward, so it rides into
+		// the gap as the row translates — no separate transform to keep in sync.
+		// #headlines-frame's overflow-x:hidden clips the off-edge remainder.
+		&.from-left {           // dragging right reveals it from the left
+			left : -100%;
+			justify-content : flex-end;
+		}
+
+		&.from-right {          // dragging left reveals it from the right
+			left : 100%;
+			justify-content : flex-start;
+		}
+
+		&.ready {
+			background : @color-checked;
+		}
+
+		.material-icons {
+			font-size : 26px;
 		}
 	}
 
