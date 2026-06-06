@@ -638,7 +638,12 @@ body.ttrss_main #feeds-holder-backdrop {
 @media (max-width: 768px) {
   body.ttrss_main .sidebar-toggle {
     display: inline-block;
-    font-size: 24px;
+    width: 28px;
+    height: 28px;
+    margin: 0 4px;
+    vertical-align: middle;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
   body.ttrss_main #content-wrap,
   body.ttrss_main #toolbar-frame,
