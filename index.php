@@ -153,11 +153,11 @@
         <div id="toolbar-frame" dojoType="dijit.layout.ContentPane" region="top">
             <div id="toolbar" dojoType="fox.Toolbar">
 
-					<!-- order -1: feed drawer toggle, shown only in narrow/phone layout -->
-					<i class="material-icons sidebar-toggle" role="button" tabindex="0"
+					<!-- order -1: feed drawer toggle (the app logo), shown only in narrow/phone layout -->
+					<img class="sidebar-toggle" src="images/favicon-72px.png" alt="" draggable="false" role="button" tabindex="0"
 						aria-expanded="false" title="<?= __('Toggle feed list') ?>"
 						onclick="App.toggleSidebar()"
-						onkeydown="if (event.key === 'Enter' || event.key === ' ') { App.toggleSidebar(); event.preventDefault(); }">menu</i>
+						onkeydown="if (event.key === 'Enter' || event.key === ' ') { App.toggleSidebar(); event.preventDefault(); }">
 
 			 	<!-- order 0, default -->
 

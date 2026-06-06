@@ -735,7 +735,7 @@ body.ttrss_main {
 	}
 
 	// Narrow / phone layout: collapse the feed sidebar into a slide-in drawer
-	// that overlays the article view, toggled by the .sidebar-toggle hamburger
+	// that overlays the article view, toggled by the .sidebar-toggle app-logo button
 	// in the toolbar. Wider screens keep the docked, resizable sidebar above.
 	.sidebar-toggle {
 		display : none;
@@ -750,7 +750,12 @@ body.ttrss_main {
 	@media (max-width: @breakpoint-md) {
 		.sidebar-toggle {
 			display : inline-block;
-			font-size : 24px;
+			width : 28px;
+			height : 28px;
+			margin : 0 4px;
+			vertical-align : middle;
+			user-select : none;
+			-webkit-touch-callout : none;
 		}
 
 		// The drawer is a fixed overlay, but BorderContainer still reserves its
