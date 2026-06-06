@@ -635,6 +635,9 @@ body.ttrss_main .sidebar-toggle {
 body.ttrss_main #feeds-holder-backdrop {
   display: none;
 }
+body.ttrss_main #popup-backdrop {
+  display: none;
+}
 @media (max-width: 768px) {
   body.ttrss_main .sidebar-toggle {
     display: inline-block;
@@ -707,6 +710,15 @@ body.ttrss_main #feeds-holder-backdrop {
   body.ttrss_main.feeds-drawer-open #feeds-holder-backdrop {
     opacity: 1;
     visibility: visible;
+  }
+  body.ttrss_main.popup-backdrop-open #popup-backdrop {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
   }
 }
 body.ttrss_main #headlines-ptr {
