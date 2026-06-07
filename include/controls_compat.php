@@ -22,7 +22,8 @@ function stylesheet_tag(string $filename, array $attributes = []): string {
  */
 function javascript_tag(string $filename, array $attributes = []): string {
 	$attributes_str = \Controls\attributes_to_string([
-		'src' => "$filename?" . filemtime($filename),
+		'src' => $filename
+			. (preg_match('/\?\d+$/', $filename) || !is_file($filename) ? '' : '?' . filemtime($filename))
 		'type' => 'text/javascript',
 		'charset' => 'utf-8',
 		...$attributes,
