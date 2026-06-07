@@ -11,11 +11,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Tiny Tiny RSS sv_SE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 17:45+0000\n"
+"POT-Creation-Date: 2026-06-07 02:22+0000\n"
 "PO-Revision-Date: 2026-01-27 06:59+0000\n"
 "Last-Translator: Helena Holland <helenaholland74@obama-dome.org>\n"
-"Language-Team: Swedish <https://hosted.weblate.org/projects/tt-rss/webui/sv/>"
-"\n"
+"Language-Team: Swedish <https://hosted.weblate.org/projects/tt-rss/webui/sv/"
+">\n"
 "Language: sv_SE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,209 +115,215 @@ msgstr "Administratör"
 msgid "Javascript is disabled. Please enable it."
 msgstr "Javascript är inaktiverat. Vänligen aktivera det."
 
-#: index.php:124 index.php:138 index.php:298 prefs.php:126
-#: classes/Pref_Prefs.php:884 classes/Pref_Prefs.php:934
+#: index.php:124 index.php:142 index.php:308 prefs.php:126
+#: classes/Pref_Prefs.php:886 classes/Pref_Prefs.php:936
 #: classes/Pref_System.php:251 classes/Pref_System.php:262 js/PrefUsers.js:112
 #: js/PrefFeedTree.js:183 js/PrefFeedTree.js:190 js/PrefFeedTree.js:314
-#: js/PrefFeedTree.js:386 js/PrefFilterTree.js:124 js/Article.js:280
-#: js/Article.js:356 js/Headlines.js:352 js/Headlines.js:535
+#: js/PrefFeedTree.js:386 js/PrefFilterTree.js:124 js/Article.js:283
+#: js/Article.js:359 js/Headlines.js:352 js/Headlines.js:535
 #: js/CommonFilters.js:265 js/CommonFilters.js:391 js/PrefHelpers.js:26
 #: js/PrefHelpers.js:38 js/PrefHelpers.js:61 js/PrefHelpers.js:114
 #: js/PrefHelpers.js:242 js/PrefHelpers.js:293 js/PrefHelpers.js:444
-#: js/PrefHelpers.js:455 js/Feeds.js:497 js/CommonDialogs.js:332
+#: js/PrefHelpers.js:455 js/Feeds.js:498 js/CommonDialogs.js:332
 #: js/CommonDialogs.js:485 js/CommonDialogs.js:640 plugins/note/note.js:34
 #: plugins/af_psql_trgm/init.js:7 plugins/share/share.js:48
 #: js/CommonFilters.js:171
 msgid "Loading, please wait..."
 msgstr "Laddar, vänta..."
 
-#: index.php:163 prefs.php:135 js/App.js:533
+#: index.php:158
+#, fuzzy
+#| msgid "Toggle embed original"
+msgid "Toggle feed list"
+msgstr "Stäng av/sätt på inbäddade original"
+
+#: index.php:173 prefs.php:135 js/App.js:536
 msgid "Communication problem with server."
 msgstr "Kommunikationsproblem med servern."
 
-#: index.php:166 prefs.php:137
+#: index.php:176 prefs.php:137
 msgid "Recent entries found in event log."
 msgstr "Nyliga poster funna i händelseloggen."
 
-#: index.php:169 prefs.php:139
+#: index.php:179 prefs.php:139
 msgid "Updates for Tiny Tiny RSS are available."
 msgstr "Uppdatering för Tiny Tiny RSS finns tillgänglig."
 
-#: index.php:173 prefs.php:142
+#: index.php:183 prefs.php:142
 #, fuzzy
 msgid "Updates for some local plugins are available."
 msgstr "Uppdateringar för vissa lokala plugins finns tillgängliga."
 
-#: index.php:181 js/Headlines.js:656
+#: index.php:191 js/Headlines.js:656
 msgid "Show articles"
 msgstr "Visa artiklarna"
 
-#: index.php:184
+#: index.php:194
 msgid "Adaptive"
 msgstr "Adaptivt"
 
-#: index.php:185
+#: index.php:195
 msgid "All Articles"
 msgstr "Alla artiklar"
 
-#: index.php:186 classes/RPC.php:538
+#: index.php:196 classes/RPC.php:538
 msgid "Starred"
 msgstr "Stjärnmärkta"
 
-#: index.php:187 classes/RPC.php:539
+#: index.php:197 classes/RPC.php:539
 msgid "Published"
 msgstr "Publicerade"
 
-#: index.php:188 js/Headlines.js:659
+#: index.php:198 js/Headlines.js:659
 msgid "Unread"
 msgstr "Olästa"
 
-#: index.php:189
+#: index.php:199
 msgid "With Note"
 msgstr "Med notering"
 
-#: index.php:192
+#: index.php:202
 msgid "Sort articles"
 msgstr "Sortera artiklar"
 
-#: index.php:196
+#: index.php:206
 msgid "Default"
 msgstr "Standard"
 
-#: index.php:197
+#: index.php:207
 msgid "Newest first"
 msgstr "Nyast först"
 
-#: index.php:198
+#: index.php:208
 msgid "Oldest first"
 msgstr "Äldst först"
 
-#: index.php:199 classes/Pref_Filters.php:38 js/CommonFilters.js:418
+#: index.php:209 classes/Pref_Filters.php:38 js/CommonFilters.js:418
 msgid "Title"
 msgstr "Titel"
 
-#: index.php:212 index.php:269 classes/RPC.php:525 classes/Pref_Filters.php:25
+#: index.php:222 index.php:279 classes/RPC.php:525 classes/Pref_Filters.php:25
 #: js/Headlines.js:1548 js/FeedTree.js:94 js/FeedTree.js:133
 #: js/Headlines.js:669
 msgid "Mark as read"
 msgstr "Markera som läst"
 
-#: index.php:213
+#: index.php:223
 msgid "Older than one day"
 msgstr "Äldre än en dag"
 
-#: index.php:214
+#: index.php:224
 msgid "Older than one week"
 msgstr "Äldre än en vecka"
 
-#: index.php:215
+#: index.php:225
 msgid "Older than two weeks"
 msgstr "Äldre än två veckor"
 
-#: index.php:228
+#: index.php:238
 msgid "Switch to three panel view"
 msgstr "Växla till tre panelvy"
 
-#: index.php:229
+#: index.php:239
 msgid "Switch to combined view"
 msgstr "Växla till kombinerad vy"
 
-#: index.php:230
+#: index.php:240
 #, fuzzy
 #| msgid "Toggle widescreen mode"
 msgid "Disable widescreen mode"
 msgstr "Inaktivera widescreen mode"
 
-#: index.php:231
+#: index.php:241
 #, fuzzy
 #| msgid "Toggle widescreen mode"
 msgid "Enable widescreen mode"
 msgstr "Aktivera widescreen mode"
 
-#: index.php:232
+#: index.php:242
 msgid "Expand selected article only"
 msgstr "Expandera endast vald artikel"
 
-#: index.php:233
+#: index.php:243
 #, fuzzy
 #| msgid "Email article"
 msgid "Expand all articles"
 msgstr "Utöka alla artiklar"
 
-#: index.php:236
+#: index.php:246
 msgid "Actions..."
 msgstr "Åtgärder..."
 
-#: index.php:261
+#: index.php:271
 msgid "Preferences..."
 msgstr "Inställningar..."
 
-#: index.php:262 js/PrefHelpers.js:613
+#: index.php:272 js/PrefHelpers.js:613
 msgid "Search..."
 msgstr "Sök..."
 
-#: index.php:263
+#: index.php:273
 #, fuzzy
 msgid "Search feeds..."
 msgstr "Sök..."
 
-#: index.php:264
+#: index.php:274
 msgid "Feed actions:"
 msgstr "Flödesåtgärder:"
 
-#: index.php:265 plugins/bookmarklets/init.php:40
+#: index.php:275 plugins/bookmarklets/init.php:40
 #: plugins/bookmarklets/init.php:78
 msgid "Subscribe to feed..."
 msgstr "Prenumerera på flöde..."
 
-#: index.php:266
+#: index.php:276
 msgid "Edit this feed..."
 msgstr "Redigera detta flöde..."
 
-#: index.php:267 classes/Pref_Feeds.php:934 js/PrefFeedTree.js:119
+#: index.php:277 classes/Pref_Feeds.php:934 js/PrefFeedTree.js:119
 #: js/CommonDialogs.js:627
 msgid "Unsubscribe"
 msgstr "Avsluta prenumeration"
 
-#: index.php:268
+#: index.php:278
 msgid "All feeds:"
 msgstr "Alla flöden:"
 
-#: index.php:270
+#: index.php:280
 msgid "(Un)hide read feeds"
 msgstr "Visa/dölj lästa flöden"
 
-#: index.php:271
+#: index.php:281
 #, fuzzy
 msgid "UI layout:"
 msgstr "UI layout:"
 
-#: index.php:272 classes/RPC.php:534
+#: index.php:282 classes/RPC.php:534
 msgid "Toggle combined mode"
 msgstr "Växla komboläge"
 
-#: index.php:274 classes/RPC.php:511
+#: index.php:284 classes/RPC.php:511
 msgid "Toggle widescreen mode"
 msgstr "Växla widescreenläge"
 
-#: index.php:276
+#: index.php:286
 #, fuzzy
 msgid "Toggle expand all articles"
 msgstr "Klicka för att expandera artikeln"
 
-#: index.php:277
+#: index.php:287
 msgid "Other actions:"
 msgstr "Andra aktiviteter:"
 
-#: index.php:278 classes/RPC.php:546
+#: index.php:288 classes/RPC.php:546
 msgid "Keyboard shortcuts help"
 msgstr "Kortkommandohjälp"
 
-#: index.php:287
+#: index.php:297
 msgid "Logout"
 msgstr "Logga ut"
 
-#: prefs.php:16 prefs.php:151 classes/RPC.php:541 classes/Pref_Prefs.php:936
+#: prefs.php:16 prefs.php:151 classes/RPC.php:541 classes/Pref_Prefs.php:938
 msgid "Preferences"
 msgstr "Inställningar"
 
@@ -325,7 +331,7 @@ msgstr "Inställningar"
 msgid "Exit preferences"
 msgstr "Lämna inställningarna"
 
-#: prefs.php:154 classes/Pref_Prefs.php:44 classes/Pref_Feeds.php:125
+#: prefs.php:154 classes/Pref_Prefs.php:45 classes/Pref_Feeds.php:125
 #: classes/Pref_Feeds.php:923
 msgid "Feeds"
 msgstr "Flöden"
@@ -606,9 +612,9 @@ msgid "Ctrl"
 msgstr "Ctrl"
 
 #: classes/RPC.php:706 plugins/af_psql_trgm/init.php:116
-#: plugins/share/init.php:284 js/PrefHelpers.js:497 js/App.js:691
+#: plugins/share/init.php:284 js/PrefHelpers.js:497 js/App.js:694
 #: js/PrefFeedTree.js:550 js/CommonFilters.js:91 js/PrefHelpers.js:65
-#: js/PrefHelpers.js:817 js/Feeds.js:294 js/CommonDialogs.js:19
+#: js/PrefHelpers.js:817 js/Feeds.js:295 js/CommonDialogs.js:19
 #: js/CommonDialogs.js:316 js/CommonDialogs.js:689
 msgid "Close this window"
 msgstr "Stäng fönstret"
@@ -626,152 +632,163 @@ msgstr "%d min"
 msgid "General"
 msgstr "Generellt"
 
-#: classes/Pref_Prefs.php:58
+#: classes/Pref_Prefs.php:59
 #, fuzzy
 msgid "Articles"
 msgstr "Artikel"
 
-#: classes/Pref_Prefs.php:72
+#: classes/Pref_Prefs.php:73
 msgid "Digest"
 msgstr "Sammanställning"
 
-#: classes/Pref_Prefs.php:78
+#: classes/Pref_Prefs.php:79
 msgid "Advanced"
 msgstr "Avancerat"
 
-#: classes/Pref_Prefs.php:89
+#: classes/Pref_Prefs.php:90
 msgid "Debugging"
 msgstr ""
 
-#: classes/Pref_Prefs.php:95
+#: classes/Pref_Prefs.php:96
 msgid "Never apply these tags automatically (comma-separated list)."
 msgstr ""
 
-#: classes/Pref_Prefs.php:99
+#: classes/Pref_Prefs.php:100
 msgid "Blacklisted tags"
 msgstr "Svartlistade taggar"
 
-#: classes/Pref_Prefs.php:100
+#: classes/Pref_Prefs.php:101
 #, fuzzy
 msgid "Default language"
 msgstr "Standardprofil"
 
-#: classes/Pref_Prefs.php:100
+#: classes/Pref_Prefs.php:101
 msgid "Used for full-text search"
 msgstr ""
 
-#: classes/Pref_Prefs.php:101
+#: classes/Pref_Prefs.php:102
 #, fuzzy
 msgid "Mark read on scroll"
 msgstr "Flagga alla artiklar som lästa?"
 
-#: classes/Pref_Prefs.php:101
+#: classes/Pref_Prefs.php:102
 #, fuzzy
 msgid "Mark articles as read as you scroll past them"
 msgstr "Flagga alla artiklar som lästa?"
 
-#: classes/Pref_Prefs.php:102
+#: classes/Pref_Prefs.php:103
 #, fuzzy
 msgid "Always expand articles"
 msgstr "Klicka för att expandera artikeln"
 
-#: classes/Pref_Prefs.php:103
+#: classes/Pref_Prefs.php:104
 #, fuzzy
 msgid "Combined mode"
 msgstr "Växla komboläge"
 
-#: classes/Pref_Prefs.php:103
+#: classes/Pref_Prefs.php:104
 #, fuzzy
 msgid "Show flat list of articles instead of separate panels"
 msgstr ""
 "Visa expanderad lista med artiklar, istället för olika visningar för "
 "rubriker och artikeltext"
 
-#: classes/Pref_Prefs.php:104
+#: classes/Pref_Prefs.php:105
 #, fuzzy
 msgid "Confirm marking feeds as read"
 msgstr "Bekräfta markera flöde som läst"
 
-#: classes/Pref_Prefs.php:105
+#: classes/Pref_Prefs.php:106
 #, fuzzy
 msgid "Default update interval"
 msgstr "Standardintervall för flödesuppdatering"
 
-#: classes/Pref_Prefs.php:106
+#: classes/Pref_Prefs.php:107
 #, fuzzy
 msgid "Mark sent articles as read"
 msgstr "Flagga alla artiklar som lästa?"
 
-#: classes/Pref_Prefs.php:107
+#: classes/Pref_Prefs.php:108
 #, fuzzy
 msgid "Enable digest"
 msgstr "Aktivera e-postsammanfattning"
 
-#: classes/Pref_Prefs.php:107
+#: classes/Pref_Prefs.php:108
 #, fuzzy
 msgid "Send daily digest of new (and unread) headlines to your email address"
 msgstr ""
 "Skicka dagliga sammanställningar över nya (och olästa) rubriker till din e-"
 "post"
 
-#: classes/Pref_Prefs.php:108
+#: classes/Pref_Prefs.php:109
 #, fuzzy
 msgid "Try to send around this time"
 msgstr "Skicka sammanfattningar runt specificerad tid"
 
-#: classes/Pref_Prefs.php:108
+#: classes/Pref_Prefs.php:109
 #, fuzzy
 msgid "Time in UTC"
 msgstr "Tidszon"
 
-#: classes/Pref_Prefs.php:109
+#: classes/Pref_Prefs.php:110
 #, fuzzy
 msgid "Enable API"
 msgstr "Aktivera OTP"
 
-#: classes/Pref_Prefs.php:109
+#: classes/Pref_Prefs.php:110
 #, fuzzy
 msgid "Allows accessing this account through the API"
 msgstr "Tillåter externa klienter att få tillgång till detta konto via API"
 
-#: classes/Pref_Prefs.php:110
+#: classes/Pref_Prefs.php:111
+#, fuzzy
+#| msgid "Enable API access"
+msgid "Enable browser-based API access"
+msgstr "Aktivera tillgång till API"
+
+#: classes/Pref_Prefs.php:111
+msgid ""
+"Allows accessing the API from browsers ('Enable API' must also be enabled)"
+msgstr ""
+
+#: classes/Pref_Prefs.php:112
 msgid "Enable categories"
 msgstr "Aktivera kategorier"
 
-#: classes/Pref_Prefs.php:111
+#: classes/Pref_Prefs.php:113
 #, fuzzy
 msgid "Maximum age of fresh articles"
 msgstr "Maximal ålder för nya artiklar (i timmar)"
 
-#: classes/Pref_Prefs.php:111 classes/Pref_Prefs.php:112
+#: classes/Pref_Prefs.php:113 classes/Pref_Prefs.php:114
 #, fuzzy
 msgid "hours"
 msgstr "Var fjärde timme"
 
-#: classes/Pref_Prefs.php:112
+#: classes/Pref_Prefs.php:114
 #, fuzzy
 msgid "Maximum age of recently read articles"
 msgstr "Maximal ålder för nya artiklar (i timmar)"
 
-#: classes/Pref_Prefs.php:113
+#: classes/Pref_Prefs.php:115
 #, fuzzy
 msgid "Hide read feeds"
 msgstr "Visa/dölj lästa flöden"
 
-#: classes/Pref_Prefs.php:114
+#: classes/Pref_Prefs.php:116
 msgid "Always show special feeds"
 msgstr ""
 
-#: classes/Pref_Prefs.php:114
+#: classes/Pref_Prefs.php:116
 #, fuzzy
 msgid "While hiding read feeds"
 msgstr "Visa specialflöden när lästa feeds är dolda"
 
-#: classes/Pref_Prefs.php:115
+#: classes/Pref_Prefs.php:117
 msgid "Long date format"
 msgstr "Långa datum"
 
-#: classes/Pref_Prefs.php:115
+#: classes/Pref_Prefs.php:117
 msgid ""
 "Syntax is identical to PHP <a href='https://www.php.net/manual/"
 "function.date.php'>date()</a> function."
@@ -779,283 +796,283 @@ msgstr ""
 "Den syntax som används är identisk med <a href='https://www.php.net/manual/"
 "function.date.php'>date()</a>-funktinen i PHP."
 
-#: classes/Pref_Prefs.php:116
+#: classes/Pref_Prefs.php:118
 #, fuzzy
 msgid "Automatically show next feed"
 msgstr "Visa nästa flöde när vi är ikapp"
 
-#: classes/Pref_Prefs.php:116
+#: classes/Pref_Prefs.php:118
 #, fuzzy
 msgid "After marking one as read"
 msgstr "Bekräfta markera flöde som läst"
 
-#: classes/Pref_Prefs.php:117
+#: classes/Pref_Prefs.php:119
 #, fuzzy
 msgid "Purge articles older than"
 msgstr "Rensa olästa artiklar"
 
-#: classes/Pref_Prefs.php:117
+#: classes/Pref_Prefs.php:119
 msgid "<strong>days</strong> (0 disables)"
 msgstr ""
 
-#: classes/Pref_Prefs.php:118
+#: classes/Pref_Prefs.php:120
 msgid "Purge unread articles"
 msgstr "Rensa olästa artiklar"
 
-#: classes/Pref_Prefs.php:119
+#: classes/Pref_Prefs.php:121
 msgid "Short date format"
 msgstr "Korta datum"
 
-#: classes/Pref_Prefs.php:120
+#: classes/Pref_Prefs.php:122
 #, fuzzy
 msgid "Show content preview in headlines"
 msgstr "Förhandsgranska text i rubriklistan"
 
-#: classes/Pref_Prefs.php:121
+#: classes/Pref_Prefs.php:123
 #, fuzzy
 msgid "SSL client certificate"
 msgstr "Logga in med SSL-certifikat"
 
-#: classes/Pref_Prefs.php:122 classes/Pref_Feeds.php:602
+#: classes/Pref_Prefs.php:124 classes/Pref_Feeds.php:602
 #: js/CommonDialogs.js:502
 msgid "Do not embed media"
 msgstr "Bädda inte in media"
 
-#: classes/Pref_Prefs.php:123
+#: classes/Pref_Prefs.php:125
 msgid "Time zone"
 msgstr "Tidszon"
 
-#: classes/Pref_Prefs.php:124
+#: classes/Pref_Prefs.php:126
 #, fuzzy
 msgid "Group by feed"
 msgstr "Topp 25 kanaler"
 
-#: classes/Pref_Prefs.php:124
+#: classes/Pref_Prefs.php:126
 msgid "Group multiple-feed output by originating feed"
 msgstr ""
 
-#: classes/Pref_Prefs.php:125
+#: classes/Pref_Prefs.php:127
 msgid "Language"
 msgstr "Språk"
 
-#: classes/Pref_Prefs.php:126
+#: classes/Pref_Prefs.php:128
 msgid "Theme"
 msgstr "Tema"
 
-#: classes/Pref_Prefs.php:127
+#: classes/Pref_Prefs.php:129
 msgid "Don't enforce DISTINCT headlines"
 msgstr ""
 
-#: classes/Pref_Prefs.php:127
+#: classes/Pref_Prefs.php:129
 #, fuzzy
 msgid "May produce duplicate entries"
 msgstr "Tillåt dubbletter av artiklar"
 
-#: classes/Pref_Prefs.php:128
+#: classes/Pref_Prefs.php:130
 #, fuzzy
 msgid "Show article and feed IDs"
 msgstr "Visa artiklarna"
 
-#: classes/Pref_Prefs.php:128
+#: classes/Pref_Prefs.php:130
 #, fuzzy
 msgid "In the headlines buffer"
 msgstr "Sortera rubriker efter flödets datum"
 
-#: classes/Pref_Prefs.php:129
+#: classes/Pref_Prefs.php:131
 #, fuzzy
 #| msgid "Disable updates"
 msgid "Disable conditional counter updates"
 msgstr "Inaktivera uppdateringar"
 
-#: classes/Pref_Prefs.php:129
+#: classes/Pref_Prefs.php:131
 msgid "May increase server load"
 msgstr ""
 
-#: classes/Pref_Prefs.php:130
+#: classes/Pref_Prefs.php:132
 #, fuzzy
 #| msgid "Preview article"
 msgid "Grid view"
 msgstr "Förhandsgranska artikel"
 
-#: classes/Pref_Prefs.php:130
+#: classes/Pref_Prefs.php:132
 msgid "On wider screens, if always expanded"
 msgstr ""
 
-#: classes/Pref_Prefs.php:131
+#: classes/Pref_Prefs.php:133
 #, fuzzy
 #| msgid "Set score"
 msgid "Required score"
 msgstr "Ange poäng"
 
-#: classes/Pref_Prefs.php:131
+#: classes/Pref_Prefs.php:133
 msgid "Include articles with this or above score"
 msgstr ""
 
-#: classes/Pref_Prefs.php:228
+#: classes/Pref_Prefs.php:230
 msgid "The configuration was saved."
 msgstr "Konfiguration sparad."
 
-#: classes/Pref_Prefs.php:269
+#: classes/Pref_Prefs.php:271
 msgid "Your personal data has been saved."
 msgstr "Dina personliga data sparas."
 
-#: classes/Pref_Prefs.php:299
+#: classes/Pref_Prefs.php:301
 #, fuzzy
 msgid "Full name:"
 msgstr "Fullständigt namn"
 
-#: classes/Pref_Prefs.php:304 classes/Handler_Public.php:534 js/PrefUsers.js:98
+#: classes/Pref_Prefs.php:306 classes/Handler_Public.php:534 js/PrefUsers.js:98
 msgid "Email:"
 msgstr "E-post:"
 
-#: classes/Pref_Prefs.php:312 classes/Pref_Feeds.php:682
+#: classes/Pref_Prefs.php:314 classes/Pref_Feeds.php:682
 #: plugins/note/init.php:49 plugins/nsfw/init.php:105
 #: plugins/af_psql_trgm/init.php:193 js/CommonFilters.js:224
 #: js/CommonFilters.js:306 js/CommonFilters.js:506 js/CommonDialogs.js:628
-#: js/PrefUsers.js:119 js/PrefLabelTree.js:168 js/Article.js:362
+#: js/PrefUsers.js:119 js/PrefLabelTree.js:168 js/Article.js:365
 msgid "Save"
 msgstr "Spara"
 
-#: classes/Pref_Prefs.php:357
+#: classes/Pref_Prefs.php:359
 #, fuzzy
 msgid "Old password:"
 msgstr "Gammalt lösenord"
 
-#: classes/Pref_Prefs.php:362 js/PrefUsers.js:84
+#: classes/Pref_Prefs.php:364 js/PrefUsers.js:84
 #, fuzzy
 msgid "New password:"
 msgstr "Nytt lösenord"
 
-#: classes/Pref_Prefs.php:367
+#: classes/Pref_Prefs.php:369
 #, fuzzy
 msgid "Confirm password:"
 msgstr "Bekräfta lösenord"
 
-#: classes/Pref_Prefs.php:375 js/PrefUsers.js:86
+#: classes/Pref_Prefs.php:377 js/PrefUsers.js:86
 msgid "Change password"
 msgstr "Byt lösenord"
 
-#: classes/Pref_Prefs.php:382
+#: classes/Pref_Prefs.php:384
 #, php-format
 msgid ""
 "Authentication module used for this session (<b>%s</b>) does not provide an "
 "ability to set passwords."
 msgstr ""
 
-#: classes/Pref_Prefs.php:399
+#: classes/Pref_Prefs.php:401
 #, fuzzy
 msgid "Generate password"
 msgstr "Skapa ny URL"
 
-#: classes/Pref_Prefs.php:405 classes/Pref_Feeds.php:947 js/PrefHelpers.js:226
+#: classes/Pref_Prefs.php:407 classes/Pref_Feeds.php:947 js/PrefHelpers.js:226
 msgid "Remove selected"
 msgstr "Ta bort markerade"
 
-#: classes/Pref_Prefs.php:441 classes/Pref_Prefs.php:493
+#: classes/Pref_Prefs.php:443 classes/Pref_Prefs.php:495
 #, fuzzy
 msgid "Your password:"
 msgstr "Bekräfta lösenord"
 
-#: classes/Pref_Prefs.php:449
+#: classes/Pref_Prefs.php:451
 msgid "Disable OTP"
 msgstr "Stäng av OTP"
 
-#: classes/Pref_Prefs.php:471
+#: classes/Pref_Prefs.php:473
 msgid "OTP secret:"
 msgstr ""
 
-#: classes/Pref_Prefs.php:498
+#: classes/Pref_Prefs.php:500
 msgid "Verification code:"
 msgstr ""
 
-#: classes/Pref_Prefs.php:506
+#: classes/Pref_Prefs.php:508
 msgid "Enable OTP"
 msgstr "Aktivera OTP"
 
-#: classes/Pref_Prefs.php:520
+#: classes/Pref_Prefs.php:522
 msgid "Personal data"
 msgstr "Personlig information"
 
-#: classes/Pref_Prefs.php:523 js/PrefFeedTree.js:450 js/CommonDialogs.js:91
+#: classes/Pref_Prefs.php:525 js/PrefFeedTree.js:450 js/CommonDialogs.js:91
 msgid "Password"
 msgstr "Lösenord"
 
-#: classes/Pref_Prefs.php:526
+#: classes/Pref_Prefs.php:528
 #, fuzzy
 msgid "App passwords"
 msgstr "Gammalt lösenord"
 
-#: classes/Pref_Prefs.php:533
+#: classes/Pref_Prefs.php:535
 #, fuzzy
 msgid "Authenticator (OTP)"
 msgstr "Autentisering"
 
-#: classes/Pref_Prefs.php:544
+#: classes/Pref_Prefs.php:546
 msgid "Some preferences are only available in default profile."
 msgstr "Vissa inställningar är endast tillgängliga i standardprofilen."
 
-#: classes/Pref_Prefs.php:633
+#: classes/Pref_Prefs.php:635
 msgid "default"
 msgstr "standard"
 
-#: classes/Pref_Prefs.php:641
+#: classes/Pref_Prefs.php:643
 msgid "Customize"
 msgstr "Anpassa"
 
-#: classes/Pref_Prefs.php:643
+#: classes/Pref_Prefs.php:645
 #, fuzzy
 msgid "More themes..."
 msgstr "Fler åtgärder..."
 
-#: classes/Pref_Prefs.php:676
+#: classes/Pref_Prefs.php:678
 #, fuzzy
 #| msgid "Preview article"
 msgid "Preview"
 msgstr "Förhandsgranska artikel"
 
-#: classes/Pref_Prefs.php:702
+#: classes/Pref_Prefs.php:704
 msgid "Register"
 msgstr "Registrera"
 
-#: classes/Pref_Prefs.php:706 classes/Pref_System.php:129
+#: classes/Pref_Prefs.php:708 classes/Pref_System.php:129
 msgid "Clear"
 msgstr "Rensa"
 
-#: classes/Pref_Prefs.php:710 classes/Pref_Prefs.php:878
+#: classes/Pref_Prefs.php:712 classes/Pref_Prefs.php:880
 #: plugins/bookmarklets/init.php:369 js/CommonDialogs.js:683
 #, fuzzy
 msgid "More info..."
 msgstr "mer info"
 
-#: classes/Pref_Prefs.php:719
+#: classes/Pref_Prefs.php:721
 #, fuzzy, php-format
 msgid "Current server time: %s"
 msgstr "Aktuell servertid: %s (UTC)"
 
-#: classes/Pref_Prefs.php:767
+#: classes/Pref_Prefs.php:769
 msgid "Save configuration"
 msgstr "Spara konfiguration"
 
-#: classes/Pref_Prefs.php:770
+#: classes/Pref_Prefs.php:772
 #, fuzzy
 msgid "Save and exit"
 msgstr "Märk ovanstående som lästa"
 
-#: classes/Pref_Prefs.php:777 js/PrefHelpers.js:126
+#: classes/Pref_Prefs.php:779 js/PrefHelpers.js:126
 msgid "Manage profiles"
 msgstr "Hantera profiler"
 
-#: classes/Pref_Prefs.php:782
+#: classes/Pref_Prefs.php:784
 msgid "Reset to defaults"
 msgstr "Återställ till standard"
 
-#: classes/Pref_Prefs.php:837 classes/Pref_Feeds.php:908
-#: classes/Pref_Filters.php:767 classes/Pref_Users.php:199 js/Feeds.js:662
-#: js/Feeds.js:657 js/Feeds.js:712
+#: classes/Pref_Prefs.php:839 classes/Pref_Feeds.php:908
+#: classes/Pref_Filters.php:767 classes/Pref_Users.php:199 js/Feeds.js:663
+#: js/Feeds.js:658 js/Feeds.js:713
 msgid "Search"
 msgstr "Sök"
 
-#: classes/Pref_Prefs.php:842 classes/Pref_Prefs.php:1547
+#: classes/Pref_Prefs.php:844 classes/Pref_Prefs.php:1548
 #: classes/Pref_Labels.php:174 classes/Pref_Feeds.php:913
 #: classes/Pref_Filters.php:772 classes/Pref_Users.php:205
 #: js/CommonFilters.js:426 js/CommonFilters.js:459 js/PrefFeedTree.js:516
@@ -1063,7 +1080,7 @@ msgstr "Sök"
 msgid "Select"
 msgstr "Markera"
 
-#: classes/Pref_Prefs.php:845 classes/Pref_Prefs.php:1550
+#: classes/Pref_Prefs.php:847 classes/Pref_Prefs.php:1551
 #: classes/Pref_Labels.php:176 classes/Pref_Feeds.php:916
 #: classes/Pref_Filters.php:775 classes/Pref_Users.php:208
 #: js/CommonFilters.js:430 js/CommonFilters.js:462 js/PrefFeedTree.js:519
@@ -1071,7 +1088,7 @@ msgstr "Markera"
 msgid "All"
 msgstr "Alla"
 
-#: classes/Pref_Prefs.php:847 classes/Pref_Prefs.php:1552
+#: classes/Pref_Prefs.php:849 classes/Pref_Prefs.php:1553
 #: classes/Pref_Labels.php:177 classes/Pref_Feeds.php:918
 #: classes/Pref_Filters.php:777 classes/Pref_Users.php:210
 #: js/CommonFilters.js:432 js/CommonFilters.js:464 js/PrefFeedTree.js:521
@@ -1079,7 +1096,7 @@ msgstr "Alla"
 msgid "None"
 msgstr "Ingen"
 
-#: classes/Pref_Prefs.php:876
+#: classes/Pref_Prefs.php:878
 #, php-format
 msgid ""
 "The following plugins use per-feed content hooks. This may cause excessive "
@@ -1087,96 +1104,96 @@ msgid ""
 "<b>%s</b>"
 msgstr ""
 
-#: classes/Pref_Prefs.php:892 js/CommonFilters.js:222
+#: classes/Pref_Prefs.php:894 js/CommonFilters.js:222
 #, fuzzy
 msgid "More info"
 msgstr "mer info"
 
-#: classes/Pref_Prefs.php:895
+#: classes/Pref_Prefs.php:897
 #, fuzzy
 #| msgid "Enable selected plugins"
 msgid "Enable selected"
 msgstr "Aktivera valda tillägg"
 
-#: classes/Pref_Prefs.php:898
+#: classes/Pref_Prefs.php:900
 msgid "Reload"
 msgstr ""
 
-#: classes/Pref_Prefs.php:905
+#: classes/Pref_Prefs.php:907
 #, fuzzy
 #| msgid "Perform updates"
 msgid "Check for updates"
 msgstr "Utför uppdatering"
 
-#: classes/Pref_Prefs.php:912
+#: classes/Pref_Prefs.php:914
 #, fuzzy
 #| msgid "Mail plugin"
 msgid "Install plugin"
 msgstr "E-post-tillägg"
 
-#: classes/Pref_Prefs.php:925
+#: classes/Pref_Prefs.php:927
 msgid "Personal data / Authentication"
 msgstr "Personlig information / Autentisering"
 
-#: classes/Pref_Prefs.php:939 classes/Pref_Feeds.php:1062
+#: classes/Pref_Prefs.php:941 classes/Pref_Feeds.php:1062
 #: js/CommonDialogs.js:622
 msgid "Plugins"
 msgstr "Tillägg"
 
-#: classes/Pref_Prefs.php:973
+#: classes/Pref_Prefs.php:975
 msgid "Incorrect one time password"
 msgstr "Felaktigt engångslösenord"
 
-#: classes/Pref_Prefs.php:976 classes/Pref_Prefs.php:1015
+#: classes/Pref_Prefs.php:978 classes/Pref_Prefs.php:1017
 msgid "Incorrect password"
 msgstr "Felaktigt lösenord"
 
-#: classes/Pref_Prefs.php:1030
+#: classes/Pref_Prefs.php:1032
 #, php-format
 msgid "v%.2f, by %s"
 msgstr ""
 
-#: classes/Pref_Prefs.php:1044
+#: classes/Pref_Prefs.php:1046
 #, php-format
 msgid "v%s, by %s"
 msgstr ""
 
-#: classes/Pref_Prefs.php:1508 classes/Handler_Public.php:289
+#: classes/Pref_Prefs.php:1509 classes/Handler_Public.php:289
 #: include/login_form.php:159
 msgid "Default profile"
 msgstr "Standardprofil"
 
-#: classes/Pref_Prefs.php:1561
+#: classes/Pref_Prefs.php:1562
 msgid "Description"
 msgstr "Beskrivning"
 
-#: classes/Pref_Prefs.php:1562
+#: classes/Pref_Prefs.php:1563
 #, fuzzy
 msgid "Created"
 msgstr "Skapa"
 
-#: classes/Pref_Prefs.php:1563
+#: classes/Pref_Prefs.php:1564
 #, fuzzy
 msgid "Last used"
 msgstr "Senaste uppdatering:"
 
-#: classes/Pref_Prefs.php:1608
+#: classes/Pref_Prefs.php:1609
 #, php-format
 msgid ""
 "Generated password <strong>%s</strong> for %s. Please remember it for future "
 "reference."
 msgstr ""
 
-#: classes/Sessions.php:121
+#: classes/Sessions.php:132
 msgid "Session failed to validate (password changed)"
 msgstr "Sessionen kunde inte valideras (ändrat lösenord)"
 
-#: classes/Sessions.php:126
+#: classes/Sessions.php:137
 #, fuzzy
 msgid "Session failed to validate (account is disabled)"
 msgstr "Kunde inte verifiera session (fel IP)"
 
-#: classes/Sessions.php:145
+#: classes/Sessions.php:156
 msgid "Session failed to validate (user not found)"
 msgstr "Sessionen kunde inte valideras (användare hittades inte)"
 
@@ -1264,7 +1281,7 @@ msgstr ""
 msgid "Search results: %s"
 msgstr "Sökresultat: %s"
 
-#: classes/Feeds.php:2278
+#: classes/Feeds.php:2282
 #, php-format
 msgid "The date keyword \"%s\" was not recognized."
 msgstr ""
@@ -1340,7 +1357,7 @@ msgstr ""
 msgid "Error while parsing document."
 msgstr "Fel vid tolkning av dokument."
 
-#: classes/Config.php:431
+#: classes/Config.php:480
 #, fuzzy, php-format
 msgid "Git error [RC=%d]: %s"
 msgstr "Ödesdigert fel"
@@ -1499,7 +1516,7 @@ msgstr "Makera uppdaterade artiklar som olästa"
 msgid "Place in category:"
 msgstr "Placera i kategori:"
 
-#: classes/Pref_Feeds.php:626 js/Feeds.js:644 js/CommonDialogs.js:556
+#: classes/Pref_Feeds.php:626 js/Feeds.js:645 js/CommonDialogs.js:556
 msgid "Language:"
 msgstr "Språk:"
 
@@ -1530,8 +1547,8 @@ msgstr "Alternativ"
 #: plugins/bookmarklets/init.php:288 js/CommonFilters.js:225
 #: js/CommonFilters.js:307 js/CommonFilters.js:507 js/CommonFilters.js:511
 #: js/CommonDialogs.js:629 js/PrefUsers.js:122 js/PrefFeedTree.js:467
-#: js/PrefLabelTree.js:171 js/Article.js:365 js/PrefHelpers.js:231
-#: js/PrefHelpers.js:305 js/Feeds.js:658 js/Feeds.js:713
+#: js/PrefLabelTree.js:171 js/Article.js:368 js/PrefHelpers.js:231
+#: js/PrefHelpers.js:305 js/Feeds.js:659 js/Feeds.js:714
 #: js/CommonDialogs.js:113
 msgid "Cancel"
 msgstr "Avbryt"
@@ -2194,71 +2211,71 @@ msgstr "Kom ihåg mig"
 msgid "Detect automatically"
 msgstr ""
 
-#: js/App.js:332
+#: js/App.js:335
 #, fuzzy
 #| msgid "Widescreen is not available in combined mode."
 msgid "This function is only available in combined mode."
 msgstr "Bredbild inte tillänglig i kombinerat läge."
 
-#: js/App.js:485
+#: js/App.js:488
 msgid "Keyboard shortcuts"
 msgstr "Kortkommandon"
 
-#: js/App.js:543
+#: js/App.js:546
 #, fuzzy
 msgid "Update daemon is not running."
 msgstr ""
 "<span onclick=\"App.explainError(3)\">Uppdaterings-daemonen uppdaterar inte "
 "flöden.</span>"
 
-#: js/App.js:556
+#: js/App.js:559
 #, fuzzy
 msgid "Update daemon is not updating feeds."
 msgstr ""
 "<span onclick=\"App.explainError(3)\">Uppdaterings-daemonen uppdaterar inte "
 "flöden.</span>"
 
-#: js/App.js:639
+#: js/App.js:642
 #, java-printf-format
 msgid ""
 "URL scheme reported by your browser (%a) doesn't match server-configured "
 "SELF_URL_PATH (%b), check X-Forwarded-Proto."
 msgstr ""
 
-#: js/App.js:646
+#: js/App.js:649
 msgid "Fatal error"
 msgstr "Ödesdigert fel"
 
-#: js/App.js:668
+#: js/App.js:671
 msgid "Unhandled exception"
 msgstr "Ohanterat undantag"
 
-#: js/App.js:950
+#: js/App.js:996
 msgid "Widescreen is not available in combined mode."
 msgstr "Bredbild inte tillänglig i kombinerat läge."
 
-#: js/App.js:1147
+#: js/App.js:1250
 msgid "Please enable mail or mailto plugin first."
 msgstr "Vänligen aktivera mail- eller mailto-tillägget först."
 
-#: js/App.js:1210 js/App.js:1323 js/CommonDialogs.js:371
+#: js/App.js:1313 js/App.js:1426 js/CommonDialogs.js:371
 msgid "You can't edit this kind of feed."
 msgstr "Detta typ av flöde kan inte redigeras."
 
-#: js/App.js:1278
+#: js/App.js:1381
 #, fuzzy
 msgid "Please enable af_readability first."
 msgstr "Vänligen aktivera mail- eller mailto-tillägget först."
 
-#: js/App.js:1332
+#: js/App.js:1435
 msgid "Please select some feed first."
 msgstr "Välj några flöden först."
 
-#: js/App.js:1337
+#: js/App.js:1440
 msgid "You can't unsubscribe from the category."
 msgstr "Du kan inte säga upp prenumeration på kategorin."
 
-#: js/App.js:1343 js/CommonDialogs.js:345 js/CommonDialogs.js:382
+#: js/App.js:1446 js/CommonDialogs.js:345 js/CommonDialogs.js:382
 #, java-printf-format, javascript-format
 msgid "Unsubscribe from %s?"
 msgstr "Säg upp prenumeration på %s?"
@@ -2476,7 +2493,7 @@ msgstr "Tar bort valda etiketter..."
 msgid "Please enter new score for selected articles:"
 msgstr "Ange ny poäng för markerade artiklar:"
 
-#: js/Article.js:56 js/Article.js:135 js/Headlines.js:939 js/Headlines.js:965
+#: js/Article.js:56 js/Article.js:138 js/Headlines.js:939 js/Headlines.js:965
 #: js/Headlines.js:1107 js/Headlines.js:1124 js/Headlines.js:1141
 #: js/Headlines.js:1276 js/Headlines.js:977
 msgid "No articles selected."
@@ -2486,31 +2503,31 @@ msgstr "Inga artiklar valda."
 msgid "Please enter new score for this article:"
 msgstr "Ange ny poäng för denna artikel:"
 
-#: js/Article.js:147
+#: js/Article.js:150
 msgid "no tags"
 msgstr "Inga taggar"
 
-#: js/Article.js:239
+#: js/Article.js:242
 msgid "comments"
 msgstr "kommentarer"
 
-#: js/Article.js:242
+#: js/Article.js:245
 #, fuzzy
 msgid "comment"
 msgid_plural "comments"
 msgstr[0] "Kommentarer?"
 msgstr[1] "Kommentarer?"
 
-#: js/Article.js:344
+#: js/Article.js:347
 #, fuzzy
 msgid "Article tags"
 msgstr "Artikel"
 
-#: js/Article.js:351
+#: js/Article.js:354
 msgid "Tags for this article (separated by commas):"
 msgstr "Taggar för denna artikel (kommaseparerade):"
 
-#: js/Article.js:371
+#: js/Article.js:374
 msgid "Saving article tags..."
 msgstr "Sparar artikeltaggar..."
 
@@ -2939,11 +2956,11 @@ msgstr ""
 msgid "(Un)collapse"
 msgstr "Fäll ut/ihop"
 
-#: js/Feeds.js:284
+#: js/Feeds.js:285
 msgid "Your password is at default value"
 msgstr "Ditt lösenord är standardlösenordet"
 
-#: js/Feeds.js:286
+#: js/Feeds.js:287
 msgid ""
 "You are using default tt-rss password. Please change it in the Preferences "
 "(Personal data / Authentication)."
@@ -2951,48 +2968,48 @@ msgstr ""
 "Du använder standardlösenordet för tt-rss. Vänligen ändra det i "
 "Inställningen (Personliga data / Autentisering)."
 
-#: js/Feeds.js:448
+#: js/Feeds.js:449
 msgid "Mark all articles as read?"
 msgstr "Flagga alla artiklar som lästa?"
 
-#: js/Feeds.js:452
+#: js/Feeds.js:453
 msgid "Marking all feeds as read..."
 msgstr "Markerar alla flöden som lästa..."
 
-#: js/Feeds.js:469
+#: js/Feeds.js:470
 msgid "Mark %w in %s older than 1 day as read?"
 msgstr "Markera %w i %s äldre än 1 dag som lästa?"
 
-#: js/Feeds.js:472
+#: js/Feeds.js:473
 msgid "Mark %w in %s older than 1 week as read?"
 msgstr "Markera %w i %s äldre än 1 vecka som lästa?"
 
-#: js/Feeds.js:475
+#: js/Feeds.js:476
 msgid "Mark %w in %s older than 2 weeks as read?"
 msgstr "Markera %w i %s äldre än 2 veckor som lästa?"
 
-#: js/Feeds.js:478
+#: js/Feeds.js:479
 msgid "Mark %w in %s as read?"
 msgstr "Märk %w i %s som lästa?"
 
-#: js/Feeds.js:481
+#: js/Feeds.js:482
 msgid "search results"
 msgstr "sökresultat"
 
-#: js/Feeds.js:481
+#: js/Feeds.js:482
 msgid "all articles"
 msgstr "alla artiklar"
 
-#: js/Feeds.js:522
+#: js/Feeds.js:523
 #, java-printf-format, javascript-format
 msgid "Mark all articles in %s as read?"
 msgstr "Märk alla artiklar i %s som lästa?"
 
-#: js/Feeds.js:653
+#: js/Feeds.js:654
 msgid "Search syntax"
 msgstr "Söksyntax"
 
-#: js/Feeds.js:717
+#: js/Feeds.js:718
 #, fuzzy
 msgid "Search feeds"
 msgstr "Sök..."
@@ -3169,11 +3186,11 @@ msgstr "Sluta dela denna artiklar?"
 msgid "This will invalidate all previously shared article URLs. Continue?"
 msgstr "Detta tar bort alla tidigare delade artikel-URLer. Fortsätt?"
 
-#: js/App.js:676
+#: js/App.js:679
 msgid "Stack trace"
 msgstr ""
 
-#: js/App.js:683 js/CommonDialogs.js:121
+#: js/App.js:686 js/CommonDialogs.js:121
 msgid "Additional information"
 msgstr ""
 
@@ -3207,19 +3224,19 @@ msgstr "Ta bort prenumeration för valda flöden"
 msgid "Caption"
 msgstr "Titel"
 
-#: js/Article.js:114
+#: js/Article.js:117
 msgid "Copied to clipboard."
 msgstr ""
 
-#: js/Article.js:116
+#: js/Article.js:119
 msgid "Article URL:"
 msgstr "URL för artikel:"
 
-#: js/Article.js:200
+#: js/Article.js:203
 msgid "Attachments"
 msgstr "Bilagor"
 
-#: js/Article.js:309 js/Headlines.js:548
+#: js/Article.js:312 js/Headlines.js:548
 msgid "Edit tags for this article"
 msgstr "Redigera taggar för denna artikel"
 
@@ -3332,20 +3349,20 @@ msgid_plural "Updates pending for %d plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: js/Feeds.js:291
+#: js/Feeds.js:292
 msgid "Open Preferences"
 msgstr "Öppna Inställningar"
 
-#: js/Feeds.js:637
+#: js/Feeds.js:638
 #, fuzzy, javascript-format
 msgid "Search %s..."
 msgstr "Sök..."
 
-#: js/Feeds.js:646
+#: js/Feeds.js:647
 msgid "Used for word stemming"
 msgstr "Används för att hitta ordstammar"
 
-#: js/Feeds.js:706
+#: js/Feeds.js:707
 msgid "Show feeds matching..."
 msgstr ""
 
@@ -3988,9 +4005,6 @@ msgstr "Ikon"
 #~ msgid "Regular expression, without outer delimiters (i.e. slashes)"
 #~ msgstr "Reguljärt uttryck, utan yttre avgränsare (d.v.s. snedstreck)"
 
-#~ msgid "Toggle embed original"
-#~ msgstr "Stäng av/sätt på inbäddade original"
-
 #~ msgid ""
 #~ "To subscribe to GoComics use the comic's regular web page as the feed URL "
 #~ "(e.g. for the <em>Garfield</em> comic use <code>http://www.gocomics.com/"
@@ -4182,9 +4196,6 @@ msgstr "Ikon"
 
 #~ msgid "Mark articles in e-mail digest as read"
 #~ msgstr "Flagga artiklar i e-postsammanfattning som lästa"
-
-#~ msgid "Enable API access"
-#~ msgstr "Aktivera tillgång till API"
 
 #~ msgid "Enable feed categories"
 #~ msgstr "Aktivera kategorier"
