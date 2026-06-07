@@ -654,6 +654,7 @@ body.ttrss_main #feeds-holder-backdrop {
   }
   body.ttrss_main #headlines-frame {
     overscroll-behavior-y: contain;
+    overflow-x: hidden;
   }
   body.ttrss_main #feeds-holder_splitter {
     display: none ! important;
@@ -726,6 +727,40 @@ body.ttrss_main #headlines-ptr.ready {
 }
 body.ttrss_main #headlines-ptr.spinning .material-icons {
   animation: ttrss-ptr-spin 0.7s linear infinite;
+}
+body.ttrss_main .hl.swiping,
+body.ttrss_main .cdm.swiping {
+  position: relative;
+}
+body.ttrss_main .hl.swipe-anim,
+body.ttrss_main .cdm.swipe-anim {
+  transition: transform 0.2s ease, height 0.2s ease, opacity 0.2s ease, margin 0.2s ease, padding 0.2s ease;
+}
+body.ttrss_main .hl-swipe-action {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 28px;
+  background: #7eb182;
+  color: white;
+}
+body.ttrss_main .hl-swipe-action.from-left {
+  left: -100%;
+  justify-content: flex-end;
+}
+body.ttrss_main .hl-swipe-action.from-right {
+  left: 100%;
+  justify-content: flex-start;
+}
+body.ttrss_main .hl-swipe-action.ready {
+  background: #69C671;
+}
+body.ttrss_main .hl-swipe-action .material-icons {
+  font-size: 26px;
 }
 @media (max-width: 768px) {
   body.ttrss_main .hl,

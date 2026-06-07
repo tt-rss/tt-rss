@@ -870,6 +870,7 @@ const App = {
          Headlines.initScrollHandler();
 
          this.initPullToRefresh();
+         this.initSwipeToRead();
 
          // If the viewport grows back to the docked layout (the hamburger
          // toggle is hidden there), make sure the drawer isn't left open.
@@ -1126,6 +1127,7 @@ const App = {
       const MAX = 96;         // clamp the badge travel so it can't be hauled off the list
 
       let start_y = 0;
+      let start_x = 0;
       let pulling = false;    // a qualifying downward drag from the top is active
       let refreshing = false; // a refresh fired; awaiting the feed to finish loading
       let safety_timeout = 0;
@@ -1164,6 +1166,7 @@ const App = {
          if (!this.isNarrowLayout() || frame.scrollTop > 0)
             return;
          start_y = ev.touches[0].clientY;
+         start_x = ev.touches[0].clientX;
          pulling = true;
       }, {passive: true});
 
@@ -1171,8 +1174,10 @@ const App = {
          if (!pulling)
             return;
          const dist = ev.touches[0].clientY - start_y;
-         // Moved up, or the list managed to scroll: hand back to native scrolling.
-         if (dist <= 0 || frame.scrollTop > 0) {
+         const dx = ev.touches[0].clientX - start_x;
+         // Moved up, the list managed to scroll, or this is really a sideways
+         // swipe (swipe-to-read, initSwipeToRead owns those): hand it back.
+         if (dist <= 0 || frame.scrollTop > 0 || Math.abs(dx) > dist) {
             pulling = false;
             settle();
             return;
@@ -1215,6 +1220,147 @@ const App = {
 
       // The reloaded feed has rendered -- stop and retract the spinner.
       PluginHost.register(PluginHost.HOOK_FEED_LOADED, stopRefreshing);
+   },
+   // Swipe-to-dismiss on the article list (narrow/phone layout): a horizontal
+   // drag across a headline row marks it read and slides it out of the list,
+   // like the swipe-to-archive gesture in mobile mail apps. Either direction
+   // does the same thing; the row reveals a coloured "mark read" affordance on
+   // the edge it is dragged toward, which brightens once the drag passes the
+   // commit threshold. Vertical drags are left to native scrolling and to
+   // pull-to-refresh (which cedes horizontal-dominant drags to us).
+   //
+   // The row content is translated to follow the finger; the affordance is an
+   // absolutely-positioned child parked just off that edge, so it rides in with
+   // the row (no second transform to keep in sync). #headlines-frame clips its
+   // horizontal overflow (overflow-x:hidden in the narrow theme) so the parked
+   // affordance and the slid-off content stay hidden until revealed.
+   initSwipeToRead: function() {
+      const frame = document.getElementById("headlines-frame");
+      if (!frame)
+         return;
+
+      const LOCK = 10;        // px of travel before we commit to an axis
+      const THRESHOLD = 80;   // px of horizontal travel that fires the action
+
+      let row = null;         // the headline row under the finger
+      let action = null;      // the revealed "mark read" layer (a child of row)
+      let start_x = 0, start_y = 0, dx = 0;
+      let axis = "";          // "" undecided, "h" we own it, "v" native scroll
+
+      const cleanup = () => {
+         if (row) {
+            row.classList.remove("swiping");
+            row.style.transform = "";
+         }
+         if (action)
+            action.remove();
+         row = action = null;
+         axis = "";
+         dx = 0;
+      };
+
+      // Mark read (persisted by Headlines' row_observer -> catchupSelected) and
+      // animate the row off-screen, then collapse its height so the rows below
+      // slide up to fill the gap, and finally drop it from the DOM.
+      const dismiss = (dir) => {
+         const r = row, a = action;
+         const id = parseInt(r.getAttribute("data-article-id"));
+         row = action = null;   // release closure state; the node lives on alone
+         axis = "";
+         dx = 0;
+
+         Headlines.toggleUnread(id, 0);
+
+         const h = r.offsetHeight;
+         const w = r.offsetWidth;
+         r.style.height = h + "px";
+         void r.offsetHeight;   // lock the height before transitioning it to 0
+         r.classList.add("swipe-anim");
+         r.style.transform = `translateX(${dir * w}px)`;
+         r.style.height = "0px";
+         r.style.opacity = "0";
+         r.style.marginTop = r.style.marginBottom = "0px";
+         r.style.paddingTop = r.style.paddingBottom = "0px";
+         r.style.borderWidth = "0px";
+         if (a)
+            a.remove();
+         // transitionend fires per-property; a timeout also covers the case
+         // where a zero-duration transition emits nothing.
+         window.setTimeout(() => r.remove(), 300);
+      };
+
+      frame.addEventListener("touchstart", (ev) => {
+         if (!this.isNarrowLayout() || ev.touches.length !== 1) {
+            axis = "v";
+            return;
+         }
+         const r = ev.target.closest("#headlines-frame > div[id^=RROW]");
+         // skip the active (open) article — it owns a Back-gesture overlay entry
+         // — and any row already animating out.
+         if (!r || r.classList.contains("active") || r.classList.contains("swipe-anim")) {
+            axis = "v";
+            return;
+         }
+         row = r;
+         start_x = ev.touches[0].clientX;
+         start_y = ev.touches[0].clientY;
+         axis = "";
+         dx = 0;
+      }, {passive: true});
+
+      frame.addEventListener("touchmove", (ev) => {
+         if (!row || axis === "v")
+            return;
+         dx = ev.touches[0].clientX - start_x;
+         const dy = ev.touches[0].clientY - start_y;
+
+         if (axis === "") {
+            if (Math.abs(dx) < LOCK && Math.abs(dy) < LOCK)
+               return;
+            if (Math.abs(dx) <= Math.abs(dy)) {   // vertical wins: it's a scroll
+               row = null;
+               axis = "v";
+               return;
+            }
+            axis = "h";                            // horizontal wins: take over
+            row.classList.add("swiping");
+            action = document.createElement("div");
+            action.className = "hl-swipe-action";
+            action.innerHTML = "<i class='material-icons'>done_all</i>";
+            row.insertBefore(action, row.firstChild);
+         }
+
+         ev.preventDefault();
+         action.classList.toggle("from-left", dx > 0);
+         action.classList.toggle("from-right", dx < 0);
+         action.classList.toggle("ready", Math.abs(dx) >= THRESHOLD);
+         row.style.transform = `translateX(${dx}px)`;
+      }, {passive: false});
+
+      frame.addEventListener("touchend", () => {
+         if (!row || axis !== "h") {
+            cleanup();
+            return;
+         }
+         if (Math.abs(dx) >= THRESHOLD) {
+            dismiss(dx > 0 ? 1 : -1);
+            return;
+         }
+         // below threshold: ease the row back home, then drop the swiping state
+         const r = row, a = action;
+         row = action = null;
+         axis = "";
+         dx = 0;
+         r.classList.add("swipe-anim");
+         r.style.transform = "";
+         window.setTimeout(() => {
+            r.classList.remove("swiping", "swipe-anim");
+            if (a)
+               a.remove();
+         }, 220);
+      }, {passive: true});
+
+      frame.addEventListener("touchcancel", cleanup, {passive: true});
    },
    initHotkeyActions: function() {
       if (this.is_prefs) {
