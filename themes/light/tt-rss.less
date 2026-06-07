@@ -773,6 +773,13 @@ body.ttrss_main {
 			width : 100% ! important;
 		}
 
+		// Our own pull-to-refresh (App.initPullToRefresh()) owns the downward
+		// overscroll at the top of the list; keep it from chaining out to the
+		// browser's native pull-to-refresh as well.
+		#headlines-frame {
+			overscroll-behavior-y : contain;
+		}
+
 		// The splitter is meaningless while the sidebar is an overlay.
 		#feeds-holder_splitter {
 			display : none ! important;
@@ -813,6 +820,56 @@ body.ttrss_main {
 		&.feeds-drawer-open #feeds-holder-backdrop {
 			opacity : 1;
 			visibility : visible;
+		}
+	}
+
+	// Pull-to-refresh spinner badge for the article list (narrow/phone layout,
+	// driven by App.initPullToRefresh()). It overlays the top of the scrolling
+	// #headlines-frame from a sibling slot in #headlines-wrap-inner, parked just
+	// above the visible top edge and invisible at rest; the gesture slides it down
+	// (.dragging removes the easing so it tracks the finger) and spins it while the
+	// feed reloads. pointer-events:none so it never intercepts taps or scrolls.
+	#headlines-ptr {
+		position : absolute;
+		top : -48px;
+		left : 50%;
+		z-index : 5;
+		display : flex;
+		align-items : center;
+		justify-content : center;
+		box-sizing : border-box;
+		width : 40px;
+		height : 40px;
+		border-radius : 50%;
+		border : 1px solid @border-default;
+		background : @default-bg;
+		box-shadow : 0 1px 6px rgba(0, 0, 0, 0.3);
+		color : @color-accent;
+		opacity : 0;
+		pointer-events : none;
+		transform : translateX(-50%);
+		transition : transform 0.25s ease, opacity 0.25s ease,
+			background-color 0.15s ease, color 0.15s ease;
+
+		.material-icons {
+			font-size : 22px;
+		}
+
+		// While the finger is down the badge follows it 1:1, with no easing.
+		&.dragging {
+			transition : none;
+		}
+
+		// Pulled past the threshold: fill with the accent colour to signal that
+		// releasing now will refresh.
+		&.ready {
+			background : @color-accent;
+			border-color : @color-accent;
+			color : white;
+		}
+
+		&.spinning .material-icons {
+			animation : ttrss-ptr-spin 0.7s linear infinite;
 		}
 	}
 
@@ -1634,6 +1691,12 @@ body.ttrss_main, body.ttrss_utility {
 
 ::-webkit-scrollbar-track {
 	background-color: #eee;
+}
+
+// Spins the pull-to-refresh badge's icon while the feed reloads (see #headlines-ptr).
+@keyframes ttrss-ptr-spin {
+	from { transform : rotate(0deg); }
+	to { transform : rotate(360deg); }
 }
 
 /* video::-webkit-media-controls-overlay-play-button {
