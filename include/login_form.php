@@ -5,6 +5,7 @@
 	<title>Tiny Tiny RSS : Login</title>
 	<link rel="shortcut icon" type="image/png" href="images/favicon.png">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1,width=device-width" />
 	<?php
 	foreach (["lib/dojo/dojo.js",
 				"lib/dojo/tt-rss-layer.js",
