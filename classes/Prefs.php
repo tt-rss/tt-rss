@@ -33,6 +33,7 @@ class Prefs {
 	const STRIP_IMAGES = "STRIP_IMAGES";
 	const _DEFAULT_VIEW_ORDER_BY = "_DEFAULT_VIEW_ORDER_BY";
 	const ENABLE_API_ACCESS = "ENABLE_API_ACCESS";
+	const ENABLE_API_ACCESS_BROWSER = 'ENABLE_API_ACCESS_BROWSER';
 	//const _COLLAPSED_SPECIAL = "_COLLAPSED_SPECIAL";
 	//const _COLLAPSED_LABELS = "_COLLAPSED_LABELS";
 	//const _COLLAPSED_UNCAT = "_COLLAPSED_UNCAT";
@@ -96,6 +97,7 @@ class Prefs {
 		Prefs::STRIP_IMAGES => [ false, Config::T_BOOL ],
 		Prefs::_DEFAULT_VIEW_ORDER_BY => [ "default", Config::T_STRING ],
 		Prefs::ENABLE_API_ACCESS => [ false, Config::T_BOOL ],
+		Prefs::ENABLE_API_ACCESS_BROWSER => [ false, Config::T_BOOL ],
 		//Prefs::_COLLAPSED_SPECIAL => [ false, Config::T_BOOL ],
 		//Prefs::_COLLAPSED_LABELS => [ false, Config::T_BOOL ],
 		//Prefs::_COLLAPSED_UNCAT => [ false, Config::T_BOOL ],
@@ -136,6 +138,7 @@ class Prefs {
 		Prefs::DIGEST_CATCHUP,
 		Prefs::BLACKLISTED_TAGS,
 		Prefs::ENABLE_API_ACCESS,
+		Prefs::ENABLE_API_ACCESS_BROWSER,
 		//Prefs::UPDATE_POST_ON_CHECKSUM_CHANGE,
 		Prefs::DEFAULT_UPDATE_INTERVAL,
 		Prefs::USER_TIMEZONE,

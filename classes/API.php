@@ -30,16 +30,24 @@ class API extends Handler {
 
 	function before(string $method): bool {
 		if (parent::before($method)) {
-			header("Content-Type: application/json");
+			header('Content-Type: application/json');
 
-			if (empty($_SESSION["uid"]) && $method != "login" && $method != "isloggedin") {
-				$this->_wrap(self::STATUS_ERR, ["error" => self::E_NOT_LOGGED_IN]);
-				return false;
-			}
+			if (empty($_SESSION['uid'])) {
+				if (!in_array($method, ['login', 'isloggedin'])) {
+					$this->_wrap(self::STATUS_ERR, ['error' => self::E_NOT_LOGGED_IN]);
+					return false;
+				}
+			} else {
+				// Block requests explicitly initiated by a browser unless the user has opted-in.
+				if (isset($_SERVER['HTTP_SEC_FETCH_MODE']) && !Prefs::get(Prefs::ENABLE_API_ACCESS_BROWSER, $_SESSION['uid'])) {
+					$this->_wrap(self::STATUS_ERR, ['error' => self::E_API_DISABLED]);
+					return false;
+				}
 
-			if (!empty($_SESSION["uid"]) && $method != "logout" && !Prefs::get(Prefs::ENABLE_API_ACCESS, $_SESSION["uid"])) {
-				$this->_wrap(self::STATUS_ERR, ["error" => self::E_API_DISABLED]);
-				return false;
+				if ($method != 'logout' && !Prefs::get(Prefs::ENABLE_API_ACCESS, $_SESSION['uid'])) {
+					$this->_wrap(self::STATUS_ERR, ['error' => self::E_API_DISABLED]);
+					return false;
+				}
 			}
 
 			$this->seq = (int) clean($_REQUEST['seq'] ?? 0);

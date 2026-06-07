@@ -11,10 +11,8 @@
 	ini_set('session.use_cookies', "0");
 	ini_set("session.gc_maxlifetime", "86400");
 
-	// Block requests explicitly initiated by a web browser environment
-	// or with an invalid content type
-	if (isset($_SERVER['HTTP_SEC_FETCH_MODE'])
-		|| !preg_match('%^(?:application|text)/json(?:\s*;|$)%i', $_SERVER['CONTENT_TYPE'] ?? '')) {
+	// Block requests with an invalid content type
+	if (!preg_match('%^(?:application|text)/json(?:\s*;|$)%i', $_SERVER['CONTENT_TYPE'] ?? '')) {
 		header('Content-Type: application/json');
 
 		print json_encode([
