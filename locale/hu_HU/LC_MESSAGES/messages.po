@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tt-rss-hu\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-17 17:45+0000\n"
+"POT-Creation-Date: 2026-06-07 02:22+0000\n"
 "PO-Revision-Date: 2025-11-05 17:51+0000\n"
 "Last-Translator: LaurentC <laurentc@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/tt-rss/webui/"
@@ -113,211 +113,217 @@ msgstr "Adminisztrátor"
 msgid "Javascript is disabled. Please enable it."
 msgstr ""
 
-#: index.php:124 index.php:138 index.php:298 prefs.php:126
-#: classes/Pref_Prefs.php:884 classes/Pref_Prefs.php:934
+#: index.php:124 index.php:142 index.php:308 prefs.php:126
+#: classes/Pref_Prefs.php:886 classes/Pref_Prefs.php:936
 #: classes/Pref_System.php:251 classes/Pref_System.php:262 js/PrefUsers.js:112
 #: js/PrefFeedTree.js:183 js/PrefFeedTree.js:190 js/PrefFeedTree.js:314
-#: js/PrefFeedTree.js:386 js/PrefFilterTree.js:124 js/Article.js:280
-#: js/Article.js:356 js/Headlines.js:352 js/Headlines.js:535
+#: js/PrefFeedTree.js:386 js/PrefFilterTree.js:124 js/Article.js:283
+#: js/Article.js:359 js/Headlines.js:352 js/Headlines.js:535
 #: js/CommonFilters.js:265 js/CommonFilters.js:391 js/PrefHelpers.js:26
 #: js/PrefHelpers.js:38 js/PrefHelpers.js:61 js/PrefHelpers.js:114
 #: js/PrefHelpers.js:242 js/PrefHelpers.js:293 js/PrefHelpers.js:444
-#: js/PrefHelpers.js:455 js/Feeds.js:497 js/CommonDialogs.js:332
+#: js/PrefHelpers.js:455 js/Feeds.js:498 js/CommonDialogs.js:332
 #: js/CommonDialogs.js:485 js/CommonDialogs.js:640 plugins/note/note.js:34
 #: plugins/af_psql_trgm/init.js:7 plugins/share/share.js:48
 #: js/CommonFilters.js:171
 msgid "Loading, please wait..."
 msgstr "Betöltés, kérem várjon..."
 
-#: index.php:163 prefs.php:135 js/App.js:533
+#: index.php:158
+#, fuzzy
+#| msgid "Toggle embed original"
+msgid "Toggle feed list"
+msgstr "Eredeti megjelenítésének váltása"
+
+#: index.php:173 prefs.php:135 js/App.js:536
 msgid "Communication problem with server."
 msgstr "Kommunikációs probléma a szerverrel"
 
-#: index.php:166 prefs.php:137
+#: index.php:176 prefs.php:137
 msgid "Recent entries found in event log."
 msgstr ""
 
-#: index.php:169 prefs.php:139
+#: index.php:179 prefs.php:139
 #, fuzzy
 #| msgid "New version of Tiny Tiny RSS is available!"
 msgid "Updates for Tiny Tiny RSS are available."
 msgstr "A Tiny Tiny RSS-nek elérhető egy újabb verziója!"
 
-#: index.php:173 prefs.php:142
+#: index.php:183 prefs.php:142
 msgid "Updates for some local plugins are available."
 msgstr ""
 
-#: index.php:181 js/Headlines.js:656
+#: index.php:191 js/Headlines.js:656
 msgid "Show articles"
 msgstr "Hírek megjelenítése"
 
-#: index.php:184
+#: index.php:194
 msgid "Adaptive"
 msgstr "Adaptív"
 
-#: index.php:185
+#: index.php:195
 msgid "All Articles"
 msgstr "Minden hír"
 
-#: index.php:186 classes/RPC.php:538
+#: index.php:196 classes/RPC.php:538
 msgid "Starred"
 msgstr "Csillagozott"
 
-#: index.php:187 classes/RPC.php:539
+#: index.php:197 classes/RPC.php:539
 msgid "Published"
 msgstr "Publikált"
 
-#: index.php:188 js/Headlines.js:659
+#: index.php:198 js/Headlines.js:659
 msgid "Unread"
 msgstr "Olvasatlan"
 
-#: index.php:189
+#: index.php:199
 msgid "With Note"
 msgstr "Megjegyzéssel"
 
-#: index.php:192
+#: index.php:202
 msgid "Sort articles"
 msgstr "Hírek rendezése"
 
-#: index.php:196
+#: index.php:206
 msgid "Default"
 msgstr "Alapértelmezett"
 
-#: index.php:197
+#: index.php:207
 msgid "Newest first"
 msgstr "Újak előre"
 
-#: index.php:198
+#: index.php:208
 msgid "Oldest first"
 msgstr "Régiek előre"
 
-#: index.php:199 classes/Pref_Filters.php:38 js/CommonFilters.js:418
+#: index.php:209 classes/Pref_Filters.php:38 js/CommonFilters.js:418
 msgid "Title"
 msgstr "Cím"
 
-#: index.php:212 index.php:269 classes/RPC.php:525 classes/Pref_Filters.php:25
+#: index.php:222 index.php:279 classes/RPC.php:525 classes/Pref_Filters.php:25
 #: js/Headlines.js:1548 js/FeedTree.js:94 js/FeedTree.js:133
 #: js/Headlines.js:669
 msgid "Mark as read"
 msgstr "Megjelölés olvasottként"
 
-#: index.php:213
+#: index.php:223
 msgid "Older than one day"
 msgstr "Egy napnál régebbi"
 
-#: index.php:214
+#: index.php:224
 msgid "Older than one week"
 msgstr "Egy hétnél régebbi"
 
-#: index.php:215
+#: index.php:225
 msgid "Older than two weeks"
 msgstr "Két hétnél régebbi"
 
-#: index.php:228
+#: index.php:238
 msgid "Switch to three panel view"
 msgstr ""
 
-#: index.php:229
+#: index.php:239
 msgid "Switch to combined view"
 msgstr ""
 
-#: index.php:230
+#: index.php:240
 #, fuzzy
 #| msgid "Toggle widescreen mode"
 msgid "Disable widescreen mode"
 msgstr "Szélesvásznú mód váltása"
 
-#: index.php:231
+#: index.php:241
 #, fuzzy
 #| msgid "Toggle widescreen mode"
 msgid "Enable widescreen mode"
 msgstr "Szélesvásznú mód váltása"
 
-#: index.php:232
+#: index.php:242
 #, fuzzy
 #| msgid "Email article"
 msgid "Expand selected article only"
 msgstr "Hír küldése emailben"
 
-#: index.php:233
+#: index.php:243
 #, fuzzy
 #| msgid "Email article"
 msgid "Expand all articles"
 msgstr "Hír küldése emailben"
 
-#: index.php:236
+#: index.php:246
 msgid "Actions..."
 msgstr "Műveletek"
 
-#: index.php:261
+#: index.php:271
 msgid "Preferences..."
 msgstr "Beállítások..."
 
-#: index.php:262 js/PrefHelpers.js:613
+#: index.php:272 js/PrefHelpers.js:613
 msgid "Search..."
 msgstr "Keresés..."
 
-#: index.php:263
+#: index.php:273
 #, fuzzy
 msgid "Search feeds..."
 msgstr "Keresés..."
 
-#: index.php:264
+#: index.php:274
 msgid "Feed actions:"
 msgstr "Műveletek hírcsatornákkal:"
 
-#: index.php:265 plugins/bookmarklets/init.php:40
+#: index.php:275 plugins/bookmarklets/init.php:40
 #: plugins/bookmarklets/init.php:78
 msgid "Subscribe to feed..."
 msgstr "Feliratkozás hírcsatornára..."
 
-#: index.php:266
+#: index.php:276
 msgid "Edit this feed..."
 msgstr "Hírcsatorna szerkesztése..."
 
-#: index.php:267 classes/Pref_Feeds.php:934 js/PrefFeedTree.js:119
+#: index.php:277 classes/Pref_Feeds.php:934 js/PrefFeedTree.js:119
 #: js/CommonDialogs.js:627
 msgid "Unsubscribe"
 msgstr "Leiratkozás"
 
-#: index.php:268
+#: index.php:278
 msgid "All feeds:"
 msgstr "Az összes hírcsatorna:"
 
-#: index.php:270
+#: index.php:280
 msgid "(Un)hide read feeds"
 msgstr "Olvasottak rejtése/mutatása"
 
-#: index.php:271
+#: index.php:281
 msgid "UI layout:"
 msgstr ""
 
-#: index.php:272 classes/RPC.php:534
+#: index.php:282 classes/RPC.php:534
 msgid "Toggle combined mode"
 msgstr "Váltás kombinált módba"
 
-#: index.php:274 classes/RPC.php:511
+#: index.php:284 classes/RPC.php:511
 msgid "Toggle widescreen mode"
 msgstr "Szélesvásznú mód váltása"
 
-#: index.php:276
+#: index.php:286
 #, fuzzy
 msgid "Toggle expand all articles"
 msgstr "Kattints a hír kibontásához"
 
-#: index.php:277
+#: index.php:287
 msgid "Other actions:"
 msgstr "Egyéb műveletek:"
 
-#: index.php:278 classes/RPC.php:546
+#: index.php:288 classes/RPC.php:546
 msgid "Keyboard shortcuts help"
 msgstr "Billentyűparancsok súgója"
 
-#: index.php:287
+#: index.php:297
 msgid "Logout"
 msgstr "Kijelentkezés"
 
-#: prefs.php:16 prefs.php:151 classes/RPC.php:541 classes/Pref_Prefs.php:936
+#: prefs.php:16 prefs.php:151 classes/RPC.php:541 classes/Pref_Prefs.php:938
 msgid "Preferences"
 msgstr "Beállítások"
 
@@ -325,7 +331,7 @@ msgstr "Beállítások"
 msgid "Exit preferences"
 msgstr "Kilépés a beállításokból"
 
-#: prefs.php:154 classes/Pref_Prefs.php:44 classes/Pref_Feeds.php:125
+#: prefs.php:154 classes/Pref_Prefs.php:45 classes/Pref_Feeds.php:125
 #: classes/Pref_Feeds.php:923
 msgid "Feeds"
 msgstr "Hírcsatornák"
@@ -611,9 +617,9 @@ msgid "Ctrl"
 msgstr "Ctrl"
 
 #: classes/RPC.php:706 plugins/af_psql_trgm/init.php:116
-#: plugins/share/init.php:284 js/PrefHelpers.js:497 js/App.js:691
+#: plugins/share/init.php:284 js/PrefHelpers.js:497 js/App.js:694
 #: js/PrefFeedTree.js:550 js/CommonFilters.js:91 js/PrefHelpers.js:65
-#: js/PrefHelpers.js:817 js/Feeds.js:294 js/CommonDialogs.js:19
+#: js/PrefHelpers.js:817 js/Feeds.js:295 js/CommonDialogs.js:19
 #: js/CommonDialogs.js:316 js/CommonDialogs.js:689
 msgid "Close this window"
 msgstr "Ablak bezárása"
@@ -631,155 +637,166 @@ msgstr ""
 msgid "General"
 msgstr "Általános"
 
-#: classes/Pref_Prefs.php:58
+#: classes/Pref_Prefs.php:59
 #, fuzzy
 msgid "Articles"
 msgstr "Hír"
 
-#: classes/Pref_Prefs.php:72
+#: classes/Pref_Prefs.php:73
 msgid "Digest"
 msgstr "Összefoglaló"
 
-#: classes/Pref_Prefs.php:78
+#: classes/Pref_Prefs.php:79
 msgid "Advanced"
 msgstr "Speciális"
 
-#: classes/Pref_Prefs.php:89
+#: classes/Pref_Prefs.php:90
 msgid "Debugging"
 msgstr ""
 
-#: classes/Pref_Prefs.php:95
+#: classes/Pref_Prefs.php:96
 msgid "Never apply these tags automatically (comma-separated list)."
 msgstr ""
 
-#: classes/Pref_Prefs.php:99
+#: classes/Pref_Prefs.php:100
 msgid "Blacklisted tags"
 msgstr "Feketelistás címkék"
 
-#: classes/Pref_Prefs.php:100
+#: classes/Pref_Prefs.php:101
 #, fuzzy
 msgid "Default language"
 msgstr "Alapértelmezett profil"
 
-#: classes/Pref_Prefs.php:100
+#: classes/Pref_Prefs.php:101
 msgid "Used for full-text search"
 msgstr ""
 
-#: classes/Pref_Prefs.php:101
+#: classes/Pref_Prefs.php:102
 #, fuzzy
 msgid "Mark read on scroll"
 msgstr "Minden hírt megjelöl olvasottként?"
 
-#: classes/Pref_Prefs.php:101
+#: classes/Pref_Prefs.php:102
 #, fuzzy
 msgid "Mark articles as read as you scroll past them"
 msgstr "Minden hírt megjelöl olvasottként?"
 
-#: classes/Pref_Prefs.php:102
+#: classes/Pref_Prefs.php:103
 #, fuzzy
 msgid "Always expand articles"
 msgstr "Kattints a hír kibontásához"
 
-#: classes/Pref_Prefs.php:103
+#: classes/Pref_Prefs.php:104
 #, fuzzy
 msgid "Combined mode"
 msgstr "Váltás kombinált módba"
 
-#: classes/Pref_Prefs.php:103
+#: classes/Pref_Prefs.php:104
 #, fuzzy
 msgid "Show flat list of articles instead of separate panels"
 msgstr ""
 "A hír címének és tartalmának külön való megjelenítése helyett jelentísen emg "
 "egy kombinált listát a hírek címével és tartalmával együtt."
 
-#: classes/Pref_Prefs.php:104
+#: classes/Pref_Prefs.php:105
 #, fuzzy
 msgid "Confirm marking feeds as read"
 msgstr "Megerősítés hírcsatornák olvasottként jelölésekor"
 
-#: classes/Pref_Prefs.php:105
+#: classes/Pref_Prefs.php:106
 #, fuzzy
 msgid "Default update interval"
 msgstr "Alapértelmezett hírcsatorna frissítési időköz:"
 
-#: classes/Pref_Prefs.php:106
+#: classes/Pref_Prefs.php:107
 #, fuzzy
 msgid "Mark sent articles as read"
 msgstr "Minden hírt megjelöl olvasottként?"
 
-#: classes/Pref_Prefs.php:107
+#: classes/Pref_Prefs.php:108
 #, fuzzy
 msgid "Enable digest"
 msgstr "Hírösszefoglaló e-mail engedélyezése"
 
-#: classes/Pref_Prefs.php:107
+#: classes/Pref_Prefs.php:108
 #, fuzzy
 msgid "Send daily digest of new (and unread) headlines to your email address"
 msgstr ""
 "Itt engedélyezheti a friss és olvasatlan cikkek napi elküldését a megadott e-"
 "mail címére.."
 
-#: classes/Pref_Prefs.php:108
+#: classes/Pref_Prefs.php:109
 #, fuzzy
 msgid "Try to send around this time"
 msgstr "A kivonatot megpróbálja a megadott időben elküldeni"
 
-#: classes/Pref_Prefs.php:108
+#: classes/Pref_Prefs.php:109
 #, fuzzy
 msgid "Time in UTC"
 msgstr "Időzóna"
 
-#: classes/Pref_Prefs.php:109
+#: classes/Pref_Prefs.php:110
 #, fuzzy
 msgid "Enable API"
 msgstr "OTP engedélyezése"
 
-#: classes/Pref_Prefs.php:109
+#: classes/Pref_Prefs.php:110
 #, fuzzy
 msgid "Allows accessing this account through the API"
 msgstr ""
 "Engedélyezi a külső kliensek számára a hozzáférést az API-n keresztül ehhez "
 "fiókhoz"
 
-#: classes/Pref_Prefs.php:110
+#: classes/Pref_Prefs.php:111
+#, fuzzy
+#| msgid "Enable API access"
+msgid "Enable browser-based API access"
+msgstr "API hozzáférés engedélyzése"
+
+#: classes/Pref_Prefs.php:111
+msgid ""
+"Allows accessing the API from browsers ('Enable API' must also be enabled)"
+msgstr ""
+
+#: classes/Pref_Prefs.php:112
 #, fuzzy
 msgid "Enable categories"
 msgstr "Hírcsatornák kategorizálásának engedélyezése"
 
-#: classes/Pref_Prefs.php:111
+#: classes/Pref_Prefs.php:113
 #, fuzzy
 msgid "Maximum age of fresh articles"
 msgstr "Meddig legyen friss egy hír (órákban megadva)"
 
-#: classes/Pref_Prefs.php:111 classes/Pref_Prefs.php:112
+#: classes/Pref_Prefs.php:113 classes/Pref_Prefs.php:114
 #, fuzzy
 msgid "hours"
 msgstr "Minden 4 órában"
 
-#: classes/Pref_Prefs.php:112
+#: classes/Pref_Prefs.php:114
 #, fuzzy
 msgid "Maximum age of recently read articles"
 msgstr "Meddig legyen friss egy hír (órákban megadva)"
 
-#: classes/Pref_Prefs.php:113
+#: classes/Pref_Prefs.php:115
 #, fuzzy
 msgid "Hide read feeds"
 msgstr "Olvasott hírcsatornák rejtése/mutatása"
 
-#: classes/Pref_Prefs.php:114
+#: classes/Pref_Prefs.php:116
 msgid "Always show special feeds"
 msgstr ""
 
-#: classes/Pref_Prefs.php:114
+#: classes/Pref_Prefs.php:116
 #, fuzzy
 msgid "While hiding read feeds"
 msgstr "Különleges hírcsatornák mutatása olvasott hírcsatornák rejtésekor"
 
-#: classes/Pref_Prefs.php:115
+#: classes/Pref_Prefs.php:117
 msgid "Long date format"
 msgstr "Dátum/idő hosszú formátuma"
 
-#: classes/Pref_Prefs.php:115
+#: classes/Pref_Prefs.php:117
 msgid ""
 "Syntax is identical to PHP <a href='https://www.php.net/manual/"
 "function.date.php'>date()</a> function."
@@ -787,282 +804,282 @@ msgstr ""
 "A szintaxis megegyezik a PHP  <a href='https://www.php.net/manual/"
 "function.date.php'>date()</a> függvényével."
 
-#: classes/Pref_Prefs.php:116
+#: classes/Pref_Prefs.php:118
 #, fuzzy
 msgid "Automatically show next feed"
 msgstr "Hírcsatorna végén mutassa a következő hírcsatornát"
 
-#: classes/Pref_Prefs.php:116
+#: classes/Pref_Prefs.php:118
 #, fuzzy
 msgid "After marking one as read"
 msgstr "Megerősítés hírcsatornák olvasottként jelölésekor"
 
-#: classes/Pref_Prefs.php:117
+#: classes/Pref_Prefs.php:119
 #, fuzzy
 msgid "Purge articles older than"
 msgstr "Régi hírek törlésekor törölje az olvasatlanokat is"
 
-#: classes/Pref_Prefs.php:117
+#: classes/Pref_Prefs.php:119
 msgid "<strong>days</strong> (0 disables)"
 msgstr ""
 
-#: classes/Pref_Prefs.php:118
+#: classes/Pref_Prefs.php:120
 msgid "Purge unread articles"
 msgstr "Régi hírek törlésekor törölje az olvasatlanokat is"
 
-#: classes/Pref_Prefs.php:119
+#: classes/Pref_Prefs.php:121
 msgid "Short date format"
 msgstr "Dátum/idő rövid formátuma"
 
-#: classes/Pref_Prefs.php:120
+#: classes/Pref_Prefs.php:122
 #, fuzzy
 msgid "Show content preview in headlines"
 msgstr "A hírelőzetes mutatása a hírcímek listájában"
 
-#: classes/Pref_Prefs.php:121
+#: classes/Pref_Prefs.php:123
 #, fuzzy
 msgid "SSL client certificate"
 msgstr "Belépés SSL tanúsítvánnyal"
 
-#: classes/Pref_Prefs.php:122 classes/Pref_Feeds.php:602
+#: classes/Pref_Prefs.php:124 classes/Pref_Feeds.php:602
 #: js/CommonDialogs.js:502
 #, fuzzy
 msgid "Do not embed media"
 msgstr "Ne ágyazza be a képeket"
 
-#: classes/Pref_Prefs.php:123
+#: classes/Pref_Prefs.php:125
 msgid "Time zone"
 msgstr "Időzóna"
 
-#: classes/Pref_Prefs.php:124
+#: classes/Pref_Prefs.php:126
 msgid "Group by feed"
 msgstr ""
 
-#: classes/Pref_Prefs.php:124
+#: classes/Pref_Prefs.php:126
 msgid "Group multiple-feed output by originating feed"
 msgstr ""
 
-#: classes/Pref_Prefs.php:125
+#: classes/Pref_Prefs.php:127
 msgid "Language"
 msgstr "Nyelv"
 
-#: classes/Pref_Prefs.php:126
+#: classes/Pref_Prefs.php:128
 msgid "Theme"
 msgstr "Téma"
 
-#: classes/Pref_Prefs.php:127
+#: classes/Pref_Prefs.php:129
 msgid "Don't enforce DISTINCT headlines"
 msgstr ""
 
-#: classes/Pref_Prefs.php:127
+#: classes/Pref_Prefs.php:129
 #, fuzzy
 msgid "May produce duplicate entries"
 msgstr "Dupla hírek engedélyezése"
 
-#: classes/Pref_Prefs.php:128
+#: classes/Pref_Prefs.php:130
 #, fuzzy
 msgid "Show article and feed IDs"
 msgstr "Hírek megjelenítése"
 
-#: classes/Pref_Prefs.php:128
+#: classes/Pref_Prefs.php:130
 #, fuzzy
 msgid "In the headlines buffer"
 msgstr "Címek rendezése hírcsatorna dátuma alapján"
 
-#: classes/Pref_Prefs.php:129
+#: classes/Pref_Prefs.php:131
 #, fuzzy
 #| msgid "Disable updates"
 msgid "Disable conditional counter updates"
 msgstr "Frissítések kikapcsolása"
 
-#: classes/Pref_Prefs.php:129
+#: classes/Pref_Prefs.php:131
 msgid "May increase server load"
 msgstr ""
 
-#: classes/Pref_Prefs.php:130
+#: classes/Pref_Prefs.php:132
 #, fuzzy
 msgid "Grid view"
 msgstr "Friss hírek"
 
-#: classes/Pref_Prefs.php:130
+#: classes/Pref_Prefs.php:132
 msgid "On wider screens, if always expanded"
 msgstr ""
 
-#: classes/Pref_Prefs.php:131
+#: classes/Pref_Prefs.php:133
 #, fuzzy
 #| msgid "Set score"
 msgid "Required score"
 msgstr "Pontszám megadás"
 
-#: classes/Pref_Prefs.php:131
+#: classes/Pref_Prefs.php:133
 msgid "Include articles with this or above score"
 msgstr ""
 
-#: classes/Pref_Prefs.php:228
+#: classes/Pref_Prefs.php:230
 msgid "The configuration was saved."
 msgstr "Beállítások elmentve."
 
-#: classes/Pref_Prefs.php:269
+#: classes/Pref_Prefs.php:271
 msgid "Your personal data has been saved."
 msgstr "A személyes adatai el lettek mentve."
 
-#: classes/Pref_Prefs.php:299
+#: classes/Pref_Prefs.php:301
 #, fuzzy
 msgid "Full name:"
 msgstr "Teljes név"
 
-#: classes/Pref_Prefs.php:304 classes/Handler_Public.php:534 js/PrefUsers.js:98
+#: classes/Pref_Prefs.php:306 classes/Handler_Public.php:534 js/PrefUsers.js:98
 msgid "Email:"
 msgstr "E-mail:"
 
-#: classes/Pref_Prefs.php:312 classes/Pref_Feeds.php:682
+#: classes/Pref_Prefs.php:314 classes/Pref_Feeds.php:682
 #: plugins/note/init.php:49 plugins/nsfw/init.php:105
 #: plugins/af_psql_trgm/init.php:193 js/CommonFilters.js:224
 #: js/CommonFilters.js:306 js/CommonFilters.js:506 js/CommonDialogs.js:628
-#: js/PrefUsers.js:119 js/PrefLabelTree.js:168 js/Article.js:362
+#: js/PrefUsers.js:119 js/PrefLabelTree.js:168 js/Article.js:365
 msgid "Save"
 msgstr "Mentés"
 
-#: classes/Pref_Prefs.php:357
+#: classes/Pref_Prefs.php:359
 #, fuzzy
 msgid "Old password:"
 msgstr "Régi jelszó"
 
-#: classes/Pref_Prefs.php:362 js/PrefUsers.js:84
+#: classes/Pref_Prefs.php:364 js/PrefUsers.js:84
 #, fuzzy
 msgid "New password:"
 msgstr "Új jelszó"
 
-#: classes/Pref_Prefs.php:367
+#: classes/Pref_Prefs.php:369
 #, fuzzy
 msgid "Confirm password:"
 msgstr "Jelszó még egyszer"
 
-#: classes/Pref_Prefs.php:375 js/PrefUsers.js:86
+#: classes/Pref_Prefs.php:377 js/PrefUsers.js:86
 msgid "Change password"
 msgstr "Jelszó megváltoztatása"
 
-#: classes/Pref_Prefs.php:382
+#: classes/Pref_Prefs.php:384
 #, php-format
 msgid ""
 "Authentication module used for this session (<b>%s</b>) does not provide an "
 "ability to set passwords."
 msgstr ""
 
-#: classes/Pref_Prefs.php:399
+#: classes/Pref_Prefs.php:401
 #, fuzzy
 msgid "Generate password"
 msgstr "Új URL generálás"
 
-#: classes/Pref_Prefs.php:405 classes/Pref_Feeds.php:947 js/PrefHelpers.js:226
+#: classes/Pref_Prefs.php:407 classes/Pref_Feeds.php:947 js/PrefHelpers.js:226
 msgid "Remove selected"
 msgstr "Kijelölt eltávolítása"
 
-#: classes/Pref_Prefs.php:441 classes/Pref_Prefs.php:493
+#: classes/Pref_Prefs.php:443 classes/Pref_Prefs.php:495
 #, fuzzy
 msgid "Your password:"
 msgstr "Jelszó még egyszer"
 
-#: classes/Pref_Prefs.php:449
+#: classes/Pref_Prefs.php:451
 msgid "Disable OTP"
 msgstr "OTP letiltása"
 
-#: classes/Pref_Prefs.php:471
+#: classes/Pref_Prefs.php:473
 msgid "OTP secret:"
 msgstr ""
 
-#: classes/Pref_Prefs.php:498
+#: classes/Pref_Prefs.php:500
 msgid "Verification code:"
 msgstr ""
 
-#: classes/Pref_Prefs.php:506
+#: classes/Pref_Prefs.php:508
 msgid "Enable OTP"
 msgstr "OTP engedélyezése"
 
-#: classes/Pref_Prefs.php:520
+#: classes/Pref_Prefs.php:522
 msgid "Personal data"
 msgstr "Személyes adatok"
 
-#: classes/Pref_Prefs.php:523 js/PrefFeedTree.js:450 js/CommonDialogs.js:91
+#: classes/Pref_Prefs.php:525 js/PrefFeedTree.js:450 js/CommonDialogs.js:91
 msgid "Password"
 msgstr "Jelszó"
 
-#: classes/Pref_Prefs.php:526
+#: classes/Pref_Prefs.php:528
 #, fuzzy
 msgid "App passwords"
 msgstr "Régi jelszó"
 
-#: classes/Pref_Prefs.php:533
+#: classes/Pref_Prefs.php:535
 #, fuzzy
 msgid "Authenticator (OTP)"
 msgstr "Azonosítás"
 
-#: classes/Pref_Prefs.php:544
+#: classes/Pref_Prefs.php:546
 msgid "Some preferences are only available in default profile."
 msgstr "Néhány beállítás csak az alapértelmezett profilban érhető el."
 
-#: classes/Pref_Prefs.php:633
+#: classes/Pref_Prefs.php:635
 #, fuzzy
 msgid "default"
 msgstr "Alapértelmezett"
 
-#: classes/Pref_Prefs.php:641
+#: classes/Pref_Prefs.php:643
 msgid "Customize"
 msgstr "Testreszabás"
 
-#: classes/Pref_Prefs.php:643
+#: classes/Pref_Prefs.php:645
 #, fuzzy
 msgid "More themes..."
 msgstr "További műveletek..."
 
-#: classes/Pref_Prefs.php:676
+#: classes/Pref_Prefs.php:678
 #, fuzzy
 msgid "Preview"
 msgstr "Friss hírek"
 
-#: classes/Pref_Prefs.php:702
+#: classes/Pref_Prefs.php:704
 msgid "Register"
 msgstr "Regisztráció"
 
-#: classes/Pref_Prefs.php:706 classes/Pref_System.php:129
+#: classes/Pref_Prefs.php:708 classes/Pref_System.php:129
 msgid "Clear"
 msgstr "Töröl"
 
-#: classes/Pref_Prefs.php:710 classes/Pref_Prefs.php:878
+#: classes/Pref_Prefs.php:712 classes/Pref_Prefs.php:880
 #: plugins/bookmarklets/init.php:369 js/CommonDialogs.js:683
 #, fuzzy
 msgid "More info..."
 msgstr "további infó"
 
-#: classes/Pref_Prefs.php:719
+#: classes/Pref_Prefs.php:721
 #, fuzzy, php-format
 msgid "Current server time: %s"
 msgstr "Aktuális szerveridő: %s (UTC)"
 
-#: classes/Pref_Prefs.php:767
+#: classes/Pref_Prefs.php:769
 msgid "Save configuration"
 msgstr "Beállítások mentése"
 
-#: classes/Pref_Prefs.php:770
+#: classes/Pref_Prefs.php:772
 #, fuzzy
 msgid "Save and exit"
 msgstr "Olvasottnak jel ez fölött"
 
-#: classes/Pref_Prefs.php:777 js/PrefHelpers.js:126
+#: classes/Pref_Prefs.php:779 js/PrefHelpers.js:126
 msgid "Manage profiles"
 msgstr "Profilok kezelése"
 
-#: classes/Pref_Prefs.php:782
+#: classes/Pref_Prefs.php:784
 msgid "Reset to defaults"
 msgstr "Alapértelmezett beállítások"
 
-#: classes/Pref_Prefs.php:837 classes/Pref_Feeds.php:908
-#: classes/Pref_Filters.php:767 classes/Pref_Users.php:199 js/Feeds.js:662
-#: js/Feeds.js:657 js/Feeds.js:712
+#: classes/Pref_Prefs.php:839 classes/Pref_Feeds.php:908
+#: classes/Pref_Filters.php:767 classes/Pref_Users.php:199 js/Feeds.js:663
+#: js/Feeds.js:658 js/Feeds.js:713
 msgid "Search"
 msgstr "Keresés"
 
-#: classes/Pref_Prefs.php:842 classes/Pref_Prefs.php:1547
+#: classes/Pref_Prefs.php:844 classes/Pref_Prefs.php:1548
 #: classes/Pref_Labels.php:174 classes/Pref_Feeds.php:913
 #: classes/Pref_Filters.php:772 classes/Pref_Users.php:205
 #: js/CommonFilters.js:426 js/CommonFilters.js:459 js/PrefFeedTree.js:516
@@ -1070,7 +1087,7 @@ msgstr "Keresés"
 msgid "Select"
 msgstr "Kiválasztás"
 
-#: classes/Pref_Prefs.php:845 classes/Pref_Prefs.php:1550
+#: classes/Pref_Prefs.php:847 classes/Pref_Prefs.php:1551
 #: classes/Pref_Labels.php:176 classes/Pref_Feeds.php:916
 #: classes/Pref_Filters.php:775 classes/Pref_Users.php:208
 #: js/CommonFilters.js:430 js/CommonFilters.js:462 js/PrefFeedTree.js:519
@@ -1078,7 +1095,7 @@ msgstr "Kiválasztás"
 msgid "All"
 msgstr "Mind"
 
-#: classes/Pref_Prefs.php:847 classes/Pref_Prefs.php:1552
+#: classes/Pref_Prefs.php:849 classes/Pref_Prefs.php:1553
 #: classes/Pref_Labels.php:177 classes/Pref_Feeds.php:918
 #: classes/Pref_Filters.php:777 classes/Pref_Users.php:210
 #: js/CommonFilters.js:432 js/CommonFilters.js:464 js/PrefFeedTree.js:521
@@ -1086,7 +1103,7 @@ msgstr "Mind"
 msgid "None"
 msgstr "Kijelölés törlése"
 
-#: classes/Pref_Prefs.php:876
+#: classes/Pref_Prefs.php:878
 #, php-format
 msgid ""
 "The following plugins use per-feed content hooks. This may cause excessive "
@@ -1094,96 +1111,96 @@ msgid ""
 "<b>%s</b>"
 msgstr ""
 
-#: classes/Pref_Prefs.php:892 js/CommonFilters.js:222
+#: classes/Pref_Prefs.php:894 js/CommonFilters.js:222
 #, fuzzy
 msgid "More info"
 msgstr "további infó"
 
-#: classes/Pref_Prefs.php:895
+#: classes/Pref_Prefs.php:897
 #, fuzzy
 #| msgid "Enable selected plugins"
 msgid "Enable selected"
 msgstr "Kiválasztott beépülők engedélyezése"
 
-#: classes/Pref_Prefs.php:898
+#: classes/Pref_Prefs.php:900
 msgid "Reload"
 msgstr ""
 
-#: classes/Pref_Prefs.php:905
+#: classes/Pref_Prefs.php:907
 #, fuzzy
 #| msgid "Perform updates"
 msgid "Check for updates"
 msgstr "Frissítések végrehajtása"
 
-#: classes/Pref_Prefs.php:912
+#: classes/Pref_Prefs.php:914
 #, fuzzy
 msgid "Install plugin"
 msgstr "Felhasználói beépülők"
 
-#: classes/Pref_Prefs.php:925
+#: classes/Pref_Prefs.php:927
 msgid "Personal data / Authentication"
 msgstr "Személyes adatok / Azonosítás"
 
-#: classes/Pref_Prefs.php:939 classes/Pref_Feeds.php:1062
+#: classes/Pref_Prefs.php:941 classes/Pref_Feeds.php:1062
 #: js/CommonDialogs.js:622
 msgid "Plugins"
 msgstr "Beépülők"
 
-#: classes/Pref_Prefs.php:973
+#: classes/Pref_Prefs.php:975
 msgid "Incorrect one time password"
 msgstr "Érvénytelen egyszer használatos jelszó"
 
-#: classes/Pref_Prefs.php:976 classes/Pref_Prefs.php:1015
+#: classes/Pref_Prefs.php:978 classes/Pref_Prefs.php:1017
 msgid "Incorrect password"
 msgstr "Érvénytelen jelszó"
 
-#: classes/Pref_Prefs.php:1030
+#: classes/Pref_Prefs.php:1032
 #, php-format
 msgid "v%.2f, by %s"
 msgstr ""
 
-#: classes/Pref_Prefs.php:1044
+#: classes/Pref_Prefs.php:1046
 #, php-format
 msgid "v%s, by %s"
 msgstr ""
 
-#: classes/Pref_Prefs.php:1508 classes/Handler_Public.php:289
+#: classes/Pref_Prefs.php:1509 classes/Handler_Public.php:289
 #: include/login_form.php:159
 msgid "Default profile"
 msgstr "Alapértelmezett profil"
 
-#: classes/Pref_Prefs.php:1561
+#: classes/Pref_Prefs.php:1562
 msgid "Description"
 msgstr "Leírás"
 
-#: classes/Pref_Prefs.php:1562
+#: classes/Pref_Prefs.php:1563
 #, fuzzy
 msgid "Created"
 msgstr "Létrehoz"
 
-#: classes/Pref_Prefs.php:1563
+#: classes/Pref_Prefs.php:1564
 #, fuzzy
 msgid "Last used"
 msgstr "Legutóbbi frissítés:"
 
-#: classes/Pref_Prefs.php:1608
+#: classes/Pref_Prefs.php:1609
 #, php-format
 msgid ""
 "Generated password <strong>%s</strong> for %s. Please remember it for future "
 "reference."
 msgstr ""
 
-#: classes/Sessions.php:121
+#: classes/Sessions.php:132
 msgid "Session failed to validate (password changed)"
 msgstr "Nem sikerült érvényesíteni a munkamenetet (megváltozott a jelszó)"
 
-#: classes/Sessions.php:126
+#: classes/Sessions.php:137
 #, fuzzy
 #| msgid "Session failed to validate (user agent changed)"
 msgid "Session failed to validate (account is disabled)"
 msgstr "Nem sikerült érvényesíteni a munkamenetet (user agent megváltozott)"
 
-#: classes/Sessions.php:145
+#: classes/Sessions.php:156
 msgid "Session failed to validate (user not found)"
 msgstr "Nem sikerült érvényesíteni a munkamenetet (felhasználó nem található)"
 
@@ -1272,7 +1289,7 @@ msgstr ""
 msgid "Search results: %s"
 msgstr "Keresési eredmények: %s"
 
-#: classes/Feeds.php:2278
+#: classes/Feeds.php:2282
 #, php-format
 msgid "The date keyword \"%s\" was not recognized."
 msgstr ""
@@ -1348,7 +1365,7 @@ msgstr ""
 msgid "Error while parsing document."
 msgstr "Hiba történt a dokuementum feldoglozása közben"
 
-#: classes/Config.php:431
+#: classes/Config.php:480
 #, php-format
 msgid "Git error [RC=%d]: %s"
 msgstr ""
@@ -1504,7 +1521,7 @@ msgstr "Frissült hírek megjelölése olvasatlanként"
 msgid "Place in category:"
 msgstr "Hozzáadás a következő kategóriához:"
 
-#: classes/Pref_Feeds.php:626 js/Feeds.js:644 js/CommonDialogs.js:556
+#: classes/Pref_Feeds.php:626 js/Feeds.js:645 js/CommonDialogs.js:556
 #, fuzzy
 msgid "Language:"
 msgstr "Nyelv"
@@ -1536,8 +1553,8 @@ msgstr "Beállítások"
 #: plugins/bookmarklets/init.php:288 js/CommonFilters.js:225
 #: js/CommonFilters.js:307 js/CommonFilters.js:507 js/CommonFilters.js:511
 #: js/CommonDialogs.js:629 js/PrefUsers.js:122 js/PrefFeedTree.js:467
-#: js/PrefLabelTree.js:171 js/Article.js:365 js/PrefHelpers.js:231
-#: js/PrefHelpers.js:305 js/Feeds.js:658 js/Feeds.js:713
+#: js/PrefLabelTree.js:171 js/Article.js:368 js/PrefHelpers.js:231
+#: js/PrefHelpers.js:305 js/Feeds.js:659 js/Feeds.js:714
 #: js/CommonDialogs.js:113
 msgid "Cancel"
 msgstr "Mégsem"
@@ -2212,66 +2229,66 @@ msgstr "Emlékezzen rám"
 msgid "Detect automatically"
 msgstr ""
 
-#: js/App.js:332
+#: js/App.js:335
 #, fuzzy
 #| msgid "Automatically expand articles in combined mode"
 msgid "This function is only available in combined mode."
 msgstr "Hírek automatikus szétnyitása kombinált üzemmódban"
 
-#: js/App.js:485
+#: js/App.js:488
 msgid "Keyboard shortcuts"
 msgstr "Billentyűparancsok"
 
-#: js/App.js:543
+#: js/App.js:546
 msgid "Update daemon is not running."
 msgstr ""
 
-#: js/App.js:556
+#: js/App.js:559
 msgid "Update daemon is not updating feeds."
 msgstr ""
 
-#: js/App.js:639
+#: js/App.js:642
 #, java-printf-format
 msgid ""
 "URL scheme reported by your browser (%a) doesn't match server-configured "
 "SELF_URL_PATH (%b), check X-Forwarded-Proto."
 msgstr ""
 
-#: js/App.js:646
+#: js/App.js:649
 msgid "Fatal error"
 msgstr ""
 
-#: js/App.js:668
+#: js/App.js:671
 msgid "Unhandled exception"
 msgstr ""
 
-#: js/App.js:950
+#: js/App.js:996
 msgid "Widescreen is not available in combined mode."
 msgstr ""
 
-#: js/App.js:1147
+#: js/App.js:1250
 #, fuzzy
 msgid "Please enable mail or mailto plugin first."
 msgstr "Először engedélyezze a mail beépülőt."
 
-#: js/App.js:1210 js/App.js:1323 js/CommonDialogs.js:371
+#: js/App.js:1313 js/App.js:1426 js/CommonDialogs.js:371
 msgid "You can't edit this kind of feed."
 msgstr "Ezt a hírcsatornatípust nem szerkesztheted."
 
-#: js/App.js:1278
+#: js/App.js:1381
 #, fuzzy
 msgid "Please enable af_readability first."
 msgstr "Először engedélyezze a mail beépülőt."
 
-#: js/App.js:1332
+#: js/App.js:1435
 msgid "Please select some feed first."
 msgstr "Válasszon hírcsatorná(ka)t!"
 
-#: js/App.js:1337
+#: js/App.js:1440
 msgid "You can't unsubscribe from the category."
 msgstr "Ebből a kategóriából nem ."
 
-#: js/App.js:1343 js/CommonDialogs.js:345 js/CommonDialogs.js:382
+#: js/App.js:1446 js/CommonDialogs.js:345 js/CommonDialogs.js:382
 #, java-printf-format, javascript-format
 msgid "Unsubscribe from %s?"
 msgstr "Leiratkozik innen: %s?"
@@ -2501,7 +2518,7 @@ msgstr "Kiválasztott címkék eltávolítása..."
 msgid "Please enter new score for selected articles:"
 msgstr "Adjon meg egy új pontszámot a kijelölt hírekhez:"
 
-#: js/Article.js:56 js/Article.js:135 js/Headlines.js:939 js/Headlines.js:965
+#: js/Article.js:56 js/Article.js:138 js/Headlines.js:939 js/Headlines.js:965
 #: js/Headlines.js:1107 js/Headlines.js:1124 js/Headlines.js:1141
 #: js/Headlines.js:1276 js/Headlines.js:977
 #, fuzzy
@@ -2512,30 +2529,30 @@ msgstr "Nincs kiválasztott hír."
 msgid "Please enter new score for this article:"
 msgstr "Adjon meg egy új pontszámot a hírhez:"
 
-#: js/Article.js:147
+#: js/Article.js:150
 msgid "no tags"
 msgstr "nincs címke"
 
-#: js/Article.js:239
+#: js/Article.js:242
 msgid "comments"
 msgstr "megjegyzések"
 
-#: js/Article.js:242
+#: js/Article.js:245
 msgid "comment"
 msgid_plural "comments"
 msgstr[0] "megjegyzés"
 msgstr[1] "megjegyzés"
 
-#: js/Article.js:344
+#: js/Article.js:347
 #, fuzzy
 msgid "Article tags"
 msgstr "Hír"
 
-#: js/Article.js:351
+#: js/Article.js:354
 msgid "Tags for this article (separated by commas):"
 msgstr "A hír címkéi (vesszőkkel elválasztva):"
 
-#: js/Article.js:371
+#: js/Article.js:374
 msgid "Saving article tags..."
 msgstr "Hír címkéinek mentése..."
 
@@ -2973,66 +2990,66 @@ msgstr ""
 msgid "(Un)collapse"
 msgstr "Oldalsáv megjelenítés/elrejtés"
 
-#: js/Feeds.js:284
+#: js/Feeds.js:285
 #, fuzzy
 msgid "Your password is at default value"
 msgstr "A jelszava még az alapértelmezett, kérem változtassa meg."
 
-#: js/Feeds.js:286
+#: js/Feeds.js:287
 msgid ""
 "You are using default tt-rss password. Please change it in the Preferences "
 "(Personal data / Authentication)."
 msgstr ""
 
-#: js/Feeds.js:448
+#: js/Feeds.js:449
 msgid "Mark all articles as read?"
 msgstr "Minden hírt megjelöl olvasottként?"
 
-#: js/Feeds.js:452
+#: js/Feeds.js:453
 msgid "Marking all feeds as read..."
 msgstr "Minden hírcsatornát megjelölése olvasottként..."
 
-#: js/Feeds.js:469
+#: js/Feeds.js:470
 #, fuzzy
 msgid "Mark %w in %s older than 1 day as read?"
 msgstr "Minden 1 napnál régebbi %s hírt megjelöl olvasottként?"
 
-#: js/Feeds.js:472
+#: js/Feeds.js:473
 #, fuzzy
 msgid "Mark %w in %s older than 1 week as read?"
 msgstr "Minden 1 hétnél régebbi %s hírt megjelöl olvasottként?"
 
-#: js/Feeds.js:475
+#: js/Feeds.js:476
 #, fuzzy
 msgid "Mark %w in %s older than 2 weeks as read?"
 msgstr "Minden 2 hétnél régebbi %s hírt megjelöl olvasottként?"
 
-#: js/Feeds.js:478
+#: js/Feeds.js:479
 #, fuzzy
 msgid "Mark %w in %s as read?"
 msgstr "Minden hírt megjelöl olvasottként itt: %s?"
 
-#: js/Feeds.js:481
+#: js/Feeds.js:482
 #, fuzzy
 msgid "search results"
 msgstr "Keresési eredmények: %s"
 
-#: js/Feeds.js:481
+#: js/Feeds.js:482
 #, fuzzy
 msgid "all articles"
 msgstr "Az összes hír"
 
-#: js/Feeds.js:522
+#: js/Feeds.js:523
 #, java-printf-format, javascript-format
 msgid "Mark all articles in %s as read?"
 msgstr "Minden hírt megjelöl olvasottként itt: %s?"
 
-#: js/Feeds.js:653
+#: js/Feeds.js:654
 #, fuzzy
 msgid "Search syntax"
 msgstr "Keresés"
 
-#: js/Feeds.js:717
+#: js/Feeds.js:718
 #, fuzzy
 msgid "Search feeds"
 msgstr "Keresés..."
@@ -3210,11 +3227,11 @@ msgid "This will invalidate all previously shared article URLs. Continue?"
 msgstr ""
 "Ez érvényteleníteni fog minden korábban megosztott hír URL-t. Folytatja?"
 
-#: js/App.js:676
+#: js/App.js:679
 msgid "Stack trace"
 msgstr ""
 
-#: js/App.js:683 js/CommonDialogs.js:121
+#: js/App.js:686 js/CommonDialogs.js:121
 msgid "Additional information"
 msgstr ""
 
@@ -3249,19 +3266,19 @@ msgstr "Leiratkozás a kiválasztott hírcsatornákról"
 msgid "Caption"
 msgstr "Cím"
 
-#: js/Article.js:114
+#: js/Article.js:117
 msgid "Copied to clipboard."
 msgstr ""
 
-#: js/Article.js:116
+#: js/Article.js:119
 msgid "Article URL:"
 msgstr "Hír URL:"
 
-#: js/Article.js:200
+#: js/Article.js:203
 msgid "Attachments"
 msgstr "Csatolmányok:"
 
-#: js/Article.js:309 js/Headlines.js:548
+#: js/Article.js:312 js/Headlines.js:548
 msgid "Edit tags for this article"
 msgstr "Címkék hozzáadása a hírhez"
 
@@ -3369,21 +3386,21 @@ msgid_plural "Updates pending for %d plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: js/Feeds.js:291
+#: js/Feeds.js:292
 #, fuzzy
 msgid "Open Preferences"
 msgstr "Beállítások"
 
-#: js/Feeds.js:637
+#: js/Feeds.js:638
 #, fuzzy, javascript-format
 msgid "Search %s..."
 msgstr "Keresés..."
 
-#: js/Feeds.js:646
+#: js/Feeds.js:647
 msgid "Used for word stemming"
 msgstr ""
 
-#: js/Feeds.js:706
+#: js/Feeds.js:707
 msgid "Show feeds matching..."
 msgstr ""
 
@@ -3963,9 +3980,6 @@ msgstr "Ikon"
 #~ msgid "Don't cache files locally."
 #~ msgstr "Képek helyi tárolása"
 
-#~ msgid "Toggle embed original"
-#~ msgstr "Eredeti megjelenítésének váltása"
-
 #~ msgid "Please enable embed_original plugin first."
 #~ msgstr "Először engedélyezze az embed_original beépülőt."
 
@@ -4133,9 +4147,6 @@ msgstr "Ikon"
 #~ msgid "Mark articles in e-mail digest as read"
 #~ msgstr ""
 #~ "Az email összefoglalóban elküldött hírek megjelölése hírek olvasottként"
-
-#~ msgid "Enable API access"
-#~ msgstr "API hozzáférés engedélyzése"
 
 #~ msgid "Hide feeds with no unread articles"
 #~ msgstr "Olvasatlan hírekkel nem rendelkező hírcsatornák elrejtése"
