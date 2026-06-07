@@ -657,6 +657,21 @@ body.ttrss_main #feeds-holder-backdrop {
     overscroll-behavior-y: contain;
     overflow-x: hidden;
   }
+  body.ttrss_main .hl,
+  body.ttrss_main .cdm {
+    font-size: 16px;
+  }
+  body.ttrss_main .hl div.title a,
+  body.ttrss_main .hl .feed a,
+  body.ttrss_main .hl .author,
+  body.ttrss_main .hl .updated,
+  body.ttrss_main .cdm .header a.title,
+  body.ttrss_main .cdm .header .feed,
+  body.ttrss_main .cdm .header .author,
+  body.ttrss_main .cdm .header .updated,
+  body.ttrss_main .cdm .excerpt {
+    font-size: 16px;
+  }
   body.ttrss_main #feeds-holder_splitter {
     display: none ! important;
   }

@@ -782,6 +782,32 @@ body.ttrss_main {
 			overflow-x : hidden;
 		}
 
+		// On phones, render the whole article list at the standard 16px mobile
+		// body size — matching the open article body and the browser default —
+		// instead of the desktop list's smaller 14px / 11px text. Setting the
+		// row base lifts generic inherited text (tags, the (+)/comments footer
+		// links); the explicit list below lifts the elements the desktop theme
+		// sizes smaller on purpose (titles, feed/author/date, excerpt). Weight,
+		// not size, keeps the title prominent. Desktop is untouched (this is in
+		// the narrow media query); the body.ttrss_main prefix outweighs
+		// .cdm.expandable's explicit 14px title rule.
+		.hl,
+		.cdm {
+			font-size : 16px;
+		}
+
+		.hl div.title a,
+		.hl .feed a,
+		.hl .author,
+		.hl .updated,
+		.cdm .header a.title,
+		.cdm .header .feed,
+		.cdm .header .author,
+		.cdm .header .updated,
+		.cdm .excerpt {
+			font-size : 16px;
+		}
+
 		// The splitter is meaningless while the sidebar is an overlay.
 		#feeds-holder_splitter {
 			display : none ! important;
