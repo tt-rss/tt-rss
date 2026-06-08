@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Tiny Tiny RSS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-07 02:22+0000\n"
-"PO-Revision-Date: 2026-02-28 22:07+0000\n"
-"Last-Translator: 大王叫我来巡山 "
+"PO-Revision-Date: 2026-06-08 06:01+0000\n"
+"Last-Translator: Hosted Weblate user 54392 "
 "<hamburger2048@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/tt-rss/webui/zh_Hans/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1-dev\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -126,10 +126,8 @@ msgid "Loading, please wait..."
 msgstr "读取中，请稍候……"
 
 #: index.php:158
-#, fuzzy
-#| msgid "Toggle embed original"
 msgid "Toggle feed list"
-msgstr "切换嵌入模式"
+msgstr "切换源列表"
 
 #: index.php:173 prefs.php:135 js/App.js:536
 msgid "Communication problem with server."
@@ -695,15 +693,13 @@ msgid "Allows accessing this account through the API"
 msgstr "允许外部客户端通过 API 来访问该账户"
 
 #: classes/Pref_Prefs.php:111
-#, fuzzy
-#| msgid "Enable API access"
 msgid "Enable browser-based API access"
-msgstr "启用 API 访问"
+msgstr "启用基于浏览器的 API 访问"
 
 #: classes/Pref_Prefs.php:111
 msgid ""
 "Allows accessing the API from browsers ('Enable API' must also be enabled)"
-msgstr ""
+msgstr "允许从浏览器访问 API（必须同时开启 \"启用 API“）"
 
 #: classes/Pref_Prefs.php:112
 msgid "Enable categories"
