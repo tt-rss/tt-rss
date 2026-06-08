@@ -1,4 +1,4 @@
-/* global __, define, App, Feeds, CommonDialogs */
+/* global __, define, App, Feeds, CommonDialogs, __csrf_token */
 
 define(["dojo/_base/declare", "dojo/dom-construct", "dojo/_base/array", "dojo/cookie", "dijit/Tree", "dijit/Menu"], function (declare, domConstruct, array, cookie) {
 
@@ -42,7 +42,73 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/_base/array", "dojo/co
 		_onContainerKeypress: function(/* Event */ /* e */) {
 			return; // Stop dijit.Tree from interpreting keystrokes
 		},
+		// One delegated context menu per node type, bound once to the whole tree,
+		// instead of constructing a dijit.Menu (+ MenuItems) for every feed and
+		// category node. dijit.Menu's `selector` routes a right-click to the matching
+		// row (marked with a feedMenu* class below) and the handlers read its
+		// data-feed-id. This collapses (#feeds + #categories) menu widgets — each
+		// otherwise pinned in dijit.registry for the whole session — down to four,
+		// mirroring the delegated pattern in Headlines.initHeadlinesMenu().
+		_initContextMenus: function() {
+			if (this._contextMenusReady)
+				return;
+
+			this._contextMenusReady = true;
+			this._contextMenus = [];
+
+			const tree = this;
+			const feedId = function(item) {
+				return item.getParent().currentTarget.getAttribute("data-feed-id");
+			};
+			const addMenu = function(selector, items) {
+				const menu = new dijit.Menu({selector: selector});
+				items.forEach(function(it) {
+					menu.addChild(it ? new dijit.MenuItem(it) : new dijit.MenuSeparator());
+				});
+				menu.startup();
+				menu.bindDomNode(tree.domNode);
+				tree._contextMenus.push(menu);
+			};
+
+			// regular feed (positive id)
+			addMenu(".feedMenuFeed", [
+				{label: __("Mark as read"), onClick: function() { Feeds.catchupFeed(feedId(this)); }},
+				{label: __("Edit feed"), onClick: function() { CommonDialogs.editFeed(feedId(this), false); }},
+				{label: __("Open site"), onClick: function() {
+					App.postOpenWindow("backend.php", {op: "Feeds", method: "opensite",
+						feed_id: feedId(this), csrf_token: __csrf_token});
+				}},
+				null,
+				{label: __("Debug feed"), onClick: function() {
+					App.postOpenWindow("backend.php", {op: "Feeds", method: "updatedebugger",
+						feed_id: feedId(this), csrf_token: __csrf_token});
+				}},
+			]);
+
+			// special feed or label (id <= 0): mark as read only
+			addMenu(".feedMenuSpecial", [
+				{label: __("Mark as read"), onClick: function() { Feeds.catchupFeed(feedId(this)); }},
+			]);
+
+			// regular category (id >= 0)
+			addMenu(".feedMenuCat", [
+				{label: __("Mark as read"), onClick: function() { Feeds.catchupFeed(feedId(this), true); }},
+				{label: __("(Un)collapse"), onClick: function() { dijit.byId("feedTree").collapseCat(feedId(this)); }},
+			]);
+
+			// "special" category (id === -1)
+			addMenu(".feedMenuCatAll", [
+				{label: __("Mark all feeds as read"), onClick: function() { Feeds.catchupAll(); }},
+			]);
+		},
+		destroy: function() {
+			(this._contextMenus || []).forEach(function(menu) { menu.destroyRecursive(); });
+			this._contextMenus = null;
+			this.inherited(arguments);
+		},
 		_createTreeNode: function(args) {
+			this._initContextMenus();
+
 			const tnode = new dijit._TreeNode(args);
 
 			const iconName = args.item.icon ? String(args.item.icon[0]) : null;
@@ -87,62 +153,13 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/_base/array", "dojo/co
 				tnode.rowNode.setAttribute('data-feed-id', bare_id);
 				tnode.rowNode.setAttribute('data-is-cat', "false");
 
-				const menu = new dijit.Menu();
-				menu.row_id = bare_id;
-
-				menu.addChild(new dijit.MenuItem({
-					label: __("Mark as read"),
-					onClick: function() {
-						Feeds.catchupFeed(this.getParent().row_id);
-					}}));
-
-				if (bare_id > 0) {
-					menu.addChild(new dijit.MenuItem({
-						label: __("Edit feed"),
-						onClick: function() {
-							CommonDialogs.editFeed(this.getParent().row_id, false);
-						}}));
-
-					menu.addChild(new dijit.MenuItem({
-						label: __("Open site"),
-						onClick: function() {
-							App.postOpenWindow("backend.php", {op: "Feeds", method: "opensite",
-								feed_id: this.getParent().row_id, csrf_token: __csrf_token});
-						}}));
-
-					menu.addChild(new dijit.MenuSeparator());
-
-					menu.addChild(new dijit.MenuItem({
-						label: __("Debug feed"),
-						onClick: function() {
-							/* global __csrf_token */
-							App.postOpenWindow("backend.php", {op: "Feeds", method: "updatedebugger",
-								feed_id: this.getParent().row_id, csrf_token: __csrf_token});
-						}}));
-				}
-
-				menu.bindDomNode(tnode.domNode);
-				tnode._menu = menu;
+				// regular feeds get the full menu; special feeds and labels (id <= 0)
+				// only "Mark as read" — see _initContextMenus()
+				tnode.rowNode.classList.add(bare_id > 0 ? "feedMenuFeed" : "feedMenuSpecial");
 			}
 
 			if (id.match("CAT:") && bare_id >= 0) {
-				const menu = new dijit.Menu();
-				menu.row_id = bare_id;
-
-				menu.addChild(new dijit.MenuItem({
-					label: __("Mark as read"),
-					onClick: function() {
-						Feeds.catchupFeed(this.getParent().row_id, true);
-					}}));
-
-				menu.addChild(new dijit.MenuItem({
-					label: __("(Un)collapse"),
-					onClick: function() {
-						dijit.byId("feedTree").collapseCat(this.getParent().row_id);
-					}}));
-
-				menu.bindDomNode(tnode.domNode);
-				tnode._menu = menu;
+				tnode.rowNode.classList.add("feedMenuCat");
 			}
 
 			if (id.match("CAT:")) {
@@ -159,17 +176,7 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/_base/array", "dojo/co
 			}
 
 			if (id.match("CAT:") && bare_id === -1) {
-				const menu = new dijit.Menu();
-				menu.row_id = bare_id;
-
-				menu.addChild(new dijit.MenuItem({
-					label: __("Mark all feeds as read"),
-					onClick: function() {
-						Feeds.catchupAll();
-					}}));
-
-				menu.bindDomNode(tnode.domNode);
-				tnode._menu = menu;
+				tnode.rowNode.classList.add("feedMenuCatAll");
 			}
 
 			tnode.markedCounterNode = dojo.create('span', { className: 'counterNode marked', innerHTML: args.item.markedcounter });
