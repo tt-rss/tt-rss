@@ -3,6 +3,13 @@
 Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version.
 
 
+## 7.11.1 - 2026-06-07
+
+### Fixed
+
+- Ignore request-level `transport_sharing`, matching other unknown request options
+
+
 ## 7.11.0 - 2026-06-02
 
 ### Added
