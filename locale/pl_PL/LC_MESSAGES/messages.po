@@ -10,17 +10,17 @@ msgstr ""
 "Project-Id-Version: Tiny Tiny RSS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-07 02:22+0000\n"
-"PO-Revision-Date: 2026-01-20 07:01+0000\n"
+"PO-Revision-Date: 2026-06-08 15:50+0000\n"
 "Last-Translator: Anarion Dunedain <anarion@go2.pl>\n"
-"Language-Team: Polish <https://hosted.weblate.org/projects/tt-rss/webui/pl/"
-">\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/tt-rss/webui/pl/>"
+"\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.6\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -127,10 +127,8 @@ msgid "Loading, please wait..."
 msgstr "Trwa ładowanie, proszę czekać..."
 
 #: index.php:158
-#, fuzzy
-#| msgid "Toggle embed original"
 msgid "Toggle feed list"
-msgstr "Przełącza flagę „wbuduj oryginalny artykuł”"
+msgstr "Przełącza listę artykułów"
 
 #: index.php:173 prefs.php:135 js/App.js:536
 msgid "Communication problem with server."
@@ -698,18 +696,17 @@ msgstr "Włącz API"
 
 #: classes/Pref_Prefs.php:110
 msgid "Allows accessing this account through the API"
-msgstr "Zezwój na dostęp do tego konta przez API"
+msgstr "Zezwól na dostęp do tego konta przez API"
 
 #: classes/Pref_Prefs.php:111
-#, fuzzy
-#| msgid "Enable API access"
 msgid "Enable browser-based API access"
-msgstr "Włącz dostęp do API"
+msgstr "Włącz dostęp do API z przeglądarki"
 
 #: classes/Pref_Prefs.php:111
 msgid ""
 "Allows accessing the API from browsers ('Enable API' must also be enabled)"
 msgstr ""
+"Zezwala na dostęp do API z przeglądarek ('Włącz API' musi też być włączone)"
 
 #: classes/Pref_Prefs.php:112
 msgid "Enable categories"
