@@ -12,7 +12,7 @@
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.4.0",
     "eslint": "^9.37.0",
-    "globals": "^16.4.0",
+    "globals": "^17.6.0",
     "gulp": "^5.0.1",
     "gulp-less": "^5.0.0",
     "gulp-touch-fd": "^2.0.0",
