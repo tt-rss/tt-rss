@@ -29,6 +29,28 @@ export default [
       'eqeqeq': ['error', 'always'],
       'no-empty': ['error', { 'allowEmptyCatch': true }],
 
+      // Security — block the eval family and javascript: URLs
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
+      'no-script-url': 'error',
+      'no-extend-native': 'error',
+
+      // Correctness / bug catchers
+      'array-callback-return': 'error',
+      'no-return-assign': 'error',
+      'no-self-compare': 'error',
+      'no-unmodified-loop-condition': 'error',
+      'no-unreachable-loop': 'error',
+      'no-constructor-return': 'error',
+      'no-new-wrappers': 'error',
+
+      // Modernization (companions to prefer-const)
+      'no-var': 'error',
+      'prefer-spread': 'error',
+      'prefer-object-spread': 'error',
+      'no-useless-rename': 'error',
+
       // Stylistic rules (replacing those deprecated in ESLint)
       '@stylistic/js/linebreak-style': ['error', 'unix'],
       '@stylistic/js/eol-last': 'error',
