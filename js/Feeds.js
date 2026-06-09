@@ -419,7 +419,7 @@ const	Feeds = {
 
 		if (offset !== 0) {
 			query.skip = offset;
-		} else if (!is_cat && feed === this.getActive() && !params.method) {
+		} else if (!is_cat && String(feed) === String(this.getActive()) && !params.method) {
 			query.m = "ForceUpdate";
 		}
 

@@ -264,7 +264,7 @@ const	Helpers = {
 				apply: function() {
 					xhr.post("backend.php", this.attr('value'), () => {
 						Element.show("css_edit_apply_msg");
-						document.getElementById("user_css_style").innerText = this.attr('value');
+						document.getElementById("user_css_style").innerText = this.attr('value').value;
 					});
 				},
 				execute: function () {
@@ -521,7 +521,7 @@ const	Helpers = {
 												<h3 style="margin-top: 0">${plugin}</h3>
 												<div class='text-error'>${reply.result}</div>
 												${reply.stderr ? `<pre class="small text-error pre-wrap">${reply.stderr}</pre>` : ''}
-												${reply.stdour ? `<pre class="small text-success pre-wrap">${reply.stdout}</pre>` : ''}
+												${reply.stdout ? `<pre class="small text-success pre-wrap">${reply.stdout}</pre>` : ''}
 												<p class="small">
 													${App.FormFields.icon("error_outline") + " " + __("Exited with RC: %d").replace("%d", reply.git_status)}
 												</p>
