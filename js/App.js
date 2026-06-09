@@ -919,21 +919,56 @@ const App = {
          // should close it first. Every popup opens through the dijit.popup
          // singleton, so reconcile after open() to push the popup's history entry.
          //
-         // We deliberately do NOT hook close(): Dijit dismisses menus on its own
-         // (an outside tap, a blur, the viewport change a phone back-swipe
-         // causes), and removing the history entry at close time -- which needs a
-         // synthetic history.back() -- races the real Back. The synthetic back
-         // eats the entry first, so the user's Back then finds nothing to absorb
-         // it and leaves the app. Instead the entry lingers harmlessly: a Back
-         // pops it (the popstate handler closes the popup, or no-ops if Dijit
-         // already dismissed it, absorbing the press), and reconcileOverlayHistory
-         // prunes any leftover entry the next time another overlay changes.
+         // We deliberately do NOT touch history from a close() hook: Dijit
+         // dismisses menus on its own (an outside tap, a blur, the viewport
+         // change a phone back-swipe causes), and removing the history entry at
+         // close time -- which needs a synthetic history.back() -- races the real
+         // Back. The synthetic back eats the entry first, so the user's Back then
+         // finds nothing to absorb it and leaves the app. Instead the entry
+         // lingers harmlessly: a Back pops it (the popstate handler closes the
+         // popup, or no-ops if Dijit already dismissed it, absorbing the press),
+         // and reconcileOverlayHistory prunes any leftover entry the next time
+         // another overlay changes.
+         //
+         // Popups are non-modal by default: an outside tap dismisses the menu but
+         // also activates whatever is behind it. To match the modal feed drawer
+         // on the narrow layout we park a full-screen backdrop just beneath the
+         // popup (below dijit.popup's z-index:1000, above the app) that swallows
+         // that tap so it only closes the menu. Keeping the backdrop in sync with
+         // dijit.popup._stack is a pure DOM toggle, so -- unlike the history work
+         // above -- it is safe to drive from a close() hook.
          if (dijit.popup) {
+            const backdrop = document.createElement("div");
+            backdrop.id = "popup-backdrop";
+            // Dismiss on the press itself (touchstart), and preventDefault it, so
+            // the browser never synthesises the "compatibility" click that a tap
+            // normally produces. Without that, closing the menu hides this
+            // backdrop mid-gesture and the click then lands on whatever is now
+            // exposed beneath -- a click-through, notably on iOS Safari. Reacting
+            // to the press rather than the finger-up also stops the gesture that
+            // opened the menu (its press landed on the opener before this backdrop
+            // existed) from dismissing it the instant the finger lifts. The click
+            // handler covers non-touch input (on touch the preventDefault above
+            // suppresses it, so it does not double-fire).
+            backdrop.addEventListener("touchstart", (ev) => {
+               ev.preventDefault();
+               dijit.popup.close();
+            }, {passive: false});
+            backdrop.addEventListener("click", () => dijit.popup.close());
+            document.body.appendChild(backdrop);
+
             const popup = dijit.popup;
             const orig_open = popup.open;
             popup.open = function() {
                const ret = orig_open.apply(this, arguments);
+               App._syncPopupBackdrop();
                App.reconcileOverlayHistory();
+               return ret;
+            };
+            const orig_close = popup.close;
+            popup.close = function() {
+               const ret = orig_close.apply(this, arguments);
+               App._syncPopupBackdrop();
                return ret;
             };
          }
@@ -1082,6 +1117,15 @@ const App = {
    isNarrowLayout: function() {
       const toggle = document.querySelector(".sidebar-toggle");
       return !!toggle && window.getComputedStyle(toggle).display !== "none";
+   },
+   // Show the modal backdrop (see the dijit.popup hooks in initSecondStage)
+   // whenever a popup is open on the narrow layout, so an outside tap dismisses
+   // the menu instead of falling through to the app. dijit.popup._stack is the
+   // set of currently-open popups; submenus keep it non-empty so the backdrop
+   // stays put until the last one closes.
+   _syncPopupBackdrop: function() {
+      const open = this.isNarrowLayout() && !!dijit.popup && dijit.popup._stack.length > 0;
+      document.body.classList.toggle("popup-backdrop-open", open);
    },
    // Phone-layout overlays — an open article (expanded row in combined mode, or
    // the 3-panel pane; both set the active row), the feed drawer, and an open
