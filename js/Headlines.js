@@ -1349,7 +1349,7 @@ const Headlines = {
 				this.headlines[data.id].tags = data.tags;
 			}
 
-			document.querySelectorAll(`span[data-tags-for="${data.id}"`).forEach((ctr) => {
+			document.querySelectorAll(`span[data-tags-for="${data.id}"]`).forEach((ctr) => {
 				ctr.innerHTML = Article.renderTags(data.id, data.tags);
 			});
 		}
@@ -1583,7 +1583,7 @@ const Headlines = {
 			const menu = new dijit.Menu({
 				id: "headlinesFeedTitleMenu",
 				targetNodeIds: ["headlines-frame"],
-				selector: "div.cdmFeedTitle"
+				selector: "div.feed-title"
 			});
 
 			menu.addChild(new dijit.MenuItem({
