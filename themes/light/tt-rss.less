@@ -975,9 +975,9 @@ body.ttrss_main {
 		}
 	}
 
-	// Narrow / phone layout: wrap each article row onto two lines — the title
-	// claims the whole first line, and the feed name, date and icons wrap onto
-	// a second line below it. Applies to both list (.hl) and combined (.cdm)
+	// Narrow / phone layout: wrap each article row — the title claims the
+	// whole first line or two, and the feed name, date and icons wrap onto a
+	// final line below it. Applies to both list (.hl) and combined (.cdm)
 	// rows, which share the same left | title | feed | date | right flex layout.
 	@media (max-width: @breakpoint-md) {
 		.hl,
@@ -989,6 +989,31 @@ body.ttrss_main {
 		.cdm .header > .titleWrap {
 			flex-basis : 100%;
 			order : -1;
+		}
+
+		// Long titles get a second line instead of being clipped after one:
+		// closed rows clamp the title block (title plus inline preview or
+		// excerpt) at two lines with an ellipsis. Open (.active) CDM rows
+		// keep the full wrap they get from cdm.less. Bottom padding becomes
+		// a margin so the overflow clip lands exactly on the second line —
+		// the CDM excerpt is a sibling of the clamp-truncated title anchor,
+		// so its third-line glyph tops would paint through any padding.
+		.hl > .title,
+		.cdm.expandable:not(.active) .header > .titleWrap {
+			display : -webkit-box;
+			-webkit-box-orient : vertical;
+			-webkit-line-clamp : 2;
+			line-clamp : 2;
+			overflow : hidden;
+			white-space : normal;
+			padding-bottom : 0;
+			margin-bottom : 4px;
+		}
+
+		// the excerpt's own nowrap (cdm.less) would otherwise keep it from
+		// wrapping through the clamp's second line
+		.cdm.expandable:not(.active) .header > .titleWrap .excerpt {
+			white-space : normal;
 		}
 
 		// keep the trailing icons flush with the right edge of the second line
