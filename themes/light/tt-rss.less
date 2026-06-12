@@ -975,6 +975,20 @@ body.ttrss_main {
 		}
 	}
 
+	// Long-press opens the delegated context menus on touch screens (see
+	// App.initLongPressContextMenu()); keep the platform's own long-press
+	// behaviours — iOS Safari's link-preview sheet and text-selection
+	// callout — from also firing on the elements that carry a menu.
+	@media (pointer: coarse) {
+		.hlMenuAttach,
+		.vfeedMenuAttach,
+		#headlines-frame .feed-title,
+		#feeds-holder .dijitTreeRow {
+			user-select : none;
+			-webkit-touch-callout : none;
+		}
+	}
+
 	// Narrow / phone layout: wrap each article row — the title claims the
 	// whole first line or two, and the feed name, date and icons wrap onto a
 	// final line below it. Applies to both list (.hl) and combined (.cdm)

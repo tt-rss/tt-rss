@@ -789,6 +789,15 @@ body.ttrss_main .hl-swipe-action.ready {
 body.ttrss_main .hl-swipe-action .material-icons {
   font-size: 26px;
 }
+@media (pointer: coarse) {
+  body.ttrss_main .hlMenuAttach,
+  body.ttrss_main .vfeedMenuAttach,
+  body.ttrss_main #headlines-frame .feed-title,
+  body.ttrss_main #feeds-holder .dijitTreeRow {
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
 @media (max-width: 768px) {
   body.ttrss_main .hl,
   body.ttrss_main .cdm .header {

@@ -871,6 +871,7 @@ const App = {
 
          this.initPullToRefresh();
          this.initSwipeToRead();
+         this.initLongPressContextMenu();
 
          // If the viewport grows back to the docked layout (the hamburger
          // toggle is hidden there), make sure the drawer isn't left open.
@@ -1440,6 +1441,126 @@ const App = {
       }, {passive: true});
 
       frame.addEventListener("touchcancel", cleanup, {passive: true});
+   },
+   // iOS Safari never fires a contextmenu event for a touch long-press, and
+   // contextmenu is the only trigger the delegated dijit.Menu bindings listen
+   // for (headline rows and group headers in Headlines.initHeadlinesMenu(),
+   // feed tree rows in FeedTree._initContextMenus()) -- so on iPhones and
+   // iPads those menus were unreachable. Time the press ourselves and
+   // dispatch the contextmenu event dijit expects at the pressed element;
+   // from there the selector delegation, currentTarget and menu position work
+   // exactly as for a real right-click. Android *does* fire contextmenu
+   // natively at ~500ms, so the timer sits above that: where a native event
+   // exists it wins and cancels the pending press, and a late native
+   // duplicate arriving just after a synthesised open is eaten.
+   //
+   // The menu opens while the finger is still down. When it lifts, the
+   // browser synthesises the tap's compatibility mousedown/mouseup/click,
+   // which would land on the just-opened menu (it opens at the finger) or on
+   // the modal backdrop behind it and activate or dismiss something the user
+   // never aimed at. So once the press qualifies, the gesture's compatibility
+   // events are swallowed at the document, armed only until just after this
+   // pointer's release so the next deliberate tap (e.g. on a menu item) is
+   // unaffected.
+   initLongPressContextMenu: function() {
+      const LONG_PRESS_MS = 600;  // above Android's native long-press delay on purpose
+      const MOVE_SLOP_PX = 10;    // finger drift allowed before it counts as a scroll
+
+      ["feeds-holder", "headlines-frame"].forEach((container_id) => {
+         const container = document.getElementById(container_id);
+         if (!container)
+            return;
+
+         let pending = null;        // the press being timed
+         let synthesized_at = 0;    // when we last dispatched a synthetic contextmenu
+
+         const cancel = () => {
+            if (pending) {
+               window.clearTimeout(pending.timer);
+               pending = null;
+            }
+         };
+
+         const armReleaseSwallow = () => {
+            const swallow = (ev) => {
+               ev.preventDefault();
+               ev.stopPropagation();
+            };
+            const types = ["mousedown", "mouseup", "click"];
+            types.forEach((t) => document.addEventListener(t, swallow, {capture: true, once: true}));
+
+            const disarm = () => {
+               container.removeEventListener("pointerup", disarm);
+               container.removeEventListener("pointercancel", disarm);
+               // compatibility events follow the release almost immediately;
+               // anything later is a new, deliberate tap
+               window.setTimeout(() => {
+                  types.forEach((t) => document.removeEventListener(t, swallow, {capture: true}));
+               }, 150);
+            };
+            container.addEventListener("pointerup", disarm);
+            container.addEventListener("pointercancel", disarm);
+         };
+
+         container.addEventListener("pointerdown", (ev) => {
+            cancel();
+
+            // a second finger means pinch or scroll, not a long-press
+            if (ev.pointerType !== "touch" || !ev.isPrimary)
+               return;
+
+            pending = {
+               pointer_id: ev.pointerId,
+               x: ev.clientX,
+               y: ev.clientY,
+               target: ev.target,
+               timer: window.setTimeout(() => {
+                  const press = pending;
+                  pending = null;
+
+                  const synth = new MouseEvent("contextmenu", {bubbles: true,
+                     cancelable: true, view: window, clientX: press.x, clientY: press.y});
+                  synth.ttrss_synthesized = true;
+                  synthesized_at = Date.now();
+
+                  // Armed before dispatching, and regardless of whether a menu
+                  // is bound here: dijit opens the menu on a deferred tick
+                  // (Menu._scheduleOpen), so "did a menu open" can't be checked
+                  // synchronously -- and a recognised long-press's release
+                  // shouldn't click through to the app in any case, matching
+                  // the native behaviour on Android.
+                  armReleaseSwallow();
+                  press.target.dispatchEvent(synth);
+               }, LONG_PRESS_MS)
+            };
+         }, {passive: true});
+
+         container.addEventListener("pointermove", (ev) => {
+            if (pending && ev.pointerId === pending.pointer_id &&
+                  (Math.abs(ev.clientX - pending.x) > MOVE_SLOP_PX ||
+                   Math.abs(ev.clientY - pending.y) > MOVE_SLOP_PX))
+               cancel();
+         }, {passive: true});
+
+         container.addEventListener("pointerup", cancel, {passive: true});
+         container.addEventListener("pointercancel", cancel, {passive: true});
+
+         // A native contextmenu -- Android's long-press or an actual right
+         // click -- outranks the timer. The reverse race (our timer fired
+         // first, the native event limped in after) would open the menu
+         // twice, so a native event on the heels of a synthesised one is
+         // eaten in the capture phase, before dijit's delegated bubble
+         // handler can see it.
+         container.addEventListener("contextmenu", (ev) => {
+            if (ev.ttrss_synthesized)
+               return;
+            cancel();
+            if (Date.now() - synthesized_at < 400) {
+               ev.preventDefault();
+               ev.stopImmediatePropagation();
+            }
+         }, {capture: true});
+      });
    },
    initHotkeyActions: function() {
       if (this.is_prefs) {
