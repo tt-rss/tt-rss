@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-07 02:22+0000\n"
-"PO-Revision-Date: 2026-04-21 04:09+0000\n"
+"PO-Revision-Date: 2026-06-14 18:01+0000\n"
 "Last-Translator: Dony Wibowo <dony@dony.me>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/tt-rss/webui/"
 "id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -124,10 +124,8 @@ msgid "Loading, please wait..."
 msgstr "Memuat, mohon tunggu..."
 
 #: index.php:158
-#, fuzzy
-#| msgid "Toggle rule display"
 msgid "Toggle feed list"
-msgstr "Alihkan tampilan aturan"
+msgstr "Daftar Umpan"
 
 #: index.php:173 prefs.php:135 js/App.js:536
 msgid "Communication problem with server."
@@ -697,12 +695,14 @@ msgstr "Memungkinkan akses akun ini melalui API﻿"
 
 #: classes/Pref_Prefs.php:111
 msgid "Enable browser-based API access"
-msgstr ""
+msgstr "Aktifkan akses API berbasis browser"
 
 #: classes/Pref_Prefs.php:111
 msgid ""
 "Allows accessing the API from browsers ('Enable API' must also be enabled)"
 msgstr ""
+"Memungkinkan akses ke API melalui peramban (opsi 'Aktifkan API' juga harus "
+"diaktifkan)"
 
 #: classes/Pref_Prefs.php:112
 msgid "Enable categories"
