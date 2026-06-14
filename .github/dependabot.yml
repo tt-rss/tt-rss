@@ -11,9 +11,12 @@ updates:
 - package-ecosystem: npm
   directory: /
   schedule:
-    interval: weekly
+    interval: monthly
   commit-message:
     prefix: 'npm:'
+  groups:
+    development-dependencies:
+      dependency-type: development
 
 - package-ecosystem: docker
   directories:
