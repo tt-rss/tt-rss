@@ -17,7 +17,7 @@
     "gulp": "^5.0.1",
     "gulp-less": "^5.0.0",
     "gulp-touch-fd": "^2.0.0",
-    "less": "^4.6.4",
+    "less": "^4.6.6",
     "stylelint": "^17.13.0",
     "stylelint-config-standard": "^40.0.0"
   }
