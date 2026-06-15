@@ -1473,6 +1473,7 @@ const App = {
 
          let pending = null;        // the press being timed
          let synthesized_at = 0;    // when we last dispatched a synthetic contextmenu
+         let opened = null;         // origin of the press that opened a menu, for drag-to-dismiss
 
          const cancel = () => {
             if (pending) {
@@ -1504,6 +1505,7 @@ const App = {
 
          container.addEventListener("pointerdown", (ev) => {
             cancel();
+            opened = null;
 
             // a second finger means pinch or scroll, not a long-press
             if (ev.pointerType !== "touch" || !ev.isPrimary)
@@ -1517,6 +1519,8 @@ const App = {
                timer: window.setTimeout(() => {
                   const press = pending;
                   pending = null;
+                  // remember where the press opened the menu so a later drag dismisses it
+                  opened = {x: press.x, y: press.y, pointer_id: press.pointer_id};
 
                   const synth = new MouseEvent("contextmenu", {bubbles: true,
                      cancelable: true, view: window, clientX: press.x, clientY: press.y});
@@ -1538,12 +1542,29 @@ const App = {
          container.addEventListener("pointermove", (ev) => {
             if (pending && ev.pointerId === pending.pointer_id &&
                   (Math.abs(ev.clientX - pending.x) > MOVE_SLOP_PX ||
-                   Math.abs(ev.clientY - pending.y) > MOVE_SLOP_PX))
+                   Math.abs(ev.clientY - pending.y) > MOVE_SLOP_PX)) {
                cancel();
+               return;
+            }
+
+            // The menu opens with the finger still down; dragging it past the slop
+            // means the user means to scroll, not pick an item, so dismiss the popup
+            // rather than leave it stranded open.
+            if (opened && ev.pointerId === opened.pointer_id &&
+                  (Math.abs(ev.clientX - opened.x) > MOVE_SLOP_PX ||
+                   Math.abs(ev.clientY - opened.y) > MOVE_SLOP_PX)) {
+               if (dijit.popup)
+                  dijit.popup.close();
+               opened = null;
+            }
          }, {passive: true});
 
-         container.addEventListener("pointerup", cancel, {passive: true});
-         container.addEventListener("pointercancel", cancel, {passive: true});
+         // End of the gesture: stop timing and forget the opened-menu origin. The
+         // menu itself stays open -- the user lifts, then taps an item; only a fresh
+         // press or a drag-away (above) dismisses it.
+         const endGesture = () => { cancel(); opened = null; };
+         container.addEventListener("pointerup", endGesture, {passive: true});
+         container.addEventListener("pointercancel", endGesture, {passive: true});
 
          // A native contextmenu -- Android's long-press or an actual right
          // click -- outranks the timer. The reverse race (our timer fired
@@ -1554,10 +1575,27 @@ const App = {
          container.addEventListener("contextmenu", (ev) => {
             if (ev.ttrss_synthesized)
                return;
+
+            // pending is only ever set for a touch press, so its presence here means
+            // a native long-press (Android/Firefox) is what opened the menu.
+            const touch_press = pending;
             cancel();
+
             if (Date.now() - synthesized_at < 400) {
+               // a late native duplicate on the heels of our synthetic open
                ev.preventDefault();
                ev.stopImmediatePropagation();
+               return;
+            }
+
+            // The native long-press opens the menu with the finger still down, so its
+            // release needs the same swallow the synthetic path arms -- otherwise the
+            // finger-lift's compatibility click falls through to the row and is taken
+            // as a tap (the feed tree's onClick runs Feeds.open and closes the
+            // drawer). Gate on a touch press so a real mouse right-click is untouched.
+            if (touch_press) {
+               opened = {x: touch_press.x, y: touch_press.y, pointer_id: touch_press.pointer_id};
+               armReleaseSwallow();
             }
          }, {capture: true});
       });
