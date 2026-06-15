@@ -463,7 +463,7 @@ const	Feeds = {
 	catchupFeed: function(feed, is_cat, mode) {
 		is_cat = is_cat || false;
 
-		let str = false;
+		let str;
 
 		switch (mode) {
 			case "1day":

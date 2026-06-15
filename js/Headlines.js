@@ -471,8 +471,6 @@ const Headlines = {
 		this.unpack_observer.disconnect();
 	},
 	render: function (headlines, hl) {
-		let row = null;
-
 		let row_class = "";
 
 		if (hl.marked) row_class += " marked";
@@ -497,6 +495,8 @@ const Headlines = {
 
 			this.vgroup_last_feed = hl.feed_id;
 		}
+
+		let row;
 
 		if (App.isCombinedMode()) {
 			row_class += App.getInitParam("cdm_expanded") ? " expanded" : " expandable";
@@ -755,8 +755,8 @@ const Headlines = {
 		);
 	},
 	onLoaded: function (reply, offset, append) {
-		let is_cat = false;
-		let feed_id = false;
+		let is_cat;
+		let feed_id;
 
 		if (reply) {
 

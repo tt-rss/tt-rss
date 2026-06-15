@@ -375,7 +375,7 @@ const App = {
 
 		Element.hide("cmdline");
 
-		let hotkey_name = "";
+		let hotkey_name;
 
 		if (event.type === 'keydown') {
 			hotkey_name = "(" + keycode + ")";

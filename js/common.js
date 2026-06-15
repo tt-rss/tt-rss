@@ -143,7 +143,7 @@ const xhr = {
 	json: function(url, params = {}, complete = undefined, failed = undefined) {
 		return new Promise((resolve, reject) =>
 			this.post(url, params, null, failed).then((data) => {
-				let obj = null;
+				let obj;
 
 				try {
 					obj = JSON.parse(data);
@@ -360,7 +360,7 @@ const Notify = {
 		}
 
 		let msgfmt = "<span class=\"msg\">%s</span>".replace("%s", __(msg));
-		let icon = "";
+		let icon;
 
 		notify.className = "notify";
 
