@@ -511,13 +511,13 @@
   },
   {
     "name": "Version_Info",
-    "description": "Show the tt-rss version using Shift+V.",
+    "description": "Show Tiny Tiny RSS (and related, e.g. PHP and OS) version info using Shift+V.",
     "topics": [
       "version_info"
     ],
     "html_url": "https://github.com/tt-rss/tt-rss-plugin-version-info",
     "clone_url": "https://github.com/tt-rss/tt-rss-plugin-version-info.git",
-    "last_update": "2024-06-20T19:26:47Z"
+    "last_update": "2026-06-12T03:25:30Z"
   },
   {
     "name": "mailer_smtp",
