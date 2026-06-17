@@ -192,6 +192,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         if (\is_array($body)) {
             throw $this->invalidBody();
         }
+        $body = self::createBodyStream($body);
         $request = new Psr7\Request($method, $uri, $headers, $body, $version);
         // Remove the option so that they are not doubly-applied.
         unset($options['headers'], $options['body'], $options['version']);
@@ -331,6 +332,8 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
      */
     private function prepareDefaults(array $options): array
     {
+        self::warnAboutRequestLevelHandler($options);
+
         $defaults = $this->config;
 
         if (!empty($defaults['headers'])) {
@@ -364,6 +367,19 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         self::warnAboutInvalidRequestOptionTypes($result);
 
         return $result;
+    }
+
+    private static function warnAboutRequestLevelHandler(array $options): void
+    {
+        if (!\array_key_exists('handler', $options)) {
+            return;
+        }
+
+        \trigger_deprecation(
+            'guzzlehttp/guzzle',
+            '7.12',
+            'Passing the "handler" request option is deprecated; guzzlehttp/guzzle 8.0 will ignore request-level handlers. Configure the handler when creating the Client, or use a separate Client instance for requests that need a different handler.'
+        );
     }
 
     private static function warnAboutInvalidRequestOptionTypes(array $options): void
@@ -841,7 +857,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
                     .'x-www-form-urlencoded requests, and the multipart '
                     .'option to send multipart/form-data requests.');
             }
-            $options['body'] = \http_build_query($options['form_params'], '', '&');
+            $options['body'] = \http_build_query(self::normalizeNonFiniteFloats($options['form_params'], 'form_params'), '', '&');
             unset($options['form_params']);
             // Ensure that we don't have the header in different case and set the new value.
             $options['_conditional'] = Psr7\Utils::caselessRemove(['Content-Type'], $options['_conditional']);
@@ -873,7 +889,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
             if (\is_array($options['body'])) {
                 throw $this->invalidBody();
             }
-            $modify['body'] = Psr7\Utils::streamFor($options['body']);
+            $modify['body'] = self::createBodyStream($options['body']);
             unset($options['body']);
         }
 
@@ -893,6 +909,11 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
                     $options['curl'][\CURLOPT_USERPWD] = "$value[0]:$value[1]";
                     break;
                 case 'ntlm':
+                    \trigger_deprecation(
+                        'guzzlehttp/guzzle',
+                        '7.12',
+                        'Passing "ntlm" as the built-in auth type is deprecated; guzzlehttp/guzzle 8.0 will no longer apply NTLM through the "auth" request option. Configure NTLM with cURL HTTP authentication options instead.'
+                    );
                     $options['curl'][\CURLOPT_HTTPAUTH] = \CURLAUTH_NTLM;
                     $options['curl'][\CURLOPT_USERPWD] = "$value[0]:$value[1]";
                     break;
@@ -902,7 +923,7 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
         if (isset($options['query'])) {
             $value = $options['query'];
             if (\is_array($value)) {
-                $value = \http_build_query($value, '', '&', \PHP_QUERY_RFC3986);
+                $value = \http_build_query(self::normalizeNonFiniteFloats($value, 'query'), '', '&', \PHP_QUERY_RFC3986);
             }
             if (!\is_string($value)) {
                 throw new InvalidArgumentException('query must be a string or array');
@@ -970,6 +991,9 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
 
                 foreach ($value as $index => $item) {
                     if ($item === null || (!\is_string($item) && \is_scalar($item))) {
+                        if (\is_float($item) && !\is_finite($item)) {
+                            $item = \is_nan($item) ? 'NAN' : ($item > 0 ? 'INF' : '-INF');
+                        }
                         $value[$index] = (string) $item;
                     }
                 }
@@ -980,11 +1004,80 @@ class Client implements ClientInterface, \Psr\Http\Client\ClientInterface
             }
 
             if ($value === null || (!\is_string($value) && \is_scalar($value))) {
+                if (\is_float($value) && !\is_finite($value)) {
+                    $value = \is_nan($value) ? 'NAN' : ($value > 0 ? 'INF' : '-INF');
+                }
                 $headers[$name] = (string) $value;
             }
         }
 
         return $droppedHeaderNames;
+    }
+
+    /**
+     * @param mixed $body
+     */
+    private static function createBodyStream($body): StreamInterface
+    {
+        if ($body instanceof StreamInterface) {
+            return $body;
+        }
+
+        if (\is_resource($body) || $body === null || \is_string($body) || $body instanceof \Iterator) {
+            return Psr7\Utils::streamFor($body);
+        }
+
+        if (\is_scalar($body)) {
+            \trigger_deprecation('guzzlehttp/guzzle', '7.12', 'Passing a non-string scalar to the "body" request option is deprecated; guzzlehttp/guzzle 8.0 will reject non-string scalar bodies.');
+
+            return Psr7\Utils::streamFor(self::stringifyScalar($body));
+        }
+
+        if (\is_object($body) && \method_exists($body, '__toString')) {
+            return Psr7\Utils::streamFor((string) $body);
+        }
+
+        if (\is_callable($body)) {
+            return Psr7\Utils::streamFor($body);
+        }
+
+        throw new InvalidArgumentException(\sprintf(
+            'Passing %s to request option "body" is invalid; expected resource|string|null|int|float|bool|StreamInterface|callable&object|Iterator|Stringable.',
+            \get_debug_type($body)
+        ));
+    }
+
+    /**
+     * @param bool|float|int|string $value
+     */
+    private static function stringifyScalar($value): string
+    {
+        // Normalize non-finite floats to dodge PHP 8.5's (string) NAN
+        // coercion warning while the value is still accepted.
+        if (\is_float($value) && !\is_finite($value)) {
+            $value = \is_nan($value) ? 'NAN' : ($value > 0 ? 'INF' : '-INF');
+        }
+
+        return (string) $value;
+    }
+
+    /**
+     * Converts non-finite floats in the array to the strings PHP coerces
+     * them to, as implicit coercion of NAN emits a warning on PHP 8.5.
+     */
+    private static function normalizeNonFiniteFloats(array $values, string $option): array
+    {
+        foreach ($values as $key => $value) {
+            if (\is_array($value)) {
+                $values[$key] = self::normalizeNonFiniteFloats($value, $option);
+            } elseif (\is_float($value) && !\is_finite($value)) {
+                \trigger_deprecation('guzzlehttp/guzzle', '7.12', 'Passing a non-finite float in the "%s" request option is deprecated; guzzlehttp/guzzle 8.0 will reject non-finite floats.', $option);
+
+                $values[$key] = \is_nan($value) ? 'NAN' : ($value > 0 ? 'INF' : '-INF');
+            }
+        }
+
+        return $values;
     }
 
     /**
