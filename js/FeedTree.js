@@ -58,7 +58,9 @@ define(["dojo/_base/declare", "dojo/dom-construct", "dojo/_base/array", "dojo/co
 
 			const tree = this;
 			const feedId = function(item) {
-				return item.getParent().currentTarget.getAttribute("data-feed-id");
+				// id might be a tag string, so check if we have something int-ish
+				const id = item.getParent().currentTarget.getAttribute('data-feed-id');
+				return Number.isInteger(Number(id)) ? parseInt(id) : id;
 			};
 			const addMenu = function(selector, items) {
 				const menu = new dijit.Menu({selector: selector});
