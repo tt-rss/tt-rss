@@ -10,7 +10,7 @@
 		$method = strtolower($method);
 
 	// Public calls compatibility shim
-	if (in_array($op, ['rss', 'getUnread', 'getProfiles', 'share'])) {
+	if (in_array($op, ['rss', 'getProfiles', 'share'])) {
 		header('Location: public.php?' . $_SERVER['QUERY_STRING']);
 		return;
 	}
