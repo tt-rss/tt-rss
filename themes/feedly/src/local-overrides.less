@@ -1,0 +1,224 @@
+@import (reference) "../tt-rss/themes/light/defines.less";
+@import "_variables.less";
+
+// use nested mixin so it inherits variables only when called, not already when defined
+.theme() {
+  .colors(@bg-body: shade(@default-bg, @fade2), @bg-content: @default-bg, @border-content: @border-darker) {
+    &.flat {
+      background-color: @bg-body;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: @color-scrollbar !important;
+      }
+      hr {
+        border-color: @border-darker !important;
+      }
+      .content {
+        border-color: @border-content;
+        background-color: @bg-content;
+      }
+      .dijitCheckBoxChecked {
+        background-color: @color-checked;
+      }
+      :is(.footer, .footer a) {
+        color: @fg-text-muted !important;
+      }
+      .dijitTooltipContents {
+        background-color: @color-tooltip-bg;
+      }
+      .dijitTooltipRight .dijitTooltipConnector {
+        border-right-color: @color-tooltip-bg;
+      }
+      .dijitTooltipLeft .dijitTooltipConnector {
+        border-left-color: @color-tooltip-bg;
+      }
+      .dijitTooltipBelow .dijitTooltipConnector {
+        border-bottom-color: @color-tooltip-bg;
+      }
+      .dijitTooltipAbove .dijitTooltipConnector {
+        border-top-color: @color-tooltip-bg;
+      }
+    }
+    // articles shared by unique url
+    &.ttrss_zoom {
+      .header {
+        border-bottom-color: @border-darker;
+        color: @fg-text-muted;
+      }
+      .content {
+        @import "_content-inner-colors.less";
+      }
+    }
+  }
+}
+
+body.flat.ttrss_utility {
+  &::-webkit-scrollbar {
+    height: 4px !important;
+
+    @media (hover: none) {
+      width: 0 !important;
+      height: 0 !important;
+    }
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent !important;
+  }
+  :focus {
+    outline: none;
+  }
+
+  // ---------------------------------------------------------------------------
+  // colors and theming
+  // ---------------------------------------------------------------------------
+  @body: &; // rewrite selector `body` to `&` to extend `.ttrss_utility` via `@import`
+  @import "_flat.less";
+  .theme.colors();
+
+  @media (prefers-color-scheme: dark) {
+    @color-accent: #b87d2c;
+    @import (multiple) "_flat.less";
+    @import "_night.less";
+    .theme.colors(@default-bg, @color-panel-bg, @border-default);
+  }
+
+  // ---------------------------------------------------------------------------
+  // shared layout
+  // ---------------------------------------------------------------------------
+  &.flat {
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: clamp(0px, ~"10vw - 50px", 50px); // 0 up to 500px, 50px from 1000px, scaling inbetween
+
+    :is(h1, h2, h3, h4) {
+      margin-bottom: 14px;
+      color: unset;
+      font-family: unset;
+    }
+    h1 {
+      margin-top: 14px;
+      font-size: 21px;
+    }
+    pre {
+      overflow: auto;
+    }
+    .container {
+      margin: 10px;
+    }
+    .content.content {
+      padding: 20px 29px;
+      border-radius: 4px;
+    }
+    fieldset {
+      width: 100%;
+      margin-inline: 0;
+      word-spacing: -0.3em; // remove extra white-space
+
+      * {
+        word-spacing: 0; // restore white-space
+      }
+      // checkboxes
+      &.narrow > label + label {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 30px;
+      }
+      > :last-child {
+        margin-right: 0;
+      }
+    }
+
+    .media(0, xs, {
+      :is(.dijitSelect, .dijitTextBox) {
+        width: 100% !important;
+      }
+      fieldset > label:first-of-type {
+        text-align: left;
+      }
+      // checkboxes
+      fieldset.narrow > label:first-of-type {
+        display: none;
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // special pages
+  // ---------------------------------------------------------------------------
+  &:is(.ttrss_login, .otp) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100svh;
+
+    h1 {
+      display: none;
+    }
+    .dijitTextBox {
+      font-size: 16px;
+    }
+    // stretch submit button
+    form > fieldset:last-child .dijitButton {
+      width: 100%;
+    }
+  }
+
+  &.ttrss_login {
+    // remove empty label before submit button
+    form > fieldset:last-child label {
+      display: none;
+    }
+  }
+
+  &.otp {
+    .content {
+      flex-basis: 400px;
+      margin: 10px;
+    }
+    .dijitTextBox {
+      width: 100%;
+      margin-bottom: 14px; // 4px field margin + 2 * 5px fieldset padding
+    }
+  }
+
+  &.share_popup {
+    fieldset {
+      padding: 0;
+    }
+  }
+
+  // articles shared by unique url
+  &.ttrss_zoom {
+    .post {
+      .header {
+        padding: 0 0 1em;
+        background-color: transparent;
+      }
+      .content {
+        padding: 1em 0 0;
+        overflow: auto; // allow scrolling wide content
+        background-color: transparent;
+
+        // prepare `* + *` reset in _content-inner.less
+        @reset-selector: *;
+
+        // styles shared with main index
+        @import "_content-inner.less";
+
+        // additions for local-overrides
+        .embed-responsive {
+          aspect-ratio: 16 / 9;
+
+          iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}

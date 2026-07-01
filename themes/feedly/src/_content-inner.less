@@ -1,0 +1,185 @@
+@import "_variables.less";
+
+// scale based on factor 1.6
+@spacing-xs: 0.375em; // 6px
+@spacing-sm: 0.625em; // 10px
+@spacing-md: 1em; // 16px
+@spacing-lg: 1.5625em; // 25px
+@spacing-xl: 2.5em; // 40px
+
+font-size: @font-size-post;
+
+.media(sm, {
+  line-height: 1.625;
+});
+
+// setup vertical rhythm with `* + *` method
+@{reset-selector} {
+  margin: 0;
+
+  &:where(img, iframe, blockquote, pre, table, video) {
+    margin-block: @spacing-xs @spacing-sm; // align with top of text, add default margin-bottom for plain text after
+  }
+  + @{reset-selector} {
+    margin-top: @spacing-lg;
+  }
+  + :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: @spacing-xl;
+  }
+  + :is(dt, li) {
+    margin-top: @spacing-sm;
+  }
+  // prevent Firefox from adding extra margin
+  + br {
+    margin-top: 0;
+  }
+}
+// pull centered table layouts from newsletter feeds to the left
+:is([align="center"], center *) {
+  margin-right: auto;
+  margin-left: 0;
+}
+:is(blockquote, iframe, img, pre, table, video) {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+:is(blockquote, dl, figcaption, h1, h2, h3, h4, h5, h6, ol, p, ul) {
+  .reading-width();
+}
+:is(h1, h2, h3, h4, h5, h6) {
+  -webkit-font-smoothing: antialiased;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+}
+each(range(6), {
+  h@{value} {
+    .heading-font-size(@level: @value);
+  }
+});
+:is(ul, ol) {
+  padding-left: 0; // no padding if no li is nested
+
+  li {
+    margin-left: @spacing-xl; // instead of ul/ol padding, add a margin here
+    padding: 0; // reset tt-rss default style
+
+    // remove margin and marker if it's the only item (e. g. Ars Technica slideshow images are rendered like this)
+    &:only-child {
+      margin: 0;
+      list-style: none;
+    }
+  }
+}
+dd {
+  margin: 0 0 0 @spacing-xl;
+}
+table {
+  border-collapse: collapse;
+
+  :is(th, td) {
+    padding: @spacing-xs @spacing-sm;
+    border-width: 1px;
+    border-style: solid;
+  }
+  // layout tables
+  &[border="0"] {
+    // tables nested in layout tables should also be layout tables, so explicitly remove the border and padding
+    :is(th, td) {
+      padding: 0;
+      border: none;
+
+      + * {
+        padding-left: @spacing-xs; // add space for columns with text
+      }
+    }
+    table {
+      width: 100%; // fix nested tables used for layout
+    }
+  }
+}
+[bgcolor] {
+  background-color: transparent; // some layout tables set bgcolor, so reset it
+}
+:is(iframe, img, video) {
+  display: block;
+}
+// add space for floating/aligned media
+:is([align="left"], [style*="float:left"], [style*="float: left"]) {
+  margin-right: @spacing-md;
+}
+:is([align="right"], [style*="float:right"], [style*="float: right"]) {
+  margin-left: @spacing-md;
+}
+// `img` in `a` or other inline elements should get more margin-top because inline elements don't apply it
+img {
+  margin-top: @spacing-lg;
+}
+// ... but not in blockquotes, figures and table-cells, and not when it's the first element
+&,
+:where(blockquote, figure, td, th) {
+  > img:first-child {
+    margin-top: @spacing-xs;
+  }
+  // nested :first-child selector, e. g. for layout tables
+  each(range(5), {
+    .repeat('> :first-child', @value, {
+      @{result} > img:first-child {
+        margin-top: @spacing-xs;
+      }
+    });
+  });
+}
+figure {
+  > * ~ figcaption ~ *, // fix p/div incorrectly nested inside figcaption breaking out
+  > img + p:last-child, // fix incorrectly using p instead of figcaption
+  figcaption {
+    margin-top: @spacing-sm;
+    font-size: 0.875em;
+    font-style: italic;
+    line-height: 1.357;
+  }
+  figcaption:first-child {
+    margin-top: 0;
+
+    + * {
+      margin-top: @spacing-sm;
+    }
+  }
+}
+:is(pre, code) {
+  font-family: @fonts-mono;
+  font-size: 0.875em;
+  line-height: 1.357;
+}
+pre {
+  padding: @spacing-sm;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+code {
+  padding: 0 0.15em !important;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  &.hljs {
+    color: unset !important;
+  }
+}
+pre code {
+  padding: 0 !important;
+  border: none;
+  background-color: transparent;
+  font-size: 1em;
+}
+:is(blockquote, q) {
+  font-style: italic;
+}
+blockquote {
+  padding: @spacing-sm @spacing-md;
+}
+@empty-selector: ~":not(area, br, col, embed, hr, iframe, img, input, link, td, th, track, video, wbr, .dijit *):empty";
+@{empty-selector},
+@{empty-selector} + br,
+:is(article, blockquote, div, figure, figcaption, hr, section, table) + br {
+  display: none;
+}

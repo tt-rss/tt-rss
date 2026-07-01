@@ -1,0 +1,73 @@
+@import "_variables.less";
+
+#content-wrap#content-wrap {
+  // reliably set root styles, exclude `.content .footer` and `.article-note`
+  :where(.post .content, .content-inner) {
+    color: @default-text;
+    font-family: @fonts-content;
+
+    // prepare `* + *` reset excluding `.dijit *` in _content-inner.less
+    @reset-selector: ~":not(:where(.dijit *))";
+
+    // styles shared with local-overrides
+    @import "_content-inner-colors.less";
+    @import "_content-inner.less";
+
+    // additions for main index
+    :is(h1, h2, h3, h4, h5, h6) {
+      font-family: @fonts-heading;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // ui styling
+  // ---------------------------------------------------------------------------
+  :is(.article-note, .attachments, .expand-prompt, .footer) {
+    font-family: @fonts-ui;
+  }
+  :is(.article-note, .attachments, .expand-prompt) {
+    font-size: @font-size-main;
+  }
+  .article-note {
+    padding: 2px 8px;
+  }
+  .content .article-note {
+    margin-block: 0 calc(5px + @font-size-post);
+  }
+  .attachments {
+    display: block;
+    width: fit-content;
+    margin: 20px 0 0;
+  }
+  .content-shrink-wrap {
+    position: relative;
+    margin: 0 -5px;
+    padding: 0 5px;
+    border-bottom: 1px solid var(--expanded-border-color);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 200px;
+      background: linear-gradient(to top, @default-bg, transparent);
+      pointer-events: none;
+    }
+  }
+  .expand-prompt {
+    max-width: 400px;
+    margin: 20px auto 0;
+
+    &,
+    .dijitButtonNode {
+      display: block;
+    }
+    .dijitButtonNode {
+      border-color: @border-darker;
+      color: @default-text;
+    }
+  }
+  .footer {
+    padding-top: 20px;
+  }
+}

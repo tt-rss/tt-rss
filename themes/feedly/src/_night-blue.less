@@ -1,0 +1,14 @@
+@import "../lib/flat-ttrss/flat_combined_dark_blue.css";
+@import "_variables.less";
+
+@color-link: @blue;
+
+body.flat.flat {
+  :is(.dijitMenuItemHover, .dijitMenuItemSelected) {
+    color: @white; // dijitComboBox menu popup doesn't have nested td
+
+    td {
+      color: unset; // dijitComboBox menu popup colors nested td, so inherit color explicitly
+    }
+  }
+}

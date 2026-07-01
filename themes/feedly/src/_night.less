@@ -1,0 +1,47 @@
+@import "_variables.less";
+
+@fade7: (800% / 15);
+@fade8: (1000% / 15);
+@fade9: (1300% / 15);
+
+@default-fg: @white;
+@default-bg: #111;
+@bg-input: darken(@default-bg, @fade1);
+@color-scrollbar: mix(@default-fg, @default-bg, @fade5);
+
+#main#main {
+  .cdm.expandable.active {
+    background-color: transparent !important;
+  }
+  :is(.cdm[data-article-id], .hl) {
+    :is(.dijitCheckBox, .marked-pic, .pub-pic) {
+      transition: all 0.2s !important;
+    }
+    .icon-score:not([title="0"]),
+    &.marked .marked-pic,
+    &.published .pub-pic,
+    .dijitCheckBox.dijitChecked {
+      opacity: 0.75;
+    }
+  }
+  img.icon {
+    filter: opacity(0.8) drop-shadow(0 0 0.2px @white) drop-shadow(0 0 0.4px @white);
+  }
+}
+
+@{body}.flat {
+  code {
+    color: @amber !important;
+  }
+  :is(.dijitMenuItemHover, .dijitMenuItemSelected) {
+    color: @black; // dijitComboBox menu popup doesn't have nested td
+
+    td {
+      color: unset; // dijitComboBox menu popup colors nested td, so inherit color explicitly
+    }
+  }
+}
+
+.notify {
+  color: fade(@black, @fade8);
+}
