@@ -560,6 +560,51 @@ class Config {
 
 		return rtrim($self_url_path, '/');
 	}
+
+	/**
+	 * @return bool true if the provided URL has the same origin (scheme+host+port) and path prefix as tt-rss's self URL, otherwise false
+	 */
+	static function matches_self_url(string $url_to_check, bool $always_detect_self_url = false): bool {
+		$check_url_parts = parse_url($url_to_check);
+
+		// check the basics first
+		if (!$check_url_parts || !isset($check_url_parts['scheme'], $check_url_parts['host']))
+			return false;
+
+		$self_url_parts  = parse_url(self::get_self_url($always_detect_self_url));
+
+		// normalize stuff
+		$check_url_scheme = strtolower($check_url_parts['scheme']);
+		$self_url_scheme = strtolower($self_url_parts['scheme']);
+
+		$check_url_host = idn_to_ascii($check_url_parts['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+		$self_url_host  = idn_to_ascii($self_url_parts['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+
+		$check_url_port = $check_url_parts['port'] ?? ($check_url_scheme === 'https' ? 443 : ($check_url_scheme === 'http' ? 80 : null));
+		$self_url_port  = $self_url_parts['port']  ?? ($self_url_scheme === 'https' ? 443 : ($self_url_scheme === 'http' ? 80 : null));
+
+		// check origin things
+		if (
+			$check_url_scheme !== $self_url_scheme
+			|| $check_url_host === false
+			|| $self_url_host === false
+			|| $check_url_host !== $self_url_host
+			|| $check_url_port !== $self_url_port
+		) {
+			return false;
+		}
+
+		// if tt-rss has a non-root path (e.g. the default '/tt-rss') check for either an exact match or a matching prefix
+		$self_url_path = isset($self_url_parts['path']) && $self_url_parts['path'] !== '/' ? $self_url_parts['path'] : '';
+
+		if ($self_url_path !== '') {
+			$check_url_path = isset($check_url_parts['path']) ? rtrim($check_url_parts['path'], '/') : '';
+			return $check_url_path === $self_url_path || str_starts_with($check_url_path, $self_url_path . '/');
+		}
+
+		return true;
+	}
+
 	/* sanity check stuff */
 
 	static function sanity_check(): void {

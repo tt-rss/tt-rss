@@ -401,7 +401,7 @@ class Handler_Public extends Handler {
 
 			$return = clean($_REQUEST['return'] ?? '');
 
-			if ($return && mb_strpos($return, Config::get_self_url()) === 0) {
+			if ($return && Config::matches_self_url($return)) {
 				header("Location: $return");
 			} else {
 				header("Location: " . Config::get_self_url());
