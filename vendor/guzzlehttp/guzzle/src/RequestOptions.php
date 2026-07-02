@@ -5,7 +5,7 @@ namespace GuzzleHttp;
 /**
  * This class contains a list of built-in Guzzle request options.
  *
- * @see https://github.com/guzzle/guzzle/blob/7.12/docs/request-options.md
+ * @see https://github.com/guzzle/guzzle/blob/7.13/docs/request-options.md
  */
 final class RequestOptions
 {
@@ -20,7 +20,9 @@ final class RequestOptions
      * - max: (int, default=5) maximum number of allowed redirects.
      * - strict: (bool, default=false) Set to true to use strict redirects
      *   meaning redirect POST requests with POST requests vs. doing what most
-     *   browsers do which is redirect POST requests with GET requests
+     *   browsers do which is redirect POST requests with GET requests. The
+     *   QUERY method keeps its method and body across non-strict 301 and 302
+     *   redirects, and a 303 redirect is followed with a body-less GET.
      * - referer: (bool, default=false) Set to true to enable the Referer
      *   header.
      * - protocols: (non-empty-array<array-key, string>, default=['http', 'https'])
@@ -95,6 +97,18 @@ final class RequestOptions
      * required to use TLS 1.3.
      */
     public const CRYPTO_METHOD = 'crypto_method';
+
+    /**
+     * crypto_method_max: (int) A value describing the maximum TLS protocol
+     * version to use.
+     *
+     * This setting must be set to one of the
+     * ``STREAM_CRYPTO_METHOD_TLS*_CLIENT`` constants. On the stream handler,
+     * PHP 7.3 or higher is required to set a maximum TLS version, and PHP 7.4
+     * or higher is required to use TLS 1.3. cURL 7.54.0 or higher is required
+     * in order to specify a maximum TLS version with the cURL handler.
+     */
+    public const CRYPTO_METHOD_MAX = 'crypto_method_max';
 
     /**
      * curl: (array) Raw cURL options to apply when using a built-in cURL handler.

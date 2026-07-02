@@ -72,6 +72,7 @@ return array(
     'GuzzleHttp\\Handler\\Proxy' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/Proxy.php',
     'GuzzleHttp\\Handler\\ProxyEnvironment' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/ProxyEnvironment.php',
     'GuzzleHttp\\Handler\\StreamHandler' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/StreamHandler.php',
+    'GuzzleHttp\\Handler\\TlsVersion' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/TlsVersion.php',
     'GuzzleHttp\\MessageFormatter' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatter.php',
     'GuzzleHttp\\MessageFormatterInterface' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatterInterface.php',
     'GuzzleHttp\\Middleware' => $vendorDir . '/guzzlehttp/guzzle/src/Middleware.php',

@@ -3,6 +3,76 @@
 Please refer to [UPGRADING](UPGRADING.md) guide for upgrading to a major version.
 
 
+## 7.13.1 - 2026-06-29
+
+### Fixed
+
+- Allow middleware to rewrite partial URIs before transports validate them
+
+
+## 7.13.0 - 2026-06-29
+
+### Added
+
+- Added the `crypto_method_max` request option to cap the maximum TLS protocol version
+- Added HTTP QUERY redirect support, preserving method and body on 301 and 302
+
+### Changed
+
+- Section proxy tunnel connection reuse by credential so distinct credentials never share a tunnel
+- Isolate concurrent foreign cURL proxy tunnels added while another owner's tunnel is active
+- Route credentialed HTTP(S) proxy Proxy-Authorization headers through cURL proxy header handling
+- Reject request-level `CURLOPT_SHARE` when combined with authenticated HTTP/HTTPS proxy tunnel configuration
+- Remove deprecation for raw cURL `CURLOPT_PREREQFUNCTION` callbacks when defined by PHP cURL
+- Route TLS 1.2 `crypto_method` requests to the stream handler when cURL cannot select TLS 1.2
+- Reject final request URIs missing a scheme or host before transfer
+
+### Deprecated
+
+- Deprecate invalid protocols, force_ip_resolve, delay, cookies, and allow_redirects values
+
+
+## 7.12.3 - 2026-06-23
+
+### Changed
+
+- Adjusted `guzzlehttp/psr7` version constraint to `^2.12.3`
+
+### Security
+
+- Treat IP and numeric cookie domains as exact-match-only (GHSA-g446-98w2-8p5w)
+
+
+## 7.12.2 - 2026-06-23
+
+### Fixed
+
+- Clamp out-of-range `Max-Age` so a very large value no longer overflows to an already-expired timestamp
+- Use strict comparison in `CookieJar` conflict resolution so distinct numeric-string names don't overwrite
+- Store a cookie whose `Domain` has a trailing dot on the origin host instead of silently discarding it
+- Fix `StreamHandler` hard-failing on bracketed IPv6 literal hosts when `force_ip_resolve` is set
+- Use strict cookie `Path` comparison so `CookieJar::clear()` with a numeric path keeps a distinct-path cookie
+- Fixed cookie handling for falsey `Domain`, `Max-Age`, path, and name values
+- Fixed `decode_content` handling for falsey string values
+- Fixed deprecated request option values reaching built-in handlers before normalization
+
+
+## 7.12.1 - 2026-06-18
+
+### Changed
+
+- Adjusted `guzzlehttp/psr7` version constraint to `^2.12.1`
+
+### Fixed
+
+- Reject proxy URLs with a malformed scheme in the cURL handlers instead of letting libcurl mishandle them
+
+### Security
+
+- Reject HTTPS proxies when the installed libcurl lacks HTTPS-proxy support (GHSA-wpwq-4j6v-78m3)
+- Reject dot-only cookie `Domain` attributes as match-all (GHSA-cwxw-98qj-8qjx)
+
+
 ## 7.12.0 - 2026-06-16
 
 ### Added
