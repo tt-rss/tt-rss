@@ -976,7 +976,9 @@ class Feeds extends Handler_Protected {
 	 */
 	static function _subscribe(string $url, int $cat_id = 0, string $auth_login = '', string $auth_pass = '', int $update_interval = 0): array {
 
-		$user = ORM::for_table("ttrss_users")->find_one($_SESSION['uid']);
+		$user = ORM::for_table('ttrss_users')
+			->select_many('id', 'login', 'access_level')
+			->find_one($_SESSION['uid']);
 
 		if ($user && $user->access_level == UserHelper::ACCESS_LEVEL_READONLY) {
 			return ["code" => 8];
@@ -1022,7 +1024,7 @@ class Feeds extends Handler_Protected {
 				Logger::log(E_USER_NOTICE, "An attempt to subscribe to '{$url}' failed due to content being HTML without detected feed URLs (User: '{$user->login}'; ID: {$user->id}).",
 					truncate_string($contents, 500, '…'));
 
-				return ["code" => 3, "message" => truncate_string(clean($contents), 250, '…')];
+				return ['code' => 3, 'message' => $user->access_level >= UserHelper::ACCESS_LEVEL_ADMIN ? truncate_string(clean($contents), 250, '…') : ''];
 			} else if (count($feedUrls) > 1) {
 				return ["code" => 4, "feeds" => $feedUrls];
 			}
@@ -1035,7 +1037,7 @@ class Feeds extends Handler_Protected {
 		if ($fp->error())
 			return ['code' => 6, 'message' => truncate_string(clean($fp->error()), 250, '…')];
 		if ($fp->get_type() === FeedParser::FEED_UNKNOWN)
-			return ['code' => 6, 'message' => truncate_string(clean($contents), 250, '…')];
+			return ['code' => 6, 'message' => $user->access_level >= UserHelper::ACCESS_LEVEL_ADMIN ? truncate_string(clean($contents), 250, '…') : ''];
 
 		$feed = ORM::for_table('ttrss_feeds')
 			->where('feed_url', $url)
