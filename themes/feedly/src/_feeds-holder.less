@@ -1,0 +1,126 @@
+@import "_variables.less";
+
+#feeds-holder#feeds-holder {
+  overflow: visible;
+  background-color: transparent;
+  box-shadow: none;
+
+  #feedTree {
+    margin-left: calc(-1 * @feeds-toggle-width);
+
+    .dijitTreeContainer {
+      padding: calc(30px + @headline-height / 2) 0;
+
+      .media(0, sm, {
+        padding: 100px 0;
+      });
+    }
+
+    .dijitTreeRow {
+      padding-right: 8px;
+      transition: none;
+      border: 0 solid transparent;
+      border-width: 0 @feeds-spacing;
+      color: @feeds-text;
+
+      &,
+      * {
+        cursor: pointer;
+      }
+      // nothing to focus here...
+      &:hover {
+        background-color: @color-fade1;
+      }
+      &.dijitTreeRowSelected {
+        background-color: @color-fade2;
+      }
+    }
+
+    .dijitTreeContent {
+      flex-grow: 0;
+    }
+
+    .counterNode {
+      min-width: 0;
+      margin-inline: auto 0;
+      border-color: transparent;
+      background-color: transparent;
+      color: @feeds-text;
+      font-weight: normal;
+      text-align: right;
+
+      &.aux {
+        color: @color-fade5;
+      }
+    }
+
+    :is(.dijitTreeIcon, .dijitTreeExpando, .dijitTreeLabel) {
+      margin-left: 8px;
+    }
+
+    .dijitTreeIcon {
+      position: relative;
+      top: -1px;
+
+      &:empty {
+        color: @color-fade6;
+        font-family: "Material Icons";
+        font-size: 18px;
+
+        &::after {
+          content: "rss_feed";
+        }
+      }
+    }
+
+    .icon.material-icons {
+      left: 0;
+      color: @color-feeds-icon;
+      font-size: 18px;
+    }
+
+    :is(.dijitTreeExpando, .dijitTreeExpandoLeaf, .loadingNode) {
+      top: 0;
+    }
+
+    .dijitTreeExpando {
+      .interactive-icon(@color-feeds-icon);
+      left: -1px;
+    }
+
+    .dijitTreeExpandoLeaf {
+      order: 1;
+      width: auto;
+      margin: 0;
+    }
+
+    .loadingNode {
+      flex-shrink: 0;
+      margin-left: 8px;
+
+      &:not(.visible) {
+        display: none;
+      }
+    }
+
+    .dijitTreeRow[style="padding-left: 19px;"] {
+      padding-left: 26px !important;
+    }
+
+    .dijitTreeRow[style="padding-left: 38px;"] {
+      padding-left: 52px !important;
+    }
+
+    .dijitTreeRow[style="padding-left: 57px;"] {
+      padding-left: 78px !important;
+    }
+
+    > .dijitTreeContainer > .dijitTreeNode > .dijitTreeNodeContainer > .dijitTreeNode:first-child {
+      margin-bottom: 28px;
+
+      > .dijitTreeNodeContainer .dijitTreeRow {
+        padding-left: 0 !important;
+      }
+    }
+  }
+}

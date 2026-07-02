@@ -1,0 +1,516 @@
+@import "_variables.less";
+
+* {
+  scrollbar-color: @color-scrollbar transparent;
+  scrollbar-width: thin;
+}
+::-webkit-scrollbar {
+  height: 4px !important;
+
+  @media (hover: none) {
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+::-webkit-scrollbar-thumb {
+  background-color: @color-scrollbar !important;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+@{body}.flat {
+  background-color: @default-bg;
+  color: @default-text;
+  font-family: @fonts-ui;
+  -webkit-tap-highlight-color: fade(@color-accent, @fade6);
+
+  .dijitMenuItemLabel {
+    font-family: unset;
+  }
+  .dijitTextBox {
+    box-sizing: border-box;
+  }
+
+  // ---------------------------------------------------------------------------
+  // colors and general appearance
+  // ---------------------------------------------------------------------------
+  a:any-link {
+    &:any-link {
+      color: @color-link;
+      text-decoration: none;
+    }
+    &:is(:hover, :focus-visible) {
+      transition: color 0.1s;
+
+      @media (hover: hover) {
+        .color-link-hover(15%);
+        text-decoration: underline;
+      }
+    }
+  }
+  .dijitContentPane,
+  .dijitDialog,
+  .dijitTab.dijitChecked,
+  .dijitTabPaneWrapper {
+    background-color: @default-bg;
+  }
+  #feedsTab,
+  #footer,
+  .dijitAccordionChildWrapper.dijitAccordionChildWrapper,
+  .dijitAccordionTitle.dijitAccordionTitle,
+  .dijitDialog .dijitToolbar,
+  .dijitSelect.dijit.dijit.dijit .dijitButtonContents,
+  .dijitSelect.dijit.dijit.dijit .dijitButtonNode,
+  .dijitSplitter.dijitSplitter,
+  .dijitTab.dijitTab:not(.dijitChecked) {
+    background-color: transparent;
+  }
+  &.ttrss_prefs #header > a:is(:hover, :focus-visible),
+  .dijitTab.dijitHover:not(.dijitChecked), // no focus here, would stick after click, no :focus-visible possible
+  :where(.dijitTreeRow:focus-within), // needs low specificity, works for feeds in prefs, sadly not for feeds-holder
+  .dijitTreeRowHover,
+  .dijitToolbar {
+    background-color: @color-fade2;
+  }
+  .dijitAccordionInnerContainer,
+  label.dijitButton.dijitButton,
+  :is(.dijitButton, .dijitDropDownButton) .dijitButtonNode,
+  :is(.dijitButton, .dijitDropDownButton).alt-info .dijitButtonNode,
+  .dijitTextBox :is(.dijitDownArrowButton, .dijitUpArrowButton) {
+    background-color: @bg-button;
+  }
+  .dijitAccordionInnerContainer.dijitHover,
+  label.dijitButton.dijitButton:is(:hover, :focus-within),
+  :is(.dijitButton, .dijitDropDownButton):where(.dijitFocused, .dijitHover) .dijitButtonNode,
+  :is(.dijitButton, .dijitDropDownButton).alt-info:where(.dijitFocused, .dijitHover) .dijitButtonNode,
+  .dijitTextBox :is(.dijitDownArrowButtonHover, .dijitUpArrowButtonHover),
+  .dijitToolbar .dijitHover:not(.dijitSelect) .dijitButtonNode {
+    background-color: @bg-button-hover;
+  }
+  &.ttrss_prefs #header > a:active,
+  .dijitAccordionInnerContainer.dijitActive,
+  label.dijitButton.dijitButton:active,
+  :is(.dijitButton, .dijitDropDownButton):where(.dijitActive) .dijitButtonNode,
+  :is(.dijitButton, .dijitDropDownButton).alt-info:where(.dijitActive) .dijitButtonNode,
+  .dijitTab.dijitActive:not(.dijitChecked),
+  .dijitTextBox :is(.dijitDownArrowButtonActive, .dijitUpArrowButtonActive),
+  .dijitToolbar .dijitActive:not(.dijitSelect) .dijitButtonNode {
+    background-color: @bg-button-active;
+  }
+  .dijitAccordionInnerContainer {
+    transition-duration: 0.1s;
+
+    &.dijitSelected {
+      background-color: mix(@color-accent, @default-bg, @fade6);
+
+      .dijitAccordionTitle {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+        background-color: @color-accent;
+        color: @white;
+      }
+    }
+  }
+  .dijitCheckBox,
+  .dijitComboBoxMenu,
+  .dijitComboBoxMenuPopup,
+  .dijitMenu,
+  .dijitMenuPopup,
+  .dijitMultiSelect,
+  .dijitSelect,
+  .dijitSelect .dijitButtonNode,
+  .dijitSelectMenu,
+  .dijitTextBox.dijitTextBox.dijitTextBox {
+    background-color: @bg-input;
+  }
+  &.ttrss_prefs #header > a:active,
+  label.dijitButton.dijitButton.dijitButton, // adjust fake buttons
+  [class*="alt-"] .dijitButtonNode.dijitButtonNode, // colored buttons need higher specificity
+  .dijitButtonNode.dijitButtonNode, // not stronger to keep toolbar buttons borderless
+  .dijitToolbar :is(.dijitActive, .dijitHover) .dijitButtonNode, // not weaker to override default toolbar button
+  .dijitAccordionChildWrapper.dijitAccordionChildWrapper,
+  .dijitAccordionInnerContainer,
+  .dijitCheckBox.dijitCheckBox,
+  .dijitDialog,
+  .dijitDialog .panel.panel,
+  .dijitDialogTitleBar,
+  .dijitMenu,
+  .dijitMenuSeparatorTop,
+  .dijitMultiSelect,
+  .dijitSelect,
+  .dijitTab.dijitActive:not(.dijitChecked),
+  .dijitTab.dijitChecked,
+  .dijitTabPaneWrapper,
+  .dijitTextBox.dijitTextBox {
+    border-color: @border-darker;
+  }
+  // match down arrow button border with combo box border
+  .dijitComboBox .dijitButtonNode {
+    border-color: @border-default;
+  }
+  :is(.dijitCheckBox, .dijitMultiSelect, .dijitSelect, .dijitTextBox) {
+    &:is(.dijitActive, .dijitFocused, .dijitHover):not(.dijitDisabled) {
+      border-color: @color-accent;
+    }
+    &.dijitError.dijitError {
+      border-color: @color-error;
+    }
+  }
+  .dijitCheckBox.dijitCheckBox:not(.dijitChecked)::before {
+    color: transparent;
+  }
+  :is(.dijitButton .material-icons, .dijitDisabled, .dijitDisabled .dijitMenuItemLabel) {
+    color: unset !important; // fix icons flashing in accent color on closing accordion pane
+  }
+  @{button-selector},
+  :is(.dijitComboBox .dijitButtonNode, .dijitSpinner .dijitArrowButton, label.dijitButton) {
+    transition: all 0.15s;
+  }
+  .dijitActive@{button-selector},
+  .dijitActive:is(.dijitComboBox .dijitButtonNode, .dijitSpinner .dijitArrowButton),
+  label.dijitButton:active {
+    transition: none;
+  }
+  :is(
+      .dijitButton,
+      .dijitCheckBox,
+      .dijitComboButton,
+      .dijitDropDownButton,
+      .dijitMultiSelect,
+      .dijitSelect,
+      .dijitTextBox
+    ) {
+    transition: border 0.2s, box-shadow 0.2s;
+
+    &:is(.dijitActive, .dijitFocused, :focus-within):not(.dijitDisabled) {
+      box-shadow: 0 0 0 2px fade(@color-accent, @fade6);
+
+      &.dijitError {
+        box-shadow: 0 0 0 2px fade(@color-error, @fade6);
+      }
+    }
+  }
+  :is(.dijitButton, .dijitComboButton, .dijitDropDownButton, .dijitMultiSelect) {
+    border-radius: 4px;
+  }
+  :is(.dijitMultiSelect, .dijitSelectActive) {
+    box-shadow: none;
+  }
+  .dijitDialogUnderlay {
+    opacity: @fade6;
+  }
+  .dijitSplitterThumb {
+    display: none;
+  }
+  .alt-primary {
+    .color-buttons(darken(@color-accent, 5%));
+  }
+  .alt-success {
+    .color-buttons(shade(@green, 20%));
+  }
+  .alt-warning {
+    .color-buttons(shade(spin(@orange, -7.5deg), 15%));
+  }
+  .alt-danger {
+    .color-buttons(shade(@red, 10%));
+  }
+  .alt-info.alt-info {
+    .dijitButtonNode {
+      color: @color-link;
+    }
+    &:is(.dijitFocused, .dijitHover) .dijitButtonNode {
+      .color-link-hover(7.5%);
+      border-color: currentColor;
+    }
+  }
+  .dijitDisabled {
+    opacity: 0.5;
+
+    &:not(.dijitChecked):is(.dijitCheckBox, .dijitMultiSelect, .dijitSelect, .dijitTextBox) {
+      background-color: @color-fade2;
+    }
+  }
+  :is(*, .dijitDisabled) {
+    .dijitButtonNode {
+      color: @default-text;
+    }
+    &[class*="alt-"] .dijitButtonNode {
+      color: fade(@white, @fade9);
+    }
+    &.alt-info .dijitButtonNode {
+      color: @color-link;
+    }
+  }
+  // align dijitSelect and dijitText text
+  .dijitSelect .dijitInputField {
+    padding-left: 6px;
+  }
+  .dijitTooltip .dijitTooltipContents {
+    color: fade(contrast(@default-fg), @fade9);
+  }
+
+  // ---------------------------------------------------------------------------
+  // tt-rss additions
+  // ---------------------------------------------------------------------------
+  :is(.small, .text-small) {
+    font-size: 0.857em;
+  }
+  .text-muted {
+    color: @fg-text-muted;
+  }
+  &.flat.flat {
+    :is(.alert, .article-note) {
+      border-color: fade(@amber, @fade5);
+      background-color: fade(@amber, @fade4);
+      color: if(@is-night, lighten(@amber, @fade3), darken(@amber, @fade3));
+
+      h4 {
+        color: unset;
+      }
+    }
+    each(@colors-alert, {
+      .alert-@{key} {
+        border-color: fade(@value, @fade5);
+        background-color: fade(@value, @fade4);
+        color: if(@is-night, lighten(@value, @fade3), darken(@value, @fade3));
+      }
+      .text-@{key} {
+        color: if(@is-night, lighten(@value, 5%), darken(@value, 10%));
+      }
+    });
+  }
+  // panels used for authentication/app passwords, some plugins
+  .panel.panel {
+    border-radius: 4px;
+    border-color: @border-default;
+  }
+
+  // ---------------------------------------------------------------------------
+  // layout and exceptions
+  // ---------------------------------------------------------------------------
+  label.checkbox {
+    display: inline-flex !important;
+    align-items: center;
+    min-height: 30px;
+    vertical-align: middle;
+    gap: 10px;
+
+    :is(.dijitButton, .dijitSelect, .dijitTextBox) {
+      margin-block: 0;
+    }
+  }
+  .dijitCheckBox {
+    flex-shrink: 0;
+  }
+  // arrow icons, expando animation
+  .dijitDropDownButton .dijitArrowButtonInner,
+  .dijitArrowButton,
+  .dijitTreeExpandoClosed,
+  .dijitTreeExpandoOpened {
+    &::before {
+      content: "\f006";
+    }
+  }
+  :is(.dijitTreeExpandoClosed, .dijitTreeExpandoOpened) {
+    position: relative;
+    top: -1px;
+    left: 2px;
+    transition: all 0.2s !important;
+    font-size: 20px;
+  }
+  .dijitTreeExpandoClosed {
+    transform: translate(3px, 3px) rotate(-90deg);
+  }
+  .dijitTreeIcon {
+    margin-inline: 4px;
+  }
+  .dijitTreeRow .dijitCheckBox {
+    margin-left: 8px;
+    vertical-align: top;
+  }
+  .dijitToolbar {
+    margin: 8px;
+    padding: 4px;
+    border: 1px solid @border-default;
+    border-radius: 4px;
+
+    :is(.dijitButton, .dijitComboButton, .dijitDropDownButton) {
+      margin: 0;
+
+      &:is(.dijitActive, .dijitFocused):not(.dijitDisabled) {
+        box-shadow: none;
+      }
+    }
+    // event log severity selector, search
+    :is(.dijitSelect, .dijitTextBox) {
+      margin: 3px 0;
+    }
+    .dijitSelect .dijitButtonNode {
+      padding-block: 2px;
+    }
+  }
+  .dijitDialogPaneContent .dijitToolbar {
+    margin: 0 0 8px;
+    padding: 0;
+    border: none;
+  }
+  :is(.dijitMultiSelect, .dijitTab.dijitActive, .dijitTab.dijitHover, .dijitTextArea) {
+    color: @default-text;
+  }
+  .dijitTab:not(.dijitChecked) {
+    border: 1px solid transparent;
+  }
+  .dijitTabContainerTop-tabs .dijitTabChecked {
+    border-bottom-color: transparent;
+  }
+  .dijitTabContainerLeft-tabs {
+    margin-right: -0.4px; // fix rounding issues
+
+    .dijitTabChecked {
+      border-right-color: transparent;
+    }
+  }
+  &.flat :is(code, pre),
+  .dijitTextArea {
+    font-family: @fonts-mono;
+  }
+
+  // ---------------------------------------------------------------------------
+  // widget layout fixes
+  // ---------------------------------------------------------------------------
+  :is(.dijitButton, .dijitComboButton, .dijitDropDownButton, .dijitToggleButton, .dijitSelect, .dijitTextBox) {
+    margin: 4px 4px 4px 0;
+
+    &.pull-right {
+      margin-inline: 4px 0;
+    }
+  }
+  :is(.dijitDialog footer, .dijitDialog .dlgButtons) :last-child {
+    margin-right: 0;
+  }
+  :is(label.dijitButton, .dijitButton i.material-icons, .tabLabel > i.material-icons) {
+    top: 0;
+  }
+  // specify `span.dijitButtonContents` to not affect `td.dijitButtonContents` of `.dijitSelect`
+  :is(label.dijitButton, span.dijitButtonContents, .dijitButtonText) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 20px; // adjust icon-only buttons
+  }
+  // allow to easily set width on `.dijitButton`
+  // specify `span.dijitButtonNode` to not affect `table.dijitButtonNode` of `.dijitSelect`
+  span.dijitButtonNode {
+    display: block;
+  }
+  // align links after button and apply button dimensions/margins, for e. g. password reset and subscribe to feed success
+  // only needed after `.dijitButton` for now, may be extended in the future
+  .dijitButton + a {
+    display: inline-flex;
+    box-sizing: border-box; // so we can apply `width: 100%`
+    align-items: center;
+    justify-content: center;
+    min-height: 30px; // total height because of `box-sizing: border-box`
+    margin: 4px 0;
+    padding: 5px 9px; // buttons have 1px border and 4px/8px padding
+    vertical-align: middle;
+  }
+  label.dijitButton {
+    display: inline-flex;
+    padding: 4px 8px;
+
+    // bookmarklets
+    a:any-link {
+      all: unset;
+    }
+    // edit feed: upload new icon
+    input {
+      display: block !important;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      opacity: 0;
+    }
+  }
+  .dijitTab {
+    vertical-align: top;
+  }
+  .tabLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-height: 18px;
+
+    .material-icons {
+      width: 18px;
+    }
+  }
+  .dijitComboBoxMenu .dijitMenuItem {
+    padding-block: 4px;
+  }
+  .dijitToolbar {
+    display: flex;
+    flex-wrap: wrap;
+
+    > :is(.pull-right, [style*="float"]) {
+      order: 1;
+      margin-left: auto;
+      padding-right: 0 !important; // for filters tab search field
+    }
+    // manage profiles: fix input growing when validation icon is added
+    .dijitValidationTextBox .dijitValidationContainer {
+      padding: 3px;
+    }
+  }
+
+  // fix sizing of dialogs and content, especially on mobile and when resizing the viewport
+  .dijitDialog {
+    @default-width: 600px;
+
+    // large dialogs don't have a width set, reducing the viewport width adds a width as inline style,
+    // increasing the viewport width sets inline width to auto which breaks the dialog, so override it
+    &[style*="width: auto"] {
+      width: @default-width !important;
+    }
+    :is(.dijitComboBox, .dijitSelect, .dijitTextBox) {
+      max-width: 100%;
+    }
+    .media(0, md, {
+      // setting dijitDialog to border-box breaks scrolling content, so add 1px border to calculations
+      @width: ~"min(@{default-width}, 100vw - 22px)"; // 2   (10px margin + 1px border)
+  
+      left: calc((100vw - @width) / 2 - 1px) !important; // subtract 1px for border
+      width: @width !important;
+  
+      // several inputs have a large fixed width set as inline style
+      .dijitTextBox[style*="width"] {
+        width: 100% !important;
+        margin-right: 0;
+  
+        // show warning icon on same row (feed error on edit feed)
+        + .material-icons {
+          position: absolute;
+          margin: 9.5px 0 0 5px;
+        }
+      }
+    });
+  }
+  :is(.dijitDialog, .dijitDialogPaneContent) {
+    display: flex;
+    flex-direction: column;
+  }
+  :is(.dijitDialogTitleBar, .dijitDialogPaneContent) {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  .dijitDialogPaneContent {
+    flex: 1;
+    overflow: auto;
+    background-color: @color-panel-bg;
+  }
+}

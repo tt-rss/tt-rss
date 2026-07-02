@@ -1,0 +1,18 @@
+@import "_variables.less";
+
+@default-bg: @black;
+
+#main#main {
+  :is(.cdm[data-article-id], .hl) {
+    .icon-score:not([title="0"]),
+    &.marked .marked-pic,
+    &.published .pub-pic,
+    .dijitCheckBox.dijitChecked {
+      opacity: 1;
+    }
+  }
+}
+
+#feedTree#feedTree#feedTree .dijitTreeRow .loadingNode {
+  filter: brightness(0);
+}

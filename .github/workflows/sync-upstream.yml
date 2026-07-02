@@ -1,0 +1,98 @@
+name: Sync from upstream tt-rss
+'on':
+  schedule:
+    - cron: '0 */48 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+      with:
+        fetch-depth: 0
+        # Use PAT if available (required for workflow file updates), else GITHUB_TOKEN
+        token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+    - name: Configure git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+    - name: Fetch upstream
+      run: |
+        # Add upstream remote
+        git remote add upstream https://github.com/tt-rss/tt-rss.git 2>/dev/null || true
+        # Fetch upstream
+        git fetch upstream main --tags
+
+    - name: Save local customizations
+      run: |
+        # Save sync-upstream.yml first (before reset)
+        mkdir -p /tmp/sync-workflow
+        cp .github/workflows/sync-upstream.yml /tmp/sync-workflow/ 2>/dev/null || true
+        # Save other local workflow files before reset (these have custom non-Docker configs)
+        mkdir -p /tmp/local-workflows
+        for f in .github/workflows/*; do
+          if [ -f "$f" ] && [ "$(basename "$f")" != "sync-upstream.yml" ]; then
+            cp "$f" /tmp/local-workflows/
+          fi
+        done
+        echo "Local customizations saved"
+
+    - name: Reset to upstream
+      run: |
+        git reset --hard upstream/main
+        echo "Reset to upstream main"
+
+    - name: Restore local customizations
+      run: |
+        # Restore sync-upstream.yml first
+        mkdir -p .github/workflows
+        cp /tmp/sync-workflow/sync-upstream.yml .github/workflows/ 2>/dev/null || true
+        # Restore other local workflow files (non-Docker versions)
+        for f in /tmp/local-workflows/*; do
+          if [ -f "$f" ]; then
+            cp "$f" .github/workflows/
+          fi
+        done
+        # Remove Docker-related files from upstream
+        rm -f .github/workflows/docker-code-quality.yml
+        rm -f .dockerignore .env-dist docker-compose.yml
+        rm -rf .devcontainer .docker
+        echo "Docker files removed"
+        echo "Local customizations restored"
+
+    - name: Download and add feedly theme
+      run: |
+        FEEDLY_DIR="themes/feedly"
+        mkdir -p "$FEEDLY_DIR"
+        
+        # Download and extract feedly theme tarball from dist branch
+        curl -sL https://api.github.com/repos/ashcoft/tt-rss-feedly-theme/tarball/dist -o /tmp/feedly.tar.gz
+        if [ -f /tmp/feedly.tar.gz ]; then
+          tar -xzf /tmp/feedly.tar.gz -C /tmp/
+          FEEDLY_SRC=$(tar -tzf /tmp/feedly.tar.gz | head -1 | cut -d/ -f1)
+          if [ -n "$FEEDLY_SRC" ] && [ -d "/tmp/$FEEDLY_SRC" ]; then
+            # Copy dist folder contents to themes/feedly
+            cp -rn "/tmp/$FEEDLY_SRC/"* "$FEEDLY_DIR/"
+            echo "Added feedly theme from dist branch"
+          else
+            echo "Warning: feedly theme directory not found after extraction"
+          fi
+          rm -f /tmp/feedly.tar.gz
+          rm -rf /tmp/$FEEDLY_SRC
+        else
+          echo "Warning: feedly theme download failed"
+        fi
+    - name: Commit and push
+      run: |
+        git add -A
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Sync: nondockerize + feedly theme as default"
+          # Use force-with-lease to handle race conditions with concurrent runs
+          git push origin main --force-with-lease
+          echo "Pushed to origin main"
+        fi

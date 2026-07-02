@@ -1,0 +1,4 @@
+@import "feedly-sepia.css" (prefers-color-scheme: light);
+@import "feedly-sepia_night.css" (prefers-color-scheme: dark);
+@import "feedly-sepia-contrast.css" (prefers-color-scheme: light) and (prefers-contrast: more);
+@import "feedly-sepia-contrast_night.css" (prefers-color-scheme: dark) and (prefers-contrast: more);

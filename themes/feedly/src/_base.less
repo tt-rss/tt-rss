@@ -1,0 +1,243 @@
+@body: body;
+
+@import "../tt-rss/themes/light/defines.less";
+@import "_variables.less";
+@import "_flat.less";
+@import "_feeds-holder.less";
+@import "_toolbar-frame.less";
+@import "_content-wrap.less";
+@import "_content.less";
+@import "_overlay.less";
+@import "_prefs.less";
+
+@font-face {
+  font-family: "SansCn";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Arial Narrow"), local("Liberation Sans Narrow"),
+    url("feedly/fonts/texgyreheroscn-regular-webfont.woff") format("woff"),
+    url("feedly/fonts/texgyreheroscn-regular-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SansCn";
+  font-style: normal;
+  font-weight: bold;
+  src: local("HelveticaNeue-CondensedBold"), local("Arial Narrow Bold"), local("Liberation Sans Narrow Bold"),
+    url("feedly/fonts/texgyreheroscn-bold-webfont.woff") format("woff"),
+    url("feedly/fonts/texgyreheroscn-bold-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SansCn";
+  font-style: italic;
+  font-weight: normal;
+  src: local("Arial Narrow Italic"), local("Liberation Sans Narrow Italic"),
+    url("feedly/fonts/texgyreheroscn-italic-webfont.woff") format("woff"),
+    url("feedly/fonts/texgyreheroscn-italic-webfont.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "SansCn";
+  font-style: italic;
+  font-weight: bold;
+  src: local("Arial Narrow Bold Italic"), local("Liberation Sans Narrow Bold Italic"),
+    url("feedly/fonts/texgyreheroscn-bolditalic-webfont.woff") format("woff"),
+    url("feedly/fonts/texgyreheroscn-bolditalic-webfont.ttf") format("truetype");
+}
+
+.dijitOffScreen {
+  left: -101vw !important;
+}
+
+// -----------------------------------------------------------------------------
+// mobile layout
+// -----------------------------------------------------------------------------
+.media(0, lg, {
+  // currently widest popular phone: 428px
+  @feeds-width: calc(min(100vw, 428px) - @feeds-toggle-width);
+
+  // allow swiping between sidebar and main content
+  body.ttrss_index #main {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      scroll-snap-align: start;
+    }
+  }
+  #feeds-holder {
+    width: @feeds-width !important;
+
+    &[style*="none"] ~ #content-wrap {
+      left: @feeds-toggle-width !important;
+      scroll-snap-align: none;
+    }
+  }
+  #content-wrap {
+    left: calc(@feeds-toggle-width + @feeds-width) !important;
+    width: calc(100vw - @feeds-toggle-width) !important;
+    margin-left: 0 !important;
+    scroll-snap-align: start;
+  }
+  #feeds-holder_splitter,
+  #feed_current_unread,
+  #toolbar > .material-icons {
+    display: none;
+  }
+  #toolbar-frame,
+  #headlines-wrap-inner,
+  #headlines-frame,
+  #content-insert {
+    inset-inline: 0 !important;
+    width: auto !important;
+  }
+});
+.media(0, md, {
+  // careful label baseline styling, further extended in _prefs.less
+  :is(.dijitDialog, .ttrss_prefs) fieldset > label:first-of-type {
+    text-align: left !important;
+  }
+});
+.media(0, sm, {
+  :root {
+    --content-spacing: 10px;
+    --expanded-detail-padding-x: 0px;
+    --feeds-toggle-width: 0px;
+  }
+  .dijitDialog fieldset .dijitTextBox {
+    width: 100%;
+  }
+});
+
+// -----------------------------------------------------------------------------
+// common styles
+// -----------------------------------------------------------------------------
+body.flat {
+  #main {
+    background-color: @color-panel-bg !important;
+  }
+  &.ttrss_index #main {
+    padding-left: @feeds-toggle-width;
+    font-size: @font-size-main;
+  }
+
+  .notify {
+    &:not(.visible) {
+      pointer-events: none;
+    }
+    &.notify_error {
+      background-color: @red;
+    }
+  }
+
+  div#cmdline {
+    display: flex;
+    bottom: 15px;
+    left: 50%;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    transform: translateX(-50%);
+    border: 2px solid;
+    border-radius: 0.4em;
+    background-color: fade(@black, @fade7);
+    box-shadow: 0 2px 12px #0006;
+    color: fade(@white, @fade9);
+    font-size: 2.5em;
+    font-weight: normal;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+  }
+
+  span.highlight {
+    margin: -0.1em -0.2em;
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+    background-color: #fb07;
+    color: @default-text;
+  }
+
+  #pref_feeds_errors_btn,
+  .dijitValidationTextBoxError .dijitValidationContainer,
+  .exception-contents h3,
+  .Error:not(.dijitTreeRowSelected) .dijitTreeLabel,
+  #feeds-holder .Error .dijitTreeLabel,
+  .icon-error,
+  .net-alert {
+    color: @color-error !important;
+  }
+
+  // action menu
+  &.ttrss_index {
+    .dijitPopup[aria-label="dijit_Menu_0"] {
+      // fix wrong initial position causing slowly scrolling to the left after initially opening on mobile
+      inset-inline: auto @content-spacing !important;
+
+      // style disabled menu items as captions
+      .dijitMenuItemDisabled {
+        opacity: 1;
+        background-color: transparent;
+
+        td {
+          padding-top: 16px;
+          background-color: transparent;
+          box-shadow: inset 0 1px 0 @bg-input, inset 0 2px 0 @border-darker;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  #updates-available {
+    padding-right: 0 !important;
+    color: @color-marked !important;
+  }
+
+  #feedEditDlg img.feedIcon {
+    border-color: @border-darker;
+    background-color: @white;
+  }
+
+  // make user css editor, article note and edit tags dialogs resizable
+  @dialog-textareas: ~".user-css-editor, .dijitTextArea[name=note], #tags_str";
+  :is(@{dialog-textareas}) {
+    flex: 1 1 auto;
+    width: 100% !important;
+    margin-right: 0;
+    resize: vertical; // disable horizontal resizing for browsers not supporting `has()`
+  }
+  .dijitDialog:has(@{dialog-textareas}) {
+    resize: both;
+
+    :is(@{dialog-textareas}) {
+      resize: none;
+    }
+  }
+  // edit tags needs special treatment because its textarea is wrapped in a section
+  section:has(#tags_str) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column; // for autocomplete
+    gap: 4px;
+  }
+  #tags_str:empty {
+    display: none;
+  }
+
+  // align article note and share article by url dialog buttons to the right
+  .dijitDialog .dijitTextArea[name="note"] + footer,
+  .dijitDialog section:has(.target-url) + footer {
+    text-align: right;
+  }
+  // left-align unshare article button
+  .dijitDialog section:has(.target-url) + footer .dijitButton.alt-danger {
+    float: left;
+  }
+}

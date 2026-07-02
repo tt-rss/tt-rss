@@ -1,0 +1,214 @@
+@import "_variables.less";
+
+#toolbar-frame#toolbar-frame {
+  overflow: visible;
+
+  // on mobile, keep floating action button above content-wrap (z-index: 2)
+  // but don't let the toolbar cover the cards detail overlay in Firefox
+  .media(0, sm, {
+    z-index: 3;
+  });
+
+  .dijitToolbar {
+    flex-wrap: nowrap;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+  }
+  #toolbar {
+    padding: 6px calc(@content-spacing-left);
+    background-color: @default-bg;
+
+    .media(0, sm, {
+      padding-inline: 11px 2px; // calc(@content-spacing + 1px), calc(@content-spacing - 8px)
+    });
+    :is(#toolbar-main, .material-icons) {
+      flex-shrink: 0;
+    }
+    :is(#toolbar-headlines, #toolbar-headlines .left) {
+      min-width: 0;
+    }
+    .icon-syndicate {
+      border: none;
+      color: @default-text;
+    }
+    #toolbar-headlines .left,
+    > .material-icons {
+      position: relative;
+      top: -1px;
+      padding-left: 1px;
+    }
+    .feed_title {
+      display: block !important; // don't hide on mobile
+      overflow: hidden;
+      color: @default-text;
+      font-size: 1.15em;
+      font-weight: bold;
+      text-overflow: ellipsis;
+
+      > * {
+        vertical-align: middle;
+      }
+      + .icon-error {
+        margin-left: 8px;
+      }
+    }
+    .cancel_search {
+      font: 0 / 1 "Material Icons";
+      -webkit-font-smoothing: antialiased;
+
+      a {
+        color: unset;
+        text-decoration: none;
+
+        &::after {
+          content: "close";
+          font-size: 18px;
+        }
+      }
+    }
+    #feed_current_unread {
+      min-width: 0;
+      padding: 0 6px;
+      border-radius: 99px;
+      border-color: transparent;
+      background-color: @color-fade8;
+      color: @default-bg;
+      font-size: @font-size-small;
+    }
+    #selected_prompt {
+      margin-right: 25px;
+      color: @fg-text-muted;
+      font-style: normal;
+    }
+
+    // -------------------------------------------------------------------------
+    // buttons excluding show/hide feeds
+    // -------------------------------------------------------------------------
+    :is(.dijitInline, .dijitReset) {
+      border-color: transparent;
+      background-color: transparent;
+      box-shadow: none;
+    }
+    :is(.dijitButtonContents, .dijitButtonNode) {
+      transition: color 0.2s;
+      color: @fg-text-muted;
+    }
+    // don't style .dijitFocused because it stays visible when clicking again without remaining accessible
+    :is(.dijitActive, .dijitHover, .dijitOpened) :is(.dijitButtonContents, .dijitButtonNode) {
+      color: @default-text;
+    }
+    .dijitDropDownButton .material-icons {
+      position: relative;
+      top: -1px;
+    }
+    .action-button {
+      margin-right: 4px;
+
+      @media (hover: none) {
+        margin-right: 0;
+      }
+    }
+    // re-adjust reduced spacing of dijitSelect to match menu popup text
+    .dijitInputField {
+      padding: 5px 0 5px 9px;
+    }
+    .media(0, xl, {
+      .dijitInputField {
+        padding-right: 4px;
+      }
+      .dijitRight {
+        display: none;
+      }
+    });
+
+    // -------------------------------------------------------------------------
+    // show/hide feeds, exclude plugin "search button"
+    // -------------------------------------------------------------------------
+    > .dijitButton:not([style]) {
+      margin: 0;
+
+      .dijitButtonNode {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: @feeds-toggle-width;
+        padding: 0;
+        transition: background-position 0.1s;
+        border: 0;
+        border-radius: 0;
+        background: linear-gradient(to right, @color-fade2, @color-fade0) calc(-1 * @feeds-toggle-width) 0 no-repeat;
+        box-shadow: none;
+      }
+      .dijitButtonContents {
+        position: absolute;
+        top: calc(44px + (@headline-height / 2));
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        margin: -8px;
+        padding: 0;
+        overflow: hidden;
+        transition: opacity 0.2s;
+        opacity: alpha(@color-feeds-icon);
+        color: @default-fg;
+        text-indent: 101%;
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset: 1px 0 auto;
+          height: 2px;
+          background-color: currentColor;
+          box-shadow: 0 6px 0, 0 12px 0;
+        }
+      }
+      @media (hover: hover) {
+        &:hover .dijitButtonNode {
+          background-position: 0 0;
+        }
+        &:hover .dijitButtonContents {
+          opacity: @fade8;
+        }
+      }
+      .media(0, sm, {
+        @padding: 28px;
+        
+        .dijitButtonNode {
+          position: fixed;
+          width: 0;
+          padding: @padding;
+          transition: box-shadow 0.3s, background 0.8s ease-out;
+          border-radius: 999px;
+          background: @color-accent radial-gradient(circle, transparent 1%, fade(@color-accent, 50%) 1%) center/20000%;
+          box-shadow: 0 3px 5px -1px #0003, 0 6px 10px 0 #00000024, 0 1px 18px 0 #0000001f;
+          inset: auto 16px 16px auto;
+          -webkit-tap-highlight-color: transparent;
+
+          &:active {
+            transition: box-shadow 0.3s, background-color 0.2s;
+            background-color: lighten(@color-accent, 20%);
+            background-size: 100%;
+            box-shadow: 0 7px 8px -4px #0003, 0 12px 17px 2px #00000024, 0 5px 22px 4px #0000001f;
+          }
+        }
+        .dijitButtonContents {
+          top: @padding;
+          opacity: 1;
+          color: @white;
+        }
+      });
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // plugins
+  // ---------------------------------------------------------------------------
+  .userpic-gravatar {
+    margin-inline: 3px;
+    transform: scale(1.5);
+  }
+  .action-chooser .dijitArrowButtonInner {
+    display: none !important;
+  }
+}

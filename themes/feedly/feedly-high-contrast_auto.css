@@ -1,0 +1,2 @@
+@import "feedly-high-contrast.css" (prefers-color-scheme: light);
+@import "feedly-high-contrast_night.css" (prefers-color-scheme: dark);
