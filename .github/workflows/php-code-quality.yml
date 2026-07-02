@@ -37,6 +37,9 @@ jobs:
         # PHPUnit is installed to support PHPStan checking tests/
         tools: phpstan/phpstan:^2.2, phpunit/phpunit:^12.4
 
+    - name: Install dependencies
+      uses: ramsey/composer-install@v3
+
     # https://phpstan.org/user-guide/result-cache
     - name: Restore result cache
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -83,6 +86,9 @@ jobs:
         coverage: none
         tools: phpunit/phpunit:^12.4
 
+    - name: Install dependencies
+      uses: ramsey/composer-install@v3
+
     - name: Run PHPUnit (standard tests)
       run: phpunit --exclude-group integration
 
@@ -104,6 +110,9 @@ jobs:
         php-version: latest
         coverage: none
         tools: rector/rector:^2.2
+
+    - name: Install dependencies
+      uses: ramsey/composer-install@v3
 
     # https://getrector.com/documentation/cache-in-ci#content-github-actions
     - name: Restore result cache

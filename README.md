@@ -7,6 +7,20 @@ Tiny Tiny RSS (tt-rss) is a free, flexible, open-source, web-based news feed (RS
 
 Please refer to [the installation guide](https://tt-rss.org/docs/Installation-Guide.html).
 
+### Installation
+
+After cloning this repository, install PHP dependencies:
+
+```bash
+composer install
+```
+
+This will download all required dependencies to the `vendor/` directory.
+
+### Included Theme
+
+This fork includes the [Feedly theme](https://github.com/ashcoft/tt-rss-feedly-theme) as a default theme. The compiled CSS files are in `themes/feedly/dist/`.
+
 ## Some notes about this project
 
 * The original tt-rss project, hosted at https://tt-rss.org/ and its various subdomains, was retired on 2025-11-01.

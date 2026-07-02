@@ -19,6 +19,8 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        # Enable line ending normalization
+        git config core.autocrlf input
     - name: Fetch upstream
       run: |
         # Add upstream remote
@@ -38,6 +40,8 @@ jobs:
             cp "$f" /tmp/local-workflows/
           fi
         done
+        # Save .gitattributes if exists
+        cp .gitattributes /tmp/ 2>/dev/null || true
         echo "Local customizations saved"
 
     - name: Reset to upstream
@@ -56,10 +60,16 @@ jobs:
             cp "$f" .github/workflows/
           fi
         done
+        # Restore .gitattributes
+        cp /tmp/.gitattributes . 2>/dev/null || true
         # Remove Docker-related files from upstream
         rm -f .github/workflows/docker-code-quality.yml
         rm -f .dockerignore .env-dist docker-compose.yml
         rm -rf .devcontainer .docker
+        # Add /vendor to .gitignore (vendor is now installed via composer)
+        if ! grep -q "^/vendor$" .gitignore 2>/dev/null; then
+          echo "/vendor" >> .gitignore
+        fi
         echo "Docker files removed"
         echo "Local customizations restored"
 
@@ -85,12 +95,33 @@ jobs:
         else
           echo "Warning: feedly theme download failed"
         fi
-    - name: Commit and push
+
+    - name: Commit and push only meaningful changes
       run: |
-        git add -A
+        # Normalize line endings before staging
+        git add --renormalize .
+        
+        # Only stage meaningful changes (exclude vendor, cache, etc.)
+        git add \
+          -- ':!.github/workflows/docker-code-quality.yml' \
+          -- ':!.dockerignore' \
+          -- ':!.env-dist' \
+          -- ':!docker-compose.yml' \
+          -- ':!.devcontainer/**' \
+          -- ':!.docker/**' \
+          -- ':!/vendor' \
+          -- ':!cache/**' \
+          -- ':!lock/**' \
+          -- ':!node_modules/**' \
+          .
+        
+        # Check if there are actual meaningful changes
         if git diff --staged --quiet; then
-          echo "No changes to commit"
+          echo "No meaningful changes to commit"
         else
+          # Show summary of changes
+          echo "Changes to commit:"
+          git diff --staged --stat
           git commit -m "Sync: nondockerize + feedly theme as default"
           # Use force-with-lease to handle race conditions with concurrent runs
           git push origin main --force-with-lease

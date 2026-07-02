@@ -1,6 +1,0 @@
-node_modules
-.sass-cache
-.idea
-scripts/__pycache__/
-yarn-error.log
-tmp
