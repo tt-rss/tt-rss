@@ -1,0 +1,17 @@
+# CodeQL configuration for tt-rss-non-dockerize
+# Exclude vendor/ from security scanning since it's managed via Composer
+
+paths-ignore:
+  - 'vendor/**'  # Dependencies managed via Composer - do not scan
+  - 'node_modules/**'  # Dependencies managed via npm
+  - 'cache/**'  # Runtime cache
+  - 'lock/**'  # Lock files
+  - 'tests/**'  # Test files (optional exclusion)
+  - 'tests_functional/**'
+  - 'tests_integration/**'
+
+paths:
+  - 'js/**'
+  - 'plugins/**'
+  - 'lib/**'
+  - 'themes/**'
