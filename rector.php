@@ -6,7 +6,7 @@ use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\Config\RectorConfig;
 
 return RectorConfig::configure()
-	// TODO: use the 'composer.json' approach instead
+	->withPhpVersion(Rector\ValueObject\PhpVersion::PHP_82)
 	->withPhpSets(php82: true)
 	->withCache(__DIR__ . '/.rector-tmp', FileCacheStorage::class)
 	->withPaths([__DIR__])
