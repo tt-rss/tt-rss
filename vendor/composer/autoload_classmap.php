@@ -76,6 +76,7 @@ return array(
     'GuzzleHttp\\MessageFormatter' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatter.php',
     'GuzzleHttp\\MessageFormatterInterface' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatterInterface.php',
     'GuzzleHttp\\Middleware' => $vendorDir . '/guzzlehttp/guzzle/src/Middleware.php',
+    'GuzzleHttp\\Multiplexing' => $vendorDir . '/guzzlehttp/guzzle/src/Multiplexing.php',
     'GuzzleHttp\\Pool' => $vendorDir . '/guzzlehttp/guzzle/src/Pool.php',
     'GuzzleHttp\\PrepareBodyMiddleware' => $vendorDir . '/guzzlehttp/guzzle/src/PrepareBodyMiddleware.php',
     'GuzzleHttp\\Promise\\AggregateException' => $vendorDir . '/guzzlehttp/promises/src/AggregateException.php',

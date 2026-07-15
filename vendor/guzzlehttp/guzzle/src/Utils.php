@@ -45,7 +45,7 @@ final class Utils
                 /** @var string $varDumpContent */
                 $varDumpContent = \ob_get_clean();
 
-                return \str_replace('double(', 'float(', \rtrim($varDumpContent));
+                return \str_replace('double(', 'float(', \rtrim($varDumpContent, " \n\r\t\0\x0B"));
         }
     }
 
@@ -61,7 +61,7 @@ final class Utils
 
         foreach ($lines as $line) {
             $parts = \explode(':', $line, 2);
-            $headers[\trim($parts[0])][] = isset($parts[1]) ? \trim($parts[1]) : null;
+            $headers[\trim($parts[0], " \n\r\t\0\x0B")][] = isset($parts[1]) ? \trim($parts[1], " \n\r\t\0\x0B") : null;
         }
 
         return $headers;
@@ -91,7 +91,7 @@ final class Utils
      *
      * The returned handler is not wrapped by any default middlewares.
      *
-     * @param array{transport_sharing?: mixed} $handlerOptions Handler constructor options.
+     * @param array{transport_sharing?: mixed, max_host_connections?: mixed, max_total_connections?: mixed} $handlerOptions Handler constructor options.
      *
      * @return callable(RequestInterface, array): Promise\PromiseInterface Returns the best handler for the given system.
      *
@@ -101,18 +101,23 @@ final class Utils
     {
         $sharingMode = CurlShareHandleState::normalizeMode($handlerOptions['transport_sharing'] ?? null, 'transport_sharing');
         $sharingRequired = self::isTransportSharingRequired($sharingMode);
-        $handler = self::createCurlHandler($sharingMode);
+        $connectionCapsRequired = self::hasConnectionCapOptions($handlerOptions);
+        $handler = self::createCurlHandler($sharingMode, $handlerOptions);
 
         if ($sharingRequired && $handler === null) {
             throw new \RuntimeException('Required transport sharing requires the PHP cURL extension, curl_exec() or curl_multi_exec(), and libcurl 7.21.2 or higher.');
         }
 
         if (\ini_get('allow_url_fopen')) {
-            return self::addStreamHandler($handler, $sharingMode, $sharingRequired);
+            return self::addStreamHandler($handler, $sharingMode, $sharingRequired, self::connectionCapOptions($handlerOptions));
         }
 
         if ($handler !== null) {
             return $handler;
+        }
+
+        if ($connectionCapsRequired) {
+            throw new \RuntimeException('Connection cap options require a cap-capable cURL multi handler or the allow_url_fopen ini setting for stream fallback.');
         }
 
         throw new \RuntimeException('GuzzleHttp requires cURL, the allow_url_fopen ini setting, or a custom HTTP handler.');
@@ -124,26 +129,50 @@ final class Utils
     }
 
     /**
+     * @param array{max_host_connections?: mixed, max_total_connections?: mixed} $handlerOptions
+     */
+    private static function hasConnectionCapOptions(array $handlerOptions): bool
+    {
+        return self::connectionCapOptions($handlerOptions) !== [];
+    }
+
+    /**
+     * @param array{max_host_connections?: mixed, max_total_connections?: mixed} $handlerOptions
+     *
      * @return (callable(RequestInterface, array): Promise\PromiseInterface)|null
      */
-    private static function createCurlHandler(string $sharingMode): ?callable
+    private static function createCurlHandler(string $sharingMode, array $handlerOptions): ?callable
     {
         if (!\defined('CURLOPT_CUSTOMREQUEST') || !CurlVersion::supportsCurlHandler()) {
             return null;
         }
 
-        $curlHandlerOptions = self::createCurlHandlerOptions($sharingMode);
-
-        if (\function_exists('curl_multi_exec') && \function_exists('curl_exec')) {
-            return Proxy::wrapSync(new CurlMultiHandler($curlHandlerOptions), new CurlHandler($curlHandlerOptions));
+        $connectionCapOptions = self::connectionCapOptions($handlerOptions);
+        if ($connectionCapOptions !== [] && (!CurlVersion::supportsConnectionCaps() || !\function_exists('curl_multi_exec'))) {
+            return null;
         }
 
-        if (\function_exists('curl_exec')) {
+        $curlHandlerOptions = self::createCurlHandlerOptions($sharingMode);
+        $curlMultiHandlerOptions = $curlHandlerOptions + $connectionCapOptions;
+
+        if (\function_exists('curl_multi_exec') && \function_exists('curl_exec')) {
+            $multiHandler = new CurlMultiHandler($curlMultiHandlerOptions);
+
+            if ($connectionCapOptions !== []) {
+                // Connection caps only govern transfers on the multi handle, so
+                // the synchronous CurlHandler fast path would escape them.
+                return $multiHandler;
+            }
+
+            return Proxy::wrapSync($multiHandler, new CurlHandler($curlHandlerOptions));
+        }
+
+        if ($connectionCapOptions === [] && \function_exists('curl_exec')) {
             return new CurlHandler($curlHandlerOptions);
         }
 
         if (\function_exists('curl_multi_exec')) {
-            return new CurlMultiHandler($curlHandlerOptions);
+            return new CurlMultiHandler($curlMultiHandlerOptions);
         }
 
         return null;
@@ -164,13 +193,38 @@ final class Utils
     }
 
     /**
+     * @param array{max_host_connections?: mixed, max_total_connections?: mixed} $handlerOptions
+     *
+     * @return array{max_host_connections?: int, max_total_connections?: int}
+     */
+    private static function connectionCapOptions(array $handlerOptions): array
+    {
+        $options = [];
+        foreach (['max_host_connections', 'max_total_connections'] as $capOption) {
+            $value = $handlerOptions[$capOption] ?? null;
+            if ($value === null) {
+                continue;
+            }
+
+            if (!\is_int($value) || $value < 1) {
+                throw new InvalidArgumentException(\sprintf('%s must be a positive integer.', $capOption));
+            }
+
+            $options[$capOption] = $value;
+        }
+
+        return $options;
+    }
+
+    /**
      * @param (callable(RequestInterface, array): Promise\PromiseInterface)|null $handler
+     * @param array{max_host_connections?: int, max_total_connections?: int}     $connectionCapOptions
      *
      * @return callable(RequestInterface, array): Promise\PromiseInterface
      */
-    private static function addStreamHandler(?callable $handler, string $sharingMode, bool $sharingRequired): callable
+    private static function addStreamHandler(?callable $handler, string $sharingMode, bool $sharingRequired, array $connectionCapOptions): callable
     {
-        $streamHandler = new StreamHandler(['transport_sharing' => $sharingMode]);
+        $streamHandler = new StreamHandler(['transport_sharing' => $sharingMode] + $connectionCapOptions);
 
         if ($handler === null) {
             return $streamHandler;
@@ -251,7 +305,7 @@ No system CA bundle could be found in any of the the common system locations.
 PHP versions earlier than 5.6 are not properly configured to use the system's
 CA bundle by default. In order to verify peer certificates, you will need to
 supply the path on disk to a certificate bundle to the 'verify' request option:
-https://github.com/guzzle/guzzle/blob/7.13/docs/request-options.md#verify. If
+https://github.com/guzzle/guzzle/blob/7.14/docs/request-options.md#verify. If
 you do not need a specific certificate bundle, then Mozilla provides a commonly
 used CA bundle which can be downloaded here (provided by the maintainer of
 cURL): https://curl.se/ca/cacert.pem. Once you have a CA bundle available on
@@ -270,7 +324,7 @@ EOT
     {
         $result = [];
         foreach (\array_keys($headers) as $key) {
-            $result[\strtolower((string) $key)] = $key;
+            $result[\strtr((string) $key, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')] = $key;
         }
 
         return $result;
@@ -383,7 +437,7 @@ EOT
                 continue;
             }
 
-            $area = \trim($area);
+            $area = \trim($area, " \n\r\t\0\x0B");
 
             // Always match on wildcards.
             if ($area === '*') {
@@ -432,7 +486,7 @@ EOT
      */
     private static function parseNoProxyRule(string $area): ?array
     {
-        $area = \trim($area);
+        $area = \trim($area, " \n\r\t\0\x0B");
         if ($area === '' || $area === '*') {
             return null;
         }
@@ -517,7 +571,7 @@ EOT
 
         return [
             'type' => 'domain',
-            'value' => \strtolower($host),
+            'value' => \strtr($host, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),
             'port' => $port,
             'matchesRoot' => $matchesRoot,
         ];
