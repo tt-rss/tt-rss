@@ -417,6 +417,11 @@ final class SanitizerTest extends TestCase {
         $this->assertStringNotContainsString('allow=', $result);
     }
 
+    public function test_strips_srcdoc_attribute(): void {
+        $result = Sanitizer::sanitize('<iframe src="url" srcdoc="&lt;script&gt;parent.eval(&quot;alert('. "'" . 'XSS | ' . "'" . '+document.cookie)&quot;)&lt;/script&gt;"></iframe>');
+        $this->assertStringNotContainsString('allow=', $result);
+    }
+
     public function test_keeps_required_link_attrs(): void {
         $result = Sanitizer::sanitize('<a href="http://example.com" target="_blank" rel="noopener noreferrer">link</a>');
         $this->assertStringContainsString('href=', $result);

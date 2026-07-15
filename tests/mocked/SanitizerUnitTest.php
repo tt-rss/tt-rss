@@ -89,6 +89,14 @@ final class SanitizerUnitTest extends TestCase {
 		$this->assertStringContainsString('Content', $result);
 	}
 
+	public function test_sanitize_removes_srcdoc_attribute(): void {
+		$input = '<iframe src="url" srcdoc="&lt;script&gt;parent.eval(&quot;alert(' . "'" . 'XSS | ' . "'" . '+document.cookie)&quot;)&lt;/script&gt;"></iframe>';
+		$result = Sanitizer::sanitize($input);
+
+		$this->assertNotFalse($result);
+		$this->assertStringNotContainsString('srcdoc', $result);
+}
+
 	public function test_sanitize_adds_noopener_noreferrer_to_links(): void {
 		$input = '<a href="https://example.com">Link</a>';
 		$result = Sanitizer::sanitize($input);
