@@ -419,7 +419,7 @@ final class SanitizerTest extends TestCase {
 
     public function test_strips_srcdoc_attribute(): void {
         $result = Sanitizer::sanitize('<iframe src="url" srcdoc="&lt;script&gt;parent.eval(&quot;alert('. "'" . 'XSS | ' . "'" . '+document.cookie)&quot;)&lt;/script&gt;"></iframe>');
-        $this->assertStringNotContainsString('allow=', $result);
+        $this->assertStringNotContainsString('srcdoc=', $result);
     }
 
     public function test_keeps_required_link_attrs(): void {
