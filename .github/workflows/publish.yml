@@ -8,6 +8,8 @@ on:
     - '.github/**'
     - '.vscode/**'
     - 'tests/**'
+    - 'tests_functional/**'
+    - 'tests_integration/**'
     - '.*'
     - '*.*-dist'
     - '*.js'
