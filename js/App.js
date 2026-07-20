@@ -414,7 +414,7 @@ const App = {
 			i.parentNode ? i.parentNode.removeChild(i) : true;
 		});
    },
-   // htmlspecialchars()-alike for headlines data-content attribute
+   // htmlspecialchars()-alike for HTML attribute values
    escapeHtml: function(p) {
       if (typeof p !== 'string')
          return p;
