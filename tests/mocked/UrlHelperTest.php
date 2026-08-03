@@ -375,6 +375,16 @@ final class UrlHelperTest extends TestCase {
 		$this->assertEquals('https://example.com/page', $result);
 	}
 
+	// ===== canonicalize_ipv4_literal() Tests =====
+
+	public function testCanonicalizeIpv4LiteralNormalizesHexOctalAndDecimalForms(): void {
+		$this->assertSame('127.0.0.1', UrlHelper::canonicalize_ipv4_literal('0177.0.0.1'));
+		$this->assertSame('127.0.0.1', UrlHelper::canonicalize_ipv4_literal('0x7f.0.0.1'));
+		$this->assertSame('127.0.0.1', UrlHelper::canonicalize_ipv4_literal('127.0.0.1'));
+		$this->assertNull(UrlHelper::canonicalize_ipv4_literal('0xgg.0.0.1'));
+		$this->assertNull(UrlHelper::canonicalize_ipv4_literal('1.2.3.4.5'));
+	}
+
 	// ===== has_disallowed_ip() Tests =====
 
 	public function testIsDisallowedIpDetectsLocalhost(): void {
@@ -407,6 +417,14 @@ final class UrlHelperTest extends TestCase {
 	public function testIsDisallowedIpReturnsFalseForInvalidUrl(): void {
 		$this->assertFalse(UrlHelper::has_disallowed_ip('not-a-url'));
 		$this->assertFalse(UrlHelper::has_disallowed_ip(''));
+	}
+
+	public function testIsDisallowedIpRejectsCanonicalizedLoopbackAndMappedIPv6Variants(): void {
+		$this->assertTrue(UrlHelper::has_disallowed_ip('http://0177.0.0.1:8080/'));
+		$this->assertTrue(UrlHelper::has_disallowed_ip('http://0x7f.0.0.1:8080/'));
+		$this->assertTrue(UrlHelper::has_disallowed_ip('http://[::ffff:127.0.0.1]:8080/'));
+		$this->assertTrue(UrlHelper::has_disallowed_ip('http://[::ffff:10.0.0.1]:8080/'));
+		$this->assertFalse(UrlHelper::has_disallowed_ip('http://[::ffff:10.0.0.1]/'));
 	}
 
 	// ===== has_disallowed_ip() - Link-Local / Cloud Metadata Tests =====
