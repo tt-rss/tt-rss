@@ -18,4 +18,6 @@ return RectorConfig::configure()
 		Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector::class,
 		// noisy at the moment (needs more review)
 		Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector::class,
+		// TODO: review and re-enable
+		Rector\Visibility\Rector\ClassMethod\ExplicitPublicClassMethodRector::class,
 	]);
