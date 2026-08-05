@@ -951,17 +951,43 @@ const App = {
             // existed) from dismissing it the instant the finger lifts. The click
             // handler covers non-touch input (on touch the preventDefault above
             // suppresses it, so it does not double-fire).
+            //
+            // The gesture that OPENS a menu can still reach that click handler:
+            // a toolbar dropdown (dijit.form.Select and every other
+            // _HasDropDown opener) opens its popup on the press itself
+            // (pointerdown), which parks this backdrop under the still-down
+            // finger, and the browser hit-tests the tap's synthesised
+            // compatibility click against the *current* DOM -- the backdrop --
+            // instantly dismissing the menu it just opened. (dijit Buttons,
+            // e.g. the toolbar Actions menu, are immune: a11yclick sets
+            // dojoClick on them, so dojo/touch swallows the tap's
+            // compatibility events and re-dispatches a click at the press
+            // target instead.) Such a ghost click has no matching press on the
+            // backdrop -- its pointerdown landed on the opener before the
+            // backdrop existed -- so only honour clicks preceded by a
+            // pointerdown that actually hit the backdrop; the flag re-arms
+            // every time a popup opens.
+            let backdrop_pressed = false;
+            backdrop.addEventListener("pointerdown", () => {
+               backdrop_pressed = true;
+            });
             backdrop.addEventListener("touchstart", (ev) => {
                ev.preventDefault();
                dijit.popup.close();
             }, {passive: false});
-            backdrop.addEventListener("click", () => dijit.popup.close());
+            backdrop.addEventListener("click", () => {
+               if (backdrop_pressed) {
+                  backdrop_pressed = false;
+                  dijit.popup.close();
+               }
+            });
             document.body.appendChild(backdrop);
 
             const popup = dijit.popup;
             const orig_open = popup.open;
             popup.open = function() {
                const ret = orig_open.apply(this, arguments);
+               backdrop_pressed = false;
                App._syncPopupBackdrop();
                App.reconcileOverlayHistory();
                return ret;
