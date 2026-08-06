@@ -254,11 +254,11 @@ class UrlHelper {
 		if (empty($tokens['host']))
 			return false;
 
-		$host = trim(strtolower($tokens['host']), '[]');
+		$host = trim(strtolower($tokens['host']), '[].');
 		$port = $tokens['port'] ?? null;
 		$is_standard_port = ($port === null || $port === 80 || $port === 443);
 
-		if ($host === 'localhost')
+		if ($host === '' || $host === 'localhost')
 			return true;
 
 		// Collect IPs to evaluate-- literal IPs (canonicalizing octal/hex/IPv6) or those from DNS resolution
@@ -271,18 +271,25 @@ class UrlHelper {
 		} elseif ($validate_resolved_ip) {
 			$records = dns_get_record($host, DNS_A | DNS_AAAA);
 
-			// Fail if resolution fails
-			if (!$records)
-				return true;
+			if (is_array($records)) {
+				foreach ($records as $r) {
+					if (isset($r['ip']))
+						$ips[] = $r['ip'];
 
-			foreach ($records as $r) {
-				if (isset($r['ip']))
-					$ips[] = $r['ip'];
-
-				if (isset($r['ipv6']))
-					$ips[] = $r['ipv6'];
+					if (isset($r['ipv6']))
+						$ips[] = $r['ipv6'];
+				}
 			}
+
+			// Also include OS resolver results (e.g. '/etc/hosts', local container hostnames)
+			$sys_ips = gethostbynamel($host);
+			if ($sys_ips !== false)
+				$ips = array_unique([...$ips, ...$sys_ips]);
 		}
+
+		// Fail if we need to validate IPs but couldn't determine any.
+		if (empty($ips))
+			return $validate_resolved_ip;
 
 		foreach ($ips as $ip) {
 			// Canonicalize IPv6 and unwrap IPv4-mapped IPv6 (e.g., ::ffff:127.0.0.1 -> 127.0.0.1)

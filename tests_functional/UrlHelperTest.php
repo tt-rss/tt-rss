@@ -206,6 +206,19 @@ final class UrlHelperTest extends TestCase {
         $this->assertFalse(UrlHelper::has_disallowed_ip('http://[::ffff:10.0.0.1]/'));
     }
 
+    public function test_has_disallowed_ip_rejects_unresolvable_hostnames_when_resolution_required(): void {
+        $this->assertTrue(UrlHelper::has_disallowed_ip('http://does-not-resolve.invalid/', true));
+    }
+
+    public function test_has_disallowed_ip_rejects_trailing_dot_ipv4_literal(): void {
+        $this->assertTrue(UrlHelper::has_disallowed_ip('http://169.254.169.254./'));
+        $this->assertTrue(UrlHelper::has_disallowed_ip('https://169.254.169.254.:443/'));
+    }
+
+    public function test_has_disallowed_ip_rejects_empty_hostname_after_trimming(): void {
+        $this->assertTrue(UrlHelper::has_disallowed_ip('http://./'));
+    }
+
     // ------------------------------------------------------------------------
     // resolve_redirects
     // ------------------------------------------------------------------------
