@@ -318,9 +318,10 @@ final class SanitizerUnitTest extends TestCase {
 		$words = ['tëst'];
 		$result = Sanitizer::highlight_words_str($str, $words);
 
-		// HTML entities are used for multibyte characters
+		$expected = (LIBXML_VERSION >= 21200) ? 'tëst' : 't&euml;st';
+
 		$this->assertStringContainsString('class="highlight"', $result);
-		$this->assertStringContainsString('t&euml;st', $result);
+		$this->assertStringContainsString($expected, $result);
 	}
 
 	public function test_highlight_words_str_multiple_occurrences(): void {
