@@ -1,4 +1,8 @@
 <?php
+	// See index.php: PHP's default session cache limiter would send no-store,
+	// which costs this page the back/forward cache for no benefit it needs.
+	session_cache_limiter('');
+
 	require_once __DIR__ . '/include/autoload.php';
 	require_once __DIR__ . '/include/sessions.php';
 
@@ -9,6 +13,10 @@
 	UserHelper::login_sequence();
 
 	header('Content-Type: text/html; charset=utf-8');
+
+	header('Cache-Control: private, no-cache');
+
+	ob_start();
 ?>
 <!DOCTYPE html>
 <html>
@@ -181,3 +189,4 @@
 
 </body>
 </html>
+<?php send_conditional_html((string) ob_get_clean());

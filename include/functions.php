@@ -504,3 +504,32 @@
 
 		return $ts;
 	}
+
+	/**
+	 * Finish a per-user HTML shell: derive an ETag from the buffered document and
+	 * answer a matching conditional request with an empty 304.
+	 *
+	 * The shells are byte-stable for the life of a session, so this turns a
+	 * reload into a validator exchange rather than a retransmission.  Hashing the
+	 * whole body is what makes that safe: every session-specific value in the
+	 * page, the CSRF token included, feeds the hash, so a 304 can only ever be
+	 * served to a client that already holds this exact session's copy.
+	 */
+	function send_conditional_html(string $body): void {
+		$etag = '"' . md5($body) . '"';
+
+		header("ETag: $etag");
+
+		// nginx weakens ETags on responses it compresses, so a client served a
+		// gzipped shell sends back W/"...".  If-None-Match compares weakly in any
+		// case (RFC 9110, 13.1.2), so drop the marker before comparing.
+		$tags = array_map(
+			fn(string $tag) => preg_replace('/^W\//', '', trim($tag)),
+			explode(',', $_SERVER['HTTP_IF_NONE_MATCH'] ?? ''));
+
+		if (in_array($etag, $tags, true)) {
+			http_response_code(304);
+		} else {
+			echo $body;
+		}
+	}
