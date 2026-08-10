@@ -4,11 +4,11 @@ abstract class Auth_Base extends Plugin implements IAuthModule {
 
 	const AUTH_SERVICE_API = '_api';
 
-	function __construct() {
+	public function __construct() {
 		$this->pdo = Db::pdo();
 	}
 
-	function hook_auth_user($login, $password, $service = '') {
+	public function hook_auth_user($login, $password, $service = '') {
 		return $this->authenticate($login, $password, $service);
 	}
 
@@ -19,7 +19,7 @@ abstract class Auth_Base extends Plugin implements IAuthModule {
 	 * @throws Exception
 	 * @throws PDOException
 	 */
-	function auto_create_user(string $login, null|false|string $password = false): ?int {
+	public function auto_create_user(string $login, null|false|string $password = false): ?int {
 		if ($login && Config::get(Config::AUTH_AUTO_CREATE)) {
 			$user_id = UserHelper::find_user_by_login($login);
 
@@ -50,7 +50,7 @@ abstract class Auth_Base extends Plugin implements IAuthModule {
 	/** replaced with UserHelper::find_user_by_login()
 	 * @deprecated
 	 */
-	function find_user_by_login(string $login): ?int {
+	public function find_user_by_login(string $login): ?int {
 		return UserHelper::find_user_by_login($login);
 	}
 }

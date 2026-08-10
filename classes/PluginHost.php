@@ -211,11 +211,11 @@ class PluginHost {
 	const KIND_SYSTEM = 2;
 	const KIND_USER = 3;
 
-	static function object_to_domain(Plugin $plugin): string {
+	public static function object_to_domain(Plugin $plugin): string {
 		return strtolower($plugin::class);
 	}
 
-	function __construct() {
+	public function __construct() {
 		$this->pdo = Db::pdo();
 		$this->scheduler = new Scheduler('PluginHost Scheduler');
 		$this->storage = [];
@@ -237,23 +237,23 @@ class PluginHost {
 	}
 
 	/** needed for compatibility with API 1 */
-	function get_link(): bool {
+	public function get_link(): bool {
 		return false;
 	}
 
 	/** needed for compatibility with API 2 (?) */
-	function get_dbh(): bool {
+	public function get_dbh(): bool {
 		return false;
 	}
 
-	function get_pdo(): PDO {
+	public function get_pdo(): PDO {
 		return $this->pdo;
 	}
 
 	/**
 	 * @return array<int, string>
 	 */
-	function get_plugin_names(): array {
+	public function get_plugin_names(): array {
 		$names = [];
 
 		foreach ($this->plugins as $p)
@@ -265,11 +265,11 @@ class PluginHost {
 	/**
 	 * @return array<Plugin>
 	 */
-	function get_plugins(): array {
+	public function get_plugins(): array {
 		return $this->plugins;
 	}
 
-	function get_plugin(string $name): ?Plugin {
+	public function get_plugin(string $name): ?Plugin {
 		return $this->plugins[strtolower($name)] ?? null;
 	}
 
@@ -277,7 +277,7 @@ class PluginHost {
 	 * @param PluginHost::HOOK_* $hook
 	 * @param mixed $args
 	 */
-	function run_hooks(string $hook, ...$args): void {
+	public function run_hooks(string $hook, ...$args): void {
 
 		$method = strtolower((string)$hook);
 
@@ -299,7 +299,7 @@ class PluginHost {
 	 * @param mixed $args
 	 * @param mixed $check
 	 */
-	function run_hooks_until(string $hook, $check, ...$args): bool {
+	public function run_hooks_until(string $hook, $check, ...$args): bool {
 		$method = strtolower((string)$hook);
 
 		foreach ($this->get_hooks((string)$hook) as $plugin) {
@@ -323,7 +323,7 @@ class PluginHost {
 	 * @param PluginHost::HOOK_* $hook
 	 * @param mixed $args
 	 */
-	function run_hooks_callback(string $hook, Closure $callback, ...$args): void {
+	public function run_hooks_callback(string $hook, Closure $callback, ...$args): void {
 		$method = strtolower((string)$hook);
 
 		foreach ($this->get_hooks((string)$hook) as $plugin) {
@@ -344,7 +344,7 @@ class PluginHost {
 	 * @param PluginHost::HOOK_* $hook
 	 * @param mixed $args
 	 */
-	function chain_hooks_callback(string $hook, Closure $callback, &...$args): void {
+	public function chain_hooks_callback(string $hook, Closure $callback, &...$args): void {
 		$method = strtolower((string)$hook);
 
 		foreach ($this->get_hooks((string)$hook) as $plugin) {
@@ -362,7 +362,7 @@ class PluginHost {
 	/**
 	 * @param PluginHost::HOOK_* $type
 	 */
-	function add_hook(string $type, Plugin $sender, int $priority = 50): void {
+	public function add_hook(string $type, Plugin $sender, int $priority = 50): void {
 		$priority = (int) $priority;
 
 		if (!method_exists($sender, strtolower((string)$type))) {
@@ -389,7 +389,7 @@ class PluginHost {
 	/**
 	 * @param PluginHost::HOOK_* $type
 	 */
-	function del_hook(string $type, Plugin $sender): void {
+	public function del_hook(string $type, Plugin $sender): void {
 		if (array_key_exists($type, $this->hooks)) {
 			foreach (array_keys($this->hooks[$type]) as $prio) {
 				$key = array_search($sender, $this->hooks[$type][$prio]);
@@ -405,7 +405,7 @@ class PluginHost {
 	 * @param PluginHost::HOOK_* $type
 	 * @return array<int, Plugin>
 	 */
-	function get_hooks(string $type) {
+	public function get_hooks(string $type) {
 		if (isset($this->hooks[$type])) {
 			$tmp = [];
 
@@ -421,7 +421,7 @@ class PluginHost {
 	/**
 	 * @param PluginHost::KIND_* $kind
 	 */
-	function load_all(int $kind, ?int $owner_uid = null, bool $skip_init = false): void {
+	public function load_all(int $kind, ?int $owner_uid = null, bool $skip_init = false): void {
 		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
 		$plugins = [...(glob("plugins/*") ?: []), ...(glob("$plugin_root_dir/*") ?: [])];
 		$plugins = array_filter($plugins, is_dir(...));
@@ -435,7 +435,7 @@ class PluginHost {
 	/**
 	 * @param PluginHost::KIND_* $kind
 	 */
-	function load(string $classlist, int $kind, ?int $owner_uid = null, bool $skip_init = false): void {
+	public function load(string $classlist, int $kind, ?int $owner_uid = null, bool $skip_init = false): void {
 		$plugins = explode(",", $classlist);
 
 		$this->owner_uid = (int) $owner_uid;
@@ -531,14 +531,14 @@ class PluginHost {
 		$this->load_data();
 	}
 
-	function is_system(Plugin $plugin): bool {
+	public function is_system(Plugin $plugin): bool {
 		$about = $plugin->about();
 
 		return ($about[3] ?? false) === true;
 	}
 
 	// only system plugins are allowed to modify routing
-	function add_handler(string $handler, string $method, Plugin $sender): void {
+	public function add_handler(string $handler, string $method, Plugin $sender): void {
 		$handler = str_replace("-", "_", strtolower($handler));
 		$method = strtolower($method);
 
@@ -548,7 +548,7 @@ class PluginHost {
 		}
 	}
 
-	function del_handler(string $handler, string $method, Plugin $sender): void {
+	public function del_handler(string $handler, string $method, Plugin $sender): void {
 		$handler = str_replace("-", "_", strtolower($handler));
 		$method = strtolower($method);
 
@@ -560,7 +560,7 @@ class PluginHost {
 	/**
 	 * @return false|Plugin false if the handler couldn't be found, otherwise the Plugin/handler
 	 */
-	function lookup_handler(string $handler, string $method): false|Plugin {
+	public function lookup_handler(string $handler, string $method): false|Plugin {
 		$handler = str_replace("-", "_", strtolower($handler));
 		$method = strtolower($method);
 
@@ -571,7 +571,7 @@ class PluginHost {
 		return false;
 	}
 
-	function add_command(string $command, string $description, Plugin $sender, string $suffix = "", string $arghelp = ""): void {
+	public function add_command(string $command, string $description, Plugin $sender, string $suffix = "", string $arghelp = ""): void {
 		$command = str_replace("-", "_", strtolower($command));
 
 		$this->commands[$command] = ["description" => $description,
@@ -580,7 +580,7 @@ class PluginHost {
 			"class" => $sender];
 	}
 
-	function del_command(string $command): void {
+	public function del_command(string $command): void {
 		$command = "-" . strtolower($command);
 
 		unset($this->commands[$command]);
@@ -589,7 +589,7 @@ class PluginHost {
 	/**
 	 * @return false|Plugin false if the command couldn't be found, otherwise the registered Plugin
 	 */
-	function lookup_command(string $command): false|Plugin {
+	public function lookup_command(string $command): false|Plugin {
 		$command = "-" . strtolower($command);
 
 		if (array_key_exists($command, $this->commands)) {
@@ -600,14 +600,14 @@ class PluginHost {
 	}
 
 	/** @return array<string, array{'description': string, 'suffix': string, 'arghelp': string, 'class': Plugin}> command type -> details array */
-	function get_commands() {
+	public function get_commands() {
 		return $this->commands;
 	}
 
 	/**
 	 * @param array<string, mixed> $args
 	 */
-	function run_commands(array $args): void {
+	public function run_commands(array $args): void {
 		foreach ($this->get_commands() as $command => $data) {
 			if (isset($args[$command])) {
 				$command = str_replace("-", "", $command);
@@ -666,7 +666,7 @@ class PluginHost {
 	 *
 	 * @param mixed $value
 	 */
-	function profile_set(Plugin $sender, string $name, $value): void {
+	public function profile_set(Plugin $sender, string $name, $value): void {
 		$profile_id = $_SESSION["profile"] ?? null;
 
 		if ($profile_id) {
@@ -685,7 +685,7 @@ class PluginHost {
 	/**
 	 * @param mixed $value
 	 */
-	function set(Plugin $sender, string $name, $value): void {
+	public function set(Plugin $sender, string $name, $value): void {
 		$idx = $sender::class;
 
 		$this->storage[$idx] ??= [];
@@ -697,7 +697,7 @@ class PluginHost {
 	/**
 	 * @param array<int|string, mixed> $params
 	 */
-	function set_array(Plugin $sender, array $params): void {
+	public function set_array(Plugin $sender, array $params): void {
 		$idx = $sender::class;
 
 		$this->storage[$idx] ??= [];
@@ -714,7 +714,7 @@ class PluginHost {
 	 * @param mixed $default_value
 	 * @return mixed
 	 */
-	function profile_get(Plugin $sender, string $name, $default_value = false) {
+	public function profile_get(Plugin $sender, string $name, $default_value = false) {
 		$profile_id = $_SESSION["profile"] ?? null;
 
 		if ($profile_id) {
@@ -730,7 +730,7 @@ class PluginHost {
 	 * @param mixed $default_value
 	 * @return mixed
 	 */
-	function get(Plugin $sender, string $name, $default_value = false) {
+	public function get(Plugin $sender, string $name, $default_value = false) {
 		$idx = $sender::class;
 		$this->load_data();
 		return $this->storage[$idx][$name] ?? $default_value;
@@ -740,7 +740,7 @@ class PluginHost {
 	 * @param array<int|string, mixed> $default_value
 	 * @return array<int|string, mixed>
 	 */
-	function get_array(Plugin $sender, string $name, array $default_value = []): array {
+	public function get_array(Plugin $sender, string $name, array $default_value = []): array {
 		$tmp = $this->get($sender, $name);
 
 		if (!is_array($tmp)) $tmp = $default_value;
@@ -751,13 +751,13 @@ class PluginHost {
 	/**
 	 * @return array<string, mixed>
 	 */
-	function get_all(Plugin $sender) {
+	public function get_all(Plugin $sender) {
 		$idx = $sender::class;
 
 		return $this->storage[$idx] ?? [];
 	}
 
-	function clear_data(Plugin $sender): void {
+	public function clear_data(Plugin $sender): void {
 		if ($this->owner_uid) {
 			$idx = $sender::class;
 
@@ -776,7 +776,7 @@ class PluginHost {
 	 * @return false|int false if the feed wasn't added (e.g. $cat_id wasn't Feeds::CATEGORY_SPECIAL),
 	 *                   otherwise an integer "feed ID" that might change between executions
 	 */
-	function add_feed(int $cat_id, string $title, string $icon, Plugin $sender): false|int {
+	public function add_feed(int $cat_id, string $title, string $icon, Plugin $sender): false|int {
 		if ($cat_id !== Feeds::CATEGORY_SPECIAL)
 			return false;
 
@@ -798,7 +798,7 @@ class PluginHost {
 	 * @param int $cat_id only -1 (Feeds::CATEGORY_SPECIAL) is supported
 	 * @return array<int, array{'id': int, 'title': string, 'sender': Plugin, 'icon': string}>
 	 */
-	function get_feeds(int $cat_id) {
+	public function get_feeds(int $cat_id) {
 		return $cat_id === Feeds::CATEGORY_SPECIAL ? $this->special_feeds : [];
 	}
 
@@ -809,7 +809,7 @@ class PluginHost {
 	 *
 	 * @return (Plugin&IVirtualFeed)|null a Plugin that implements IVirtualFeed, otherwise null
 	 */
-	function get_feed_handler(int $pfeed_id): ?Plugin {
+	public function get_feed_handler(int $pfeed_id): ?Plugin {
 		foreach ($this->special_feeds as $feed) {
 			if ($feed['id'] == $pfeed_id) {
 				/** @var Plugin&IVirtualFeed $feed['sender'] */
@@ -819,25 +819,25 @@ class PluginHost {
 		return null;
 	}
 
-	static function pfeed_to_feed_id(int $pfeed): int {
+	public static function pfeed_to_feed_id(int $pfeed): int {
 		return PLUGIN_FEED_BASE_INDEX - 1 - abs($pfeed);
 	}
 
-	static function feed_to_pfeed_id(int $feed): int {
+	public static function feed_to_pfeed_id(int $feed): int {
 		return PLUGIN_FEED_BASE_INDEX - 1 + abs($feed);
 	}
 
-	function add_api_method(string $name, Plugin $sender): void {
+	public function add_api_method(string $name, Plugin $sender): void {
 		if ($this->is_system($sender)) {
 			$this->api_methods[strtolower($name)] = $sender;
 		}
 	}
 
-	function get_api_method(string $name): ?Plugin {
+	public function get_api_method(string $name): ?Plugin {
 		return $this->api_methods[$name] ?? null;
 	}
 
-	function add_filter_action(Plugin $sender, string $action_name, string $action_desc): void {
+	public function add_filter_action(Plugin $sender, string $action_name, string $action_desc): void {
 		$sender_class = $sender::class;
 
 		$this->plugin_actions[$sender_class] ??= [];
@@ -852,11 +852,11 @@ class PluginHost {
 	/**
 	 * @return array<string, array<int, array{'action': string, 'description': string, 'sender': Plugin}>>
 	 */
-	function get_filter_actions() {
+	public function get_filter_actions() {
 		return $this->plugin_actions;
 	}
 
-	function get_owner_uid(): ?int {
+	public function get_owner_uid(): ?int {
 		return $this->owner_uid;
 	}
 
@@ -865,7 +865,7 @@ class PluginHost {
 	 *
 	 * @param array<int|string, mixed> $params
 	 */
-	function get_method_url(Plugin $sender, string $method, array $params = []): string  {
+	public function get_method_url(Plugin $sender, string $method, array $params = []): string  {
 		return Config::get_self_url() . "/backend.php?" .
 			http_build_query([
 				'op' => 'pluginhandler',
@@ -891,7 +891,7 @@ class PluginHost {
 	 *
 	 * @param array<int|string, mixed> $params
 	 */
-	function get_public_method_url(Plugin $sender, string $method, array $params = []): ?string  {
+	public function get_public_method_url(Plugin $sender, string $method, array $params = []): ?string  {
 		if ($sender->is_public_method($method)) {
 			return Config::get_self_url() . "/public.php?" .
 				http_build_query([
@@ -903,12 +903,12 @@ class PluginHost {
 		return null;
 	}
 
-	function get_plugin_dir(Plugin $plugin): string {
+	public function get_plugin_dir(Plugin $plugin): string {
 		$ref = new ReflectionClass($plugin::class);
 		return dirname($ref->getFileName());
 	}
 
-	function is_local(Plugin $plugin): bool {
+	public function is_local(Plugin $plugin): bool {
 		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
 		$plugin_dir = $this->get_plugin_dir($plugin);
 		return realpath($plugin_root_dir) == realpath(dirname($plugin_dir));
@@ -924,7 +924,7 @@ class PluginHost {
 	 * @see Scheduler::add_scheduled_task()
 	 * @see Plugin::hook_house_keeping()
 	*/
-	function add_scheduled_task(Plugin $sender, string $task_name, string $cron_expression, Closure $callback): bool {
+	public function add_scheduled_task(Plugin $sender, string $task_name, string $cron_expression, Closure $callback): bool {
 		if ($this->is_system($sender))
 			$task_name = $sender::class . ':' . $task_name;
 		else
@@ -933,7 +933,7 @@ class PluginHost {
 		return $this->scheduler->add_scheduled_task($task_name, $cron_expression, $callback);
 	}
 
-	function run_due_tasks() : void {
+	public function run_due_tasks() : void {
 		$this->scheduler->run_due_tasks();
 	}
 

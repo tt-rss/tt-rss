@@ -11,18 +11,18 @@ class Db_Migrations {
 	private int $cached_max_version = 0;
 	private int $max_version_override;
 
-	function __construct() {
+	public function __construct() {
 		$this->pdo = Db::pdo();
 	}
 
-	function initialize_for_plugin(Plugin $plugin, bool $base_is_latest = true, string $schema_suffix = "sql"): void {
+	public function initialize_for_plugin(Plugin $plugin, bool $base_is_latest = true, string $schema_suffix = "sql"): void {
 		$plugin_dir = PluginHost::getInstance()->get_plugin_dir($plugin);
 		$this->initialize("{$plugin_dir}/{$schema_suffix}",
 			strtolower("ttrss_migrations_plugin_" . $plugin::class),
 			$base_is_latest);
 	}
 
-	function initialize(string $root_path, string $migrations_table, bool $base_is_latest = true, int $max_version_override = 0): void {
+	public function initialize(string $root_path, string $migrations_table, bool $base_is_latest = true, int $max_version_override = 0): void {
 		$this->base_path = "$root_path/pgsql";
 		$this->migrations_path = $this->base_path . "/migrations";
 		$this->migrations_table = $migrations_table;
@@ -46,7 +46,7 @@ class Db_Migrations {
 		$this->cached_version = $version;
 	}
 
-	function get_version() : int {
+	public function get_version() : int {
 		if ($this->cached_version)
 			return $this->cached_version;
 
@@ -127,7 +127,7 @@ class Db_Migrations {
 		}
 	}
 
-	function get_max_version() : int {
+	public function get_max_version() : int {
 		if ($this->max_version_override > 0)
 			return $this->max_version_override;
 
@@ -148,11 +148,11 @@ class Db_Migrations {
 		return $this->cached_max_version;
 	}
 
-	function is_migration_needed() : bool {
+	public function is_migration_needed() : bool {
 		return $this->get_version() != $this->get_max_version();
 	}
 
-	function migrate() : bool {
+	public function migrate() : bool {
 
 		if ($this->get_version() == -1) {
 			try {

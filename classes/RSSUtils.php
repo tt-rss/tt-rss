@@ -17,7 +17,7 @@ class RSSUtils {
 	/**
 	 * @param array<string, mixed> $article
 	 */
-	static function calculate_article_hash(array $article, PluginHost $pluginhost): string {
+	public static function calculate_article_hash(array $article, PluginHost $pluginhost): string {
 		$ignored_fields = [
 			// Details about the parent feed aren't relevant.
 			'feed',
@@ -58,7 +58,7 @@ class RSSUtils {
 		return sha1(implode(',', $pluginhost->get_plugin_names()) . $tmp);
 	}
 
-	static function cleanup_feed_icons(): void {
+	public static function cleanup_feed_icons(): void {
 		$pdo = Db::pdo();
 		$sth = $pdo->prepare("SELECT id FROM ttrss_feeds WHERE id = ?");
 
@@ -92,7 +92,7 @@ class RSSUtils {
 	/**
 	 * @param array<string, false|string> $options
 	 */
-	static function update_daemon_common(int $limit = 0, array $options = []): int {
+	public static function update_daemon_common(int $limit = 0, array $options = []): int {
 		if (!$limit) $limit = Config::get(Config::DAEMON_FEED_LIMIT);
 
 		if (Config::get_schema_version() != Config::SCHEMA_VERSION) {
@@ -291,7 +291,7 @@ class RSSUtils {
 	}
 
 	/** this is used when subscribing */
-	static function update_basic_info(int $feed_id): void {
+	public static function update_basic_info(int $feed_id): void {
 		$feed = ORM::for_table('ttrss_feeds')
 			->select_many('id', 'owner_uid', 'feed_url', 'auth_pass', 'auth_login', 'title', 'site_url')
 			->find_one($feed_id);
@@ -355,7 +355,7 @@ class RSSUtils {
 		}
 	}
 
-	static function update_rss_feed(int $feed, bool $no_cache = false, bool $html_output = false) : bool {
+	public static function update_rss_feed(int $feed, bool $no_cache = false, bool $html_output = false) : bool {
 
 		Debug::enable_html($html_output);
 		Debug::log("start", Debug::LOG_VERBOSE);
@@ -1351,7 +1351,7 @@ class RSSUtils {
 	 * @see RSSUtils::update_rss_feed()
 	 * @see FeedEnclosure
 	 */
-	static function cache_enclosures(array $enclosures, string $site_url): void {
+	public static function cache_enclosures(array $enclosures, string $site_url): void {
 		$cache = DiskCache::instance("images");
 
 		if ($cache->is_writable()) {
@@ -1381,7 +1381,7 @@ class RSSUtils {
 	}
 
 	/* TODO: move to DiskCache? */
-	static function cache_media_url(DiskCache $cache, string $url, string $site_url): void {
+	public static function cache_media_url(DiskCache $cache, string $url, string $site_url): void {
 		$url = UrlHelper::rewrite_relative($site_url, $url);
 		$local_filename = sha1($url);
 
@@ -1403,7 +1403,7 @@ class RSSUtils {
 	}
 
 	/* TODO: move to DiskCache? */
-	static function cache_media(string $html, string $site_url): void {
+	public static function cache_media(string $html, string $site_url): void {
 		$cache = DiskCache::instance("images");
 
 		if ($html && $cache->is_writable()) {
@@ -1433,13 +1433,13 @@ class RSSUtils {
 		}
 	}
 
-	static function expire_error_log(): void {
+	public static function expire_error_log(): void {
 		Debug::log("Removing old error log entries...");
 		$pdo = Db::pdo();
 		$pdo->query("DELETE FROM ttrss_error_log WHERE created_at < NOW() - INTERVAL '1 week'");
 	}
 
-	static function expire_lock_files(): void {
+	public static function expire_lock_files(): void {
 		Debug::log("Removing old lock files...", Debug::LOG_VERBOSE);
 
 		$num_deleted = 0;
@@ -1470,7 +1470,7 @@ class RSSUtils {
 	 *
 	 * @return array<int, array{'type': string, 'param': string}> An array of filter actions from matched filters
 	 */
-	static function eval_article_filters(array $filters, string $title, string $content, string $link, string $author, array $tags, ?array &$matched_rules = null, ?array &$matched_filters = null): array {
+	public static function eval_article_filters(array $filters, string $title, string $content, string $link, string $author, array $tags, ?array &$matched_rules = null, ?array &$matched_filters = null): array {
 		$matches = [];
 
 		foreach ($filters as $filter) {
@@ -1570,7 +1570,7 @@ class RSSUtils {
 	 *
 	 * @return bool Whether a filter action of type $filter_action_type exists
 	 */
-	static function has_article_filter_action(array $filter_actions, string $filter_action_type): bool {
+	public static function has_article_filter_action(array $filter_actions, string $filter_action_type): bool {
 		foreach ($filter_actions as $fa) {
 			if ($fa["type"] == $filter_action_type) {
 				return true;
@@ -1584,14 +1584,14 @@ class RSSUtils {
 	 *
 	 * @return array<int, array{'type': string, 'param': string}> An array of filter actions of type $filter_action_type
 	 */
-	static function find_article_filter_actions(array $filter_actions, string $filter_action_type): array {
+	public static function find_article_filter_actions(array $filter_actions, string $filter_action_type): array {
 		return array_values(array_filter($filter_actions, fn(array $fa) => $fa['type'] === $filter_action_type));
 	}
 
 	/**
 	 * @param array<int, array{'type': string, 'param': string}> $filter_actions An array of all filter actions from filters that matched an article
 	 */
-	static function calculate_article_score(array $filter_actions): int {
+	public static function calculate_article_score(array $filter_actions): int {
 		$score = 0;
 
 		foreach ($filter_actions as $fa) {
@@ -1607,7 +1607,7 @@ class RSSUtils {
 	 *
 	 * @see Article::_get_labels()
 	 */
-	static function labels_contains_caption(array $labels, string $caption): bool {
+	public static function labels_contains_caption(array $labels, string $caption): bool {
 		foreach ($labels as $label) {
 			if ($label[1] == $caption) {
 				return true;
@@ -1621,7 +1621,7 @@ class RSSUtils {
 	 * @param array<int, array{'type': string, 'param': string}> $filter_actions An array of filter actions from matched filters
 	 * @param array<int, array<int, int|string>> $article_labels An array of label arrays like [int $feed_id, string $caption, string $fg_color, string $bg_color]
 	 */
-	static function assign_article_to_label_filters(int $id, array $filter_actions, int $owner_uid, $article_labels): void {
+	public static function assign_article_to_label_filters(int $id, array $filter_actions, int $owner_uid, $article_labels): void {
 		foreach ($filter_actions as $fa) {
 			if ($fa["type"] == "label") {
 				if (!self::labels_contains_caption($article_labels, $fa["param"])) {
@@ -1631,12 +1631,12 @@ class RSSUtils {
 		}
 	}
 
-	static function make_guid_from_title(string $title): ?string {
+	public static function make_guid_from_title(string $title): ?string {
 		return preg_replace("/[ \"\',.:;]/", "-",
 			mb_strtolower(strip_tags($title), 'utf-8'));
 	}
 
-	static function disable_failed_feeds(): void {
+	public static function disable_failed_feeds(): void {
 		if (Config::get(Config::DAEMON_UNSUCCESSFUL_DAYS_LIMIT) > 0) {
 
 			$pdo = Db::pdo();
@@ -1666,7 +1666,7 @@ class RSSUtils {
 		}
 	}
 
-	static function housekeeping_user(int $owner_uid): void {
+	public static function housekeeping_user(int $owner_uid): void {
 		$tmph = new PluginHost();
 
 		UserHelper::load_user_plugins($owner_uid, $tmph);
@@ -1676,7 +1676,7 @@ class RSSUtils {
 	}
 
 	/** Init all system tasks which are run periodically by updater in housekeeping_common() */
-	static function init_housekeeping_tasks() : void {
+	public static function init_housekeeping_tasks() : void {
 		Debug::log('Registering scheduled tasks for housekeeping...');
 
 		$scheduler = Scheduler::getInstance();
@@ -1762,7 +1762,7 @@ class RSSUtils {
 		);
 	}
 
-	static function housekeeping_common(): void {
+	public static function housekeeping_common(): void {
 		Scheduler::getInstance()->run_due_tasks();
 
 		$pluginhost = PluginHost::getInstance();
@@ -1771,7 +1771,7 @@ class RSSUtils {
 		$pluginhost->run_hooks(PluginHost::HOOK_HOUSE_KEEPING);
 	}
 
-	static function update_favicon(string $site_url, int $feed): false|string {
+	public static function update_favicon(string $site_url, int $feed): false|string {
 		$favicon_urls = self::get_favicon_urls($site_url);
 
 		if (count($favicon_urls) == 0) {
@@ -1827,14 +1827,14 @@ class RSSUtils {
 		return false;
 	}
 
-	static function is_gzipped(string $feed_data): bool {
+	public static function is_gzipped(string $feed_data): bool {
 		return str_starts_with(substr($feed_data, 0, 3), "\x1f" . "\x8b" . "\x08");
 	}
 
 	/**
 	 * @return array<int, array{'id': int, 'match_any_rule': bool, 'inverse': bool, 'rules': array<int,mixed>, 'actions': array<int,mixed>}> An array of filters
 	 */
-	static function load_filters(int $feed_id, int $owner_uid): array {
+	public static function load_filters(int $feed_id, int $owner_uid): array {
 		$filters = [];
 
 		$feed_id = (int) $feed_id;
@@ -1937,7 +1937,7 @@ class RSSUtils {
 	 * @access public
 	 * @return false|string The favicon URL string, or false if none was found.
 	 */
-	static function get_favicon_url(string $url): false|string {
+	public static function get_favicon_url(string $url): false|string {
 		$favicon_urls = self::get_favicon_urls($url);
 		return count($favicon_urls) > 0 ? $favicon_urls[0] : false;
 	}
@@ -1951,7 +1951,7 @@ class RSSUtils {
 	 * @access public
 	 * @return array<string> List of all determined favicon URLs or an empty array
 	 */
-	static function get_favicon_urls(string $url) : array {
+	public static function get_favicon_urls(string $url) : array {
 
 		$favicon_urls = [];
 
@@ -1994,7 +1994,7 @@ class RSSUtils {
 	/**
 	 * @return array<int, array{url: string, size: string}> An array of srcset subitem arrays
 	 */
-	static function decode_srcset(string $srcset): array {
+	public static function decode_srcset(string $srcset): array {
 		$matches = [];
 
 		preg_match_all(
@@ -2008,11 +2008,11 @@ class RSSUtils {
 	/**
 	 * @param array<int, array{url: string, size: string}> $matches An array of srcset subitem arrays
 	 */
-	static function encode_srcset(array $matches): string {
+	public static function encode_srcset(array $matches): string {
 		return implode(',', array_map(fn(array $m) => trim($m['url']) . ' ' . trim($m['size']), $matches));
 	}
 
-	static function function_enabled(string $func): bool {
+	public static function function_enabled(string $func): bool {
 		return !in_array($func,
 						explode(',', str_replace(" ", "", ini_get('disable_functions'))));
 	}

@@ -1,14 +1,14 @@
 <?php
 class OPML extends Handler_Protected {
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return in_array($method, ['export']);
 	}
 
 	/**
 	 * @return bool|int|null false if writing the file failed, true if printing succeeded, int if bytes were written to a file, or null if $owner_uid is missing
 	 */
-	function export(): bool|int|null {
+	public function export(): bool|int|null {
 		$output_name = sprintf('tt-rss_%s_%s.opml', $_SESSION['name'], date('Y-m-d'));
 		$include_settings = ($_REQUEST['include_settings'] ?? null) == '1';
 		$owner_uid = $_SESSION['uid'];
@@ -91,7 +91,7 @@ class OPML extends Handler_Protected {
 	/**
 	 * @return bool|int|null false if writing the file failed, true if printing succeeded, int if bytes were written to a file, or null if $owner_uid is missing
 	 */
-	function opml_export(string $filename, int $owner_uid, bool $hide_private_feeds = false, bool $include_settings = true, bool $file_output = false): bool|int|null {
+	public function opml_export(string $filename, int $owner_uid, bool $hide_private_feeds = false, bool $include_settings = true, bool $file_output = false): bool|int|null {
 		if (!$owner_uid) return null;
 
 		if (!$file_output)
@@ -537,7 +537,7 @@ class OPML extends Handler_Protected {
 	/**
 	 * @return bool|null false on failure, true if successful, null if $owner_uid is missing
 	 */
-	function opml_import(int $owner_uid, string $filename = ""): ?bool {
+	public function opml_import(int $owner_uid, string $filename = ""): ?bool {
 		if (!$owner_uid) return null;
 
 		if (!$filename) {
@@ -600,7 +600,7 @@ class OPML extends Handler_Protected {
 		}
 	}
 
-	function get_feed_category(string $feed_cat, int $owner_uid, int $parent_cat_id) : int {
+	public function get_feed_category(string $feed_cat, int $owner_uid, int $parent_cat_id) : int {
 
 		$sth = $this->pdo->prepare("SELECT id FROM ttrss_feed_categories
 			WHERE title = :title

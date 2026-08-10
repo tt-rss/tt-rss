@@ -1,10 +1,10 @@
 <?php
 class Pref_Users extends Handler_Administrative {
-		function csrf_ignore(string $method): bool {
+		public function csrf_ignore(string $method): bool {
 			return $method == "index";
 		}
 
-		function edit(): void {
+		public function edit(): void {
 			$user = ORM::for_table('ttrss_users')
 				->select_many('id', 'login', 'access_level', 'email', 'full_name', 'otp_enabled')
 				->find_one((int)$_REQUEST["id"])
@@ -20,7 +20,7 @@ class Pref_Users extends Handler_Administrative {
 			}
 		}
 
-		function userdetails(): void {
+		public function userdetails(): void {
 			$id = (int) clean($_REQUEST["id"]);
 
 			$user = ORM::for_table('ttrss_users')
@@ -89,7 +89,7 @@ class Pref_Users extends Handler_Administrative {
 
 		}
 
-		function editSave(): void {
+		public function editSave(): void {
 			$id = (int)$_REQUEST['id'];
 			$password = clean($_REQUEST["password"]);
 			$user = ORM::for_table('ttrss_users')->find_one($id);
@@ -118,7 +118,7 @@ class Pref_Users extends Handler_Administrative {
 			}
 		}
 
-		function remove(): void {
+		public function remove(): void {
 			$ids = self::_param_to_int_array($_REQUEST['ids']);
 
 			foreach ($ids as $id) {
@@ -130,7 +130,7 @@ class Pref_Users extends Handler_Administrative {
 			}
 		}
 
-		function add(): void {
+		public function add(): void {
 			$login = clean($_REQUEST["login"]);
 
 			if (!$login) return; // no blank usernames
@@ -159,11 +159,11 @@ class Pref_Users extends Handler_Administrative {
 			}
 		}
 
-		function resetPass(): void {
+		public function resetPass(): void {
 			UserHelper::reset_password(clean($_REQUEST["id"]));
 		}
 
-		function index(): void {
+		public function index(): void {
 
 			global $access_level_names;
 

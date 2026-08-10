@@ -16,13 +16,13 @@ class Cache_Starred_Images extends Plugin {
 	/** @var int $max_cache_attempts (per article) */
 	private $max_cache_attempts = 5;
 
-	function about() {
+	public function about() {
 		return [null,
 			"Automatically cache media files in Starred articles",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$this->host = $host;
 		$this->cache = DiskCache::instance("starred-images");
 		$this->cache_status = DiskCache::instance("starred-images.status-files");
@@ -115,7 +115,7 @@ class Cache_Starred_Images extends Plugin {
 		}
 	}
 
-	function hook_enclosure_entry($enc, $article_id, $rv) {
+	public function hook_enclosure_entry($enc, $article_id, $rv) {
 		$local_filename = $article_id . "-" . sha1($enc["content_url"]);
 
 		if ($this->cache->exists($local_filename)) {
@@ -125,7 +125,7 @@ class Cache_Starred_Images extends Plugin {
 		return $enc;
 	}
 
-	function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id) {
+	public function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id) {
 		$xpath = new DOMXPath($doc);
 
 		if ($article_id) {
@@ -264,7 +264,7 @@ class Cache_Starred_Images extends Plugin {
 		return $success || !$has_media;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 }

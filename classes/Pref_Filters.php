@@ -18,7 +18,7 @@ class Pref_Filters extends Handler_Protected {
 	/** @var array<int,array<mixed>> */
 	private array $filter_types;
 
-	function before(string $method) : bool {
+	public function before(string $method) : bool {
 		// ttrss_filters2_actions, but here to support translations
 		$this->filter_actions = [
 			1 => ['name' => 'filter', 'description' => __('Delete article')],
@@ -48,17 +48,17 @@ class Pref_Filters extends Handler_Protected {
 		return parent::before($method);
 	}
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return in_array($method, ['index', 'getfiltertree']);
 	}
 
-	function filtersortreset(): void {
+	public function filtersortreset(): void {
 		$sth = $this->pdo->prepare("UPDATE ttrss_filters2
 				SET order_id = 0 WHERE owner_uid = ?");
 		$sth->execute([$_SESSION['uid']]);
 	}
 
-	function savefilterorder(): void {
+	public function savefilterorder(): void {
 		$data = json_decode($_POST['payload'], true);
 
 		#file_put_contents("/tmp/saveorder.json", clean($_POST['payload']));
@@ -86,7 +86,7 @@ class Pref_Filters extends Handler_Protected {
 		}
 	}
 
-	function testFilterDo(): void {
+	public function testFilterDo(): void {
 		$offset = (int) clean($_REQUEST["offset"]);
 		$limit = (int) clean($_REQUEST["limit"]);
 
@@ -299,7 +299,7 @@ class Pref_Filters extends Handler_Protected {
 		return $rv;
 	}
 
-	function getfiltertree(): void {
+	public function getfiltertree(): void {
 		$root = [
 			'id' => 'root',
 			'name' =>  __('Filters'),
@@ -355,7 +355,7 @@ class Pref_Filters extends Handler_Protected {
 		print json_encode($fl);
 	}
 
-	function edit(): void {
+	public function edit(): void {
 
 		$filter_id = (int) clean($_REQUEST["id"] ?? 0);
 
@@ -481,7 +481,7 @@ class Pref_Filters extends Handler_Protected {
 			$filter_type, $feed, $inverse ? __('(inverse)') : '');
 	}
 
-	function printRuleName(): void {
+	public function printRuleName(): void {
 		try {
 			$rule = json_decode($_REQUEST['rule'], true, flags: JSON_THROW_ON_ERROR);
 		} catch (Exception) {
@@ -522,7 +522,7 @@ class Pref_Filters extends Handler_Protected {
 		return $title;
 	}
 
-	function printActionName(): void {
+	public function printActionName(): void {
 		try {
 			$action = json_decode($_REQUEST['action'], true, flags: JSON_THROW_ON_ERROR);
 		} catch (Exception) {
@@ -533,7 +533,7 @@ class Pref_Filters extends Handler_Protected {
 		print is_array($action) ? $this->_get_action_name($action) : 'invalid action JSON';
 	}
 
-	function editSave(): void {
+	public function editSave(): void {
 		$filter_id = (int) clean($_REQUEST["id"]);
 		$enabled = checkbox_to_sql_bool($_REQUEST["enabled"] ?? false);
 		$match_any_rule = checkbox_to_sql_bool($_REQUEST["match_any_rule"] ?? false);
@@ -556,7 +556,7 @@ class Pref_Filters extends Handler_Protected {
 		$this->pdo->commit();
 	}
 
-	function remove(): void {
+	public function remove(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		if (!$ids)
@@ -680,7 +680,7 @@ class Pref_Filters extends Handler_Protected {
 	/**
 	 * @param null|array{'src_filter_id': int, 'title': string, 'enabled': 0|1, 'match_any_rule': 0|1, 'inverse': 0|1} $props
 	 */
-	function add(?array $props = null): void {
+	public function add(?array $props = null): void {
 		if ($props === null) {
 			$src_filter_id = null;
 			// intentionally not doing clean() here to allow for '<', etc. in titles
@@ -720,7 +720,7 @@ class Pref_Filters extends Handler_Protected {
 		$this->pdo->commit();
 	}
 
-	function clone(): void {
+	public function clone(): void {
 		$src_filter_ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		if (!$src_filter_ids)
@@ -746,7 +746,7 @@ class Pref_Filters extends Handler_Protected {
 		}
 	}
 
-	function index(): void {
+	public function index(): void {
 		if (array_key_exists("search", $_REQUEST)) {
 			$filter_search = clean($_REQUEST["search"]);
 			$_SESSION["prefs_filter_search"] = $filter_search;
@@ -810,7 +810,7 @@ class Pref_Filters extends Handler_Protected {
 		<?php
 	}
 
-	function editrule(): void {
+	public function editrule(): void {
 		// may contain category strings, so don't use self::_param_to_int_array() here
 		$feed_ids = explode(",", clean($_REQUEST["ids"]));
 
@@ -891,7 +891,7 @@ class Pref_Filters extends Handler_Protected {
 		];
 	}
 
-	function join(): void {
+	public function join(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		if (!$ids)

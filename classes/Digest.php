@@ -1,7 +1,7 @@
 <?php
 class Digest
 {
-	static function send_headlines_digests(): void {
+	public static function send_headlines_digests(): void {
 		$user_limit = 15; // amount of users to process (e.g. emails to send out)
 		$limit = 1000; // maximum amount of headlines to include
 
@@ -75,7 +75,7 @@ class Digest
 	/**
 	 * @return array{0: string, 1: int, 2: array<int>, 3: string}
 	 */
-	static function prepare_headlines_digest(int $user_id, int $days = 1, int $limit = 1000) {
+	public static function prepare_headlines_digest(int $user_id, int $days = 1, int $limit = 1000) {
 
 		$tpl = new Templator();
 		$tpl_t = new Templator();

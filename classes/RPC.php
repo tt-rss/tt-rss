@@ -40,7 +40,7 @@ class RPC extends Handler_Protected {
 	}
 
 
-	function togglepref(): void {
+	public function togglepref(): void {
 		$key = clean($_REQUEST["key"]);
 		$profile = $_SESSION['profile'] ?? null;
 		Prefs::set($key, !Prefs::get($key, $_SESSION['uid'], $profile), $_SESSION['uid'], $profile);
@@ -49,7 +49,7 @@ class RPC extends Handler_Protected {
 		print json_encode(["param" =>$key, "value" => $value]);
 	}
 
-	function setpref(): void {
+	public function setpref(): void {
 		// set_pref escapes input, so no need to double escape it here
 		$key = clean($_REQUEST['key']);
 		$value = $_REQUEST['value'];
@@ -59,7 +59,7 @@ class RPC extends Handler_Protected {
 		print json_encode(["param" =>$key, "value" => $value]);
 	}
 
-	function mark(): void {
+	public function mark(): void {
 		$mark = clean($_REQUEST["mark"]);
 		$id = clean($_REQUEST["id"]);
 
@@ -74,7 +74,7 @@ class RPC extends Handler_Protected {
 		print json_encode(["message" => "UPDATE_COUNTERS"]);
 	}
 
-	function delete(): void {
+	public function delete(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		if (!$ids)
@@ -88,7 +88,7 @@ class RPC extends Handler_Protected {
 		print json_encode(["message" => "UPDATE_COUNTERS"]);
 	}
 
-	function publ(): void {
+	public function publ(): void {
 		$pub = clean($_REQUEST["pub"]);
 		$id = clean($_REQUEST["id"]);
 
@@ -103,7 +103,7 @@ class RPC extends Handler_Protected {
 		print json_encode(["message" => "UPDATE_COUNTERS"]);
 	}
 
-	function getRuntimeInfo(): void {
+	public function getRuntimeInfo(): void {
 		$reply = [
 			'runtime-info' => static::_make_runtime_info()
 		];
@@ -111,7 +111,7 @@ class RPC extends Handler_Protected {
 		print json_encode($reply);
 	}
 
-	function getAllCounters(): void {
+	public function getAllCounters(): void {
 		@$seq = (int) $_REQUEST['seq'];
 
 		$feed_id_count = (int) ($_REQUEST["feed_id_count"] ?? -1);
@@ -134,7 +134,7 @@ class RPC extends Handler_Protected {
 	}
 
 	/* GET["cmode"] = 0 - mark as read, 1 - as unread, 2 - toggle */
-	function catchupSelected(): void {
+	public function catchupSelected(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '') ?? [];
 		$cmode = (int)clean($_REQUEST["cmode"]);
 
@@ -146,7 +146,7 @@ class RPC extends Handler_Protected {
 			"feeds" => Article::_feeds_of($ids)]);
 	}
 
-	function markSelected(): void {
+	public function markSelected(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '') ?? [];
 		$cmode = (int)clean($_REQUEST["cmode"]);
 
@@ -158,7 +158,7 @@ class RPC extends Handler_Protected {
 			"feeds" => Article::_feeds_of($ids)]);
 	}
 
-	function publishSelected(): void {
+	public function publishSelected(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '') ?? [];
 		$cmode = (int)clean($_REQUEST["cmode"]);
 
@@ -170,7 +170,7 @@ class RPC extends Handler_Protected {
 			"feeds" => Article::_feeds_of($ids)]);
 	}
 
-	function sanityCheck(): void {
+	public function sanityCheck(): void {
 		$_SESSION["hasSandbox"] = self::_param_to_bool($_REQUEST["hasSandbox"] ?? false);
 		$_SESSION["clientTzOffset"] = clean($_REQUEST["clientTzOffset"]);
 
@@ -219,7 +219,7 @@ class RPC extends Handler_Protected {
 		print "</ul>";
 	}*/
 
-	function catchupFeed(): void {
+	public function catchupFeed(): void {
 		$feed_id = clean($_REQUEST['feed_id']);
 		$is_cat = self::_param_to_bool($_REQUEST['is_cat'] ?? false);
 		$mode = clean($_REQUEST['mode'] ?? '');
@@ -234,7 +234,7 @@ class RPC extends Handler_Protected {
 		//print json_encode(array("message" => "UPDATE_COUNTERS"));
 	}
 
-	function setWidescreen(): void {
+	public function setWidescreen(): void {
 		$wide = (int) clean($_REQUEST["wide"]);
 
 		Prefs::set(Prefs::WIDESCREEN_MODE, $wide, $_SESSION['uid'], $_SESSION['profile'] ?? null);
@@ -290,7 +290,7 @@ class RPC extends Handler_Protected {
 		PluginHost::getInstance()->run_hooks(PluginHost::HOOK_ARTICLES_PUBLISH_TOGGLED, $ids);
 	}
 
-	function log(): void {
+	public function log(): void {
 		$msg = clean($_REQUEST['msg'] ?? "");
 		$file = basename(clean($_REQUEST['file'] ?? ""));
 		$line = (int) clean($_REQUEST['line'] ?? 0);
@@ -304,7 +304,7 @@ class RPC extends Handler_Protected {
 		}
 	}
 
-	function checkforupdates(): void {
+	public function checkforupdates(): void {
 		$rv = ["changeset" => [], "plugins" => []];
 
 		$version = Config::get_version(false);
@@ -408,7 +408,7 @@ class RPC extends Handler_Protected {
 	/**
 	 * @return array<string, mixed>
 	 */
-	static function _make_runtime_info(): array {
+	public static function _make_runtime_info(): array {
 		$pdo = Db::pdo();
 
 		$sth = $pdo->prepare("SELECT MAX(id) AS mid, COUNT(*) AS nf FROM
@@ -475,7 +475,7 @@ class RPC extends Handler_Protected {
 	/**
 	 * @return array<string, array<string, string>>
 	 */
-	static function get_hotkeys_info(): array {
+	public static function get_hotkeys_info(): array {
 		$hotkeys = [
 			__("Navigation") => [
 				"next_feed" => __("Open next feed"),
@@ -561,7 +561,7 @@ class RPC extends Handler_Protected {
 	 *
 	 * @return array{0: array<int, string>, 1: array<string, string>} $prefixes, $hotkeys
 	 */
-	static function get_hotkeys_map() {
+	public static function get_hotkeys_map() {
 		$hotkeys = [
 			"k" => "next_feed",
 			"K" => "next_unread_feed",
@@ -644,7 +644,7 @@ class RPC extends Handler_Protected {
 		return [$prefixes, $hotkeys];
 	}
 
-	function hotkeyHelp(): void {
+	public function hotkeyHelp(): void {
 		$info = self::get_hotkeys_info();
 		$imap = self::get_hotkeys_map();
 		$omap = [];

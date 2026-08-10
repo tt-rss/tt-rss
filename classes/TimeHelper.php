@@ -1,7 +1,7 @@
 <?php
 class TimeHelper {
 
-	static function smart_date_time(int $timestamp, int $tz_offset = 0, ?int $owner_uid = null, bool $eta_min = false): string {
+	public static function smart_date_time(int $timestamp, int $tz_offset = 0, ?int $owner_uid = null, bool $eta_min = false): string {
 		// i.e. if the Unix epoch
 		if ($timestamp - $tz_offset === 0)
 			return __('Never');
@@ -29,7 +29,7 @@ class TimeHelper {
 	/**
 	 * @param bool $long Whether to display the datetime in a 'long' format.  Only used if $no_smart_dt is true.
 	 */
-	static function make_local_datetime(?string $timestamp, bool $long = false, ?int $owner_uid = null,
+	public static function make_local_datetime(?string $timestamp, bool $long = false, ?int $owner_uid = null,
 					bool $no_smart_dt = false, bool $eta_min = false): string {
 
 		if (!$owner_uid) $owner_uid = $_SESSION['uid'];
@@ -77,7 +77,7 @@ class TimeHelper {
 		}
 	}
 
-	static function convert_timestamp(int $timestamp, string $source_tz, string $dest_tz): int {
+	public static function convert_timestamp(int $timestamp, string $source_tz, string $dest_tz): int {
 
 		try {
 			$source_tz = new DateTimeZone($source_tz);

@@ -1,20 +1,20 @@
 <?php
 class Hotkeys_Force_Top extends Plugin {
-        function about() {
+        public function about() {
                 return [null,
                         "Force open article to the top",
                         "itsamenathan"];
         }
 
-        function init($host) {
+        public function init($host) {
 
         }
 
-        function get_js() {
+        public function get_js() {
                 return file_get_contents(__DIR__ . "/init.js");
         }
 
-        function api_version() {
+        public function api_version() {
                 return 2;
         }
 

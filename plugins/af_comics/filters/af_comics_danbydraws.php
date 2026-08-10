@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_DanbyDraws extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["Danby Draws"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 		if (str_contains($article["link"], "danbydraws.com")) {
 			$res = UrlHelper::fetch(["url" => $article["link"]]);
 

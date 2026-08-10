@@ -25,11 +25,11 @@ class Pref_Prefs extends Handler_Protected {
 
 	private const PLUGIN_UPDATE_ALLOWED_BRANCHES = ['main', 'master'];
 
-	function csrf_ignore(string $method) : bool {
+	public function csrf_ignore(string $method) : bool {
 		return in_array($method, ['index', 'updateself', 'otpqrcode']);
 	}
 
-	function __construct($args) {
+	public function __construct($args) {
 		parent::__construct($args);
 
 		$this->pref_item_map = [
@@ -139,7 +139,7 @@ class Pref_Prefs extends Handler_Protected {
 		];
 	}
 
-	function changepassword(): void {
+	public function changepassword(): void {
 
 		if (Config::get(Config::FORBID_PASSWORD_CHANGES)) {
 			print "ERROR: ".format_error("Access forbidden.");
@@ -186,7 +186,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function saveconfig(): void {
+	public function saveconfig(): void {
 		$profile = $_SESSION['profile'] ?? null;
 
 		$boolean_prefs = explode(",", clean($_POST["boolean_prefs"]));
@@ -230,7 +230,7 @@ class Pref_Prefs extends Handler_Protected {
 		print ($need_reload ? 'PREFS_NEED_RELOAD' : __('The configuration was saved.'));
 	}
 
-	function changePersonalData(): void {
+	public function changePersonalData(): void {
 
 		$user = ORM::for_table('ttrss_users')->find_one($_SESSION['uid']);
 		$new_email = clean($_POST['email']);
@@ -271,7 +271,7 @@ class Pref_Prefs extends Handler_Protected {
 		print __("Your personal data has been saved.");
 	}
 
-	function resetconfig(): void {
+	public function resetconfig(): void {
 		Prefs::reset($_SESSION["uid"], $_SESSION["profile"] ?? null);
 
 		print "PREFS_NEED_RELOAD";
@@ -516,7 +516,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function index_auth(): void {
+	public function index_auth(): void {
 		?>
 		<div dojoType='dijit.layout.TabContainer'>
 			<div dojoType='dijit.layout.ContentPane' title="<?= __('Personal data') ?>">
@@ -791,7 +791,7 @@ class Pref_Prefs extends Handler_Protected {
 		<?php
 	}
 
-	function getPluginsList(): void {
+	public function getPluginsList(): void {
 		$system_enabled = array_map(trim(...), explode(',', (string)Config::get(Config::PLUGINS)));
 		$user_enabled = array_map(trim(...), explode(',', Prefs::get(Prefs::_ENABLED_PLUGINS, $_SESSION['uid'], $_SESSION['profile'] ?? null)));
 
@@ -824,7 +824,7 @@ class Pref_Prefs extends Handler_Protected {
 		print json_encode(['plugins' => $rv, 'is_admin' => $_SESSION['access_level'] >= UserHelper::ACCESS_LEVEL_ADMIN]);
 	}
 
-	function index_plugins(): void {
+	public function index_plugins(): void {
 		?>
 		<form dojoType="dijit.form.Form" id="changePluginsForm">
 
@@ -921,7 +921,7 @@ class Pref_Prefs extends Handler_Protected {
 		<?php
 	}
 
-	function index(): void {
+	public function index(): void {
 		?>
 			<div dojoType='dijit.layout.AccordionContainer' region='center'>
 				<div dojoType='dijit.layout.AccordionPane' title="<i class='material-icons'>person</i> <?= __('Personal data / Authentication')?>">
@@ -946,7 +946,7 @@ class Pref_Prefs extends Handler_Protected {
 		<?php
 	}
 
-	function _get_otp_qrcode_img(): ?string {
+	public function _get_otp_qrcode_img(): ?string {
 		$secret = UserHelper::get_otp_secret($_SESSION["uid"]);
 		$login = UserHelper::get_login_by_id($_SESSION["uid"]);
 
@@ -961,7 +961,7 @@ class Pref_Prefs extends Handler_Protected {
 		return null;
 	}
 
-	function otpenable(): void {
+	public function otpenable(): void {
 		$password = clean($_REQUEST["password"]);
 		$otp_check = clean($_REQUEST["otp"]);
 
@@ -979,7 +979,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function otpdisable(): void {
+	public function otpdisable(): void {
 		$password = clean($_REQUEST["password"]);
 
 		/** @var Auth_Internal|null $authenticator -- this is only here to make check_password() visible to static analyzer */
@@ -1019,13 +1019,13 @@ class Pref_Prefs extends Handler_Protected {
 
 	}
 
-	function setplugins(): void {
+	public function setplugins(): void {
 		$plugins = array_filter($_REQUEST['plugins'] ?? [], clean(...));
 
 		Prefs::set(Prefs::_ENABLED_PLUGINS, implode(',', $plugins), $_SESSION['uid'], $_SESSION['profile'] ?? null);
 	}
 
-	function _get_plugin_version(Plugin $plugin): string {
+	public function _get_plugin_version(Plugin $plugin): string {
 		$about = $plugin->about();
 
 		if (!empty($about[0])) {
@@ -1052,7 +1052,7 @@ class Pref_Prefs extends Handler_Protected {
 	/**
 	 * @return array<int, array{'plugin': string, 'rv': array{'stdout': false|string, 'stderr': false|string, 'git_status': int, 'need_update': bool}|null}>
 	 */
-	static function _get_updated_plugins(): array {
+	public static function _get_updated_plugins(): array {
 		$plugin_root_dir = Config::get(Config::LOCAL_PLUGINS_DIR);
 		$plugin_dirs = array_filter(glob("$plugin_root_dir/*"), is_dir(...));
 		$rv = [];
@@ -1210,7 +1210,7 @@ class Pref_Prefs extends Handler_Protected {
 		return "";
 	}
 
-	function uninstallPlugin():  void {
+	public function uninstallPlugin():  void {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN) {
 			$plugin_name = basename(clean($_REQUEST['plugin']));
 			$status = 0;
@@ -1225,7 +1225,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function installPlugin(): void {
+	public function installPlugin(): void {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN && Config::get(Config::ENABLE_PLUGIN_INSTALLER)) {
 			$plugin_name = basename(clean($_REQUEST['plugin']));
 			$all_plugins = $this->_get_available_plugins();
@@ -1323,7 +1323,7 @@ class Pref_Prefs extends Handler_Protected {
 		return [];
 	}
 
-	function getAvailablePlugins(): void {
+	public function getAvailablePlugins(): void {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN) {
 			print json_encode($this->_get_available_plugins());
 		} else {
@@ -1331,7 +1331,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function checkForPluginUpdates(): void {
+	public function checkForPluginUpdates(): void {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN && Config::get(Config::CHECK_FOR_UPDATES) && Config::get(Config::CHECK_FOR_PLUGIN_UPDATES)) {
 			$plugin_name = $_REQUEST["name"] ?? "";
 
@@ -1343,7 +1343,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function updateLocalPlugins(): void {
+	public function updateLocalPlugins(): void {
 		if ($_SESSION["access_level"] >= UserHelper::ACCESS_LEVEL_ADMIN) {
 			$plugins = array_filter(explode(',', $_REQUEST['plugins'] ?? ''), fn($p) => strlen($p) > 0);
 			$rv = [];
@@ -1372,20 +1372,20 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function clearplugindata(): void {
+	public function clearplugindata(): void {
 		$name = clean($_REQUEST["name"]);
 
 		PluginHost::getInstance()->clear_data(PluginHost::getInstance()->get_plugin($name));
 	}
 
-	function customizeCSS(): void {
+	public function customizeCSS(): void {
 		$value = Prefs::get(Prefs::USER_STYLESHEET, $_SESSION['uid'], $_SESSION['profile'] ?? null);
 		$value = str_replace("<br/>", "\n", $value);
 
 		print json_encode(["value" => $value]);
 	}
 
-	function activateprofile(): void {
+	public function activateprofile(): void {
 		$id = (int) ($_REQUEST['id'] ?? 0);
 
 		$profile = ORM::for_table('ttrss_settings_profiles')
@@ -1398,7 +1398,7 @@ class Pref_Prefs extends Handler_Protected {
 	/**
 	 * @todo this should result in an error on failures
 	 */
-	function cloneprofile(): void {
+	public function cloneprofile(): void {
 		$old_profile_id = $_REQUEST['old_profile'] ?? '';
 
 		if (ctype_digit($old_profile_id))
@@ -1457,7 +1457,7 @@ class Pref_Prefs extends Handler_Protected {
 		$sth->execute($params);
 	}
 
-	function remprofiles(): void {
+	public function remprofiles(): void {
 		$ids = $_REQUEST["ids"] ?? [];
 
 		ORM::for_table('ttrss_settings_profiles')
@@ -1467,7 +1467,7 @@ class Pref_Prefs extends Handler_Protected {
 			->delete_many();
 	}
 
-	function addprofile(): void {
+	public function addprofile(): void {
 		$title = clean($_REQUEST["title"]);
 
 		if ($title) {
@@ -1486,7 +1486,7 @@ class Pref_Prefs extends Handler_Protected {
 		}
 	}
 
-	function saveprofile(): void {
+	public function saveprofile(): void {
 		$id = (int)$_REQUEST["id"];
 		$title = clean($_REQUEST["value"]);
 
@@ -1503,7 +1503,7 @@ class Pref_Prefs extends Handler_Protected {
 	}
 
 	// TODO: this maybe needs to be unified with Public::getProfiles()
-	function getProfiles(): void {
+	public function getProfiles(): void {
 		$rv = [
 			[
 				'title' => __('Default profile'),
@@ -1591,7 +1591,7 @@ class Pref_Prefs extends Handler_Protected {
 		<?php
 	}
 
-	function deleteAppPasswords(): void {
+	public function deleteAppPasswords(): void {
 		ORM::for_table('ttrss_app_passwords')
 			->where('owner_uid', $_SESSION['uid'])
 			->where_in('id', $_REQUEST['ids'] ?? [])
@@ -1600,7 +1600,7 @@ class Pref_Prefs extends Handler_Protected {
 		$this->appPasswordList();
 	}
 
-	function generateAppPassword(): void {
+	public function generateAppPassword(): void {
 		$title = clean($_REQUEST['title']);
 		$new_password = make_password(16);
 		$new_salt = UserHelper::get_salt();
@@ -1621,11 +1621,11 @@ class Pref_Prefs extends Handler_Protected {
 		$this->appPasswordList();
 	}
 
-	function previewDigest(): void {
+	public function previewDigest(): void {
 		print json_encode(Digest::prepare_headlines_digest($_SESSION["uid"], 1, 16));
 	}
 
-	static function _get_ssl_certificate_id(): string {
+	public static function _get_ssl_certificate_id(): string {
 		if ($_SERVER["REDIRECT_SSL_CLIENT_M_SERIAL"] ?? false) {
 			return sha1($_SERVER["REDIRECT_SSL_CLIENT_M_SERIAL"] .
 				$_SERVER["REDIRECT_SSL_CLIENT_V_START"] .

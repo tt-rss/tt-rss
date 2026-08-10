@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_Explosm extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["Cyanide and Happiness"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 
 		if (str_contains($article["link"], "explosm.net/comics")) {
 

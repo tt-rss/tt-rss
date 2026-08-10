@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_DarkLegacy extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["Dark Legacy Comics"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 
 		if (str_contains($article["guid"], "darklegacycomics.com")) {
 				$res = UrlHelper::fetch([

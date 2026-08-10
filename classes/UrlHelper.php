@@ -39,7 +39,7 @@ class UrlHelper {
 	/**
 	 * @param array<string, string|int> $parts
 	 */
-	static function build_url(array $parts): string {
+	public static function build_url(array $parts): string {
 		$tmp = $parts['scheme'] . '://' . $parts['host'];
 
 		if (isset($parts['port'])) $tmp .= ':' . $parts['port'];
@@ -140,7 +140,7 @@ class UrlHelper {
 	/** extended filtering involves validation for safe ports and loopback
 	 * @return false|string false if something went wrong, otherwise the URL string
 	 */
-	static function validate(string $url, bool $extended_filtering = false): false|string {
+	public static function validate(string $url, bool $extended_filtering = false): false|string {
 
 		$url = clean($url);
 
@@ -211,7 +211,7 @@ class UrlHelper {
 	 * @param string $host hostname or IPv4 literal to normalize
 	 * @return ?string canonical dotted-quad IPv4 string, or null if the input is not a valid dotted IPv4 literal
 	 */
-	static function canonicalize_ipv4_literal(string $host): ?string {
+	public static function canonicalize_ipv4_literal(string $host): ?string {
 		// Match 1 to 4 dot-separated octal, hex, or decimal integers
 		if (!preg_match('/^(0x[0-9a-f]+|\d+)(\.(0x[0-9a-f]+|\d+)){0,3}$/i', $host))
 			return null;
@@ -248,7 +248,7 @@ class UrlHelper {
 	 * @param bool $validate_resolved_ip whether to perform additional validation by resolving the host to an IP and validating that IP
 	 * @return bool true if the URL should be rejected, false otherwise
 	 */
-	static function has_disallowed_ip(string|array $url_or_tokens, bool $validate_resolved_ip = false): bool {
+	public static function has_disallowed_ip(string|array $url_or_tokens, bool $validate_resolved_ip = false): bool {
 		$tokens = is_array($url_or_tokens) ? $url_or_tokens : parse_url($url_or_tokens);
 
 		if (empty($tokens['host']))
@@ -317,7 +317,7 @@ class UrlHelper {
 		return false;
 	}
 
-	static function resolve_redirects(string $url, int $timeout): false|string {
+	public static function resolve_redirects(string $url, int $timeout): false|string {
 		$client = self::get_client();
 
 		try {

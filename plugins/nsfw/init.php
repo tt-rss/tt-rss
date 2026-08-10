@@ -4,14 +4,14 @@ class NSFW extends Plugin {
 	/** @var PluginHost $host */
 	private $host;
 
-	function about() {
+	public function about() {
 		return [null,
 			"Hide article content based on tags",
 			"fox",
 			false];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$this->host = $host;
 
 		$host->add_hook(PluginHost::HOOK_RENDER_ARTICLE, $this);
@@ -22,7 +22,7 @@ class NSFW extends Plugin {
 
 	}
 
-	function hook_article_image($enclosures, $content, $site_url, $article) {
+	public function hook_article_image($enclosures, $content, $site_url, $article) {
 		$tags = explode(",", $this->host->get($this, "tags"));
 		$article_tags = $article["tags"];
 
@@ -49,7 +49,7 @@ class NSFW extends Plugin {
 		return $article;
 	}
 
-	function get_css() {
+	public function get_css() {
 		return
 			'details.nsfw {
 				cursor : pointer;
@@ -57,20 +57,20 @@ class NSFW extends Plugin {
 			}';
 	}
 
-	function hook_render_article_api($row) {
+	public function hook_render_article_api($row) {
 		$article = $row['headline'] ?? $row['article'];
 		return $this->rewrite_contents($article);
 	}
 
-	function hook_render_article($article) {
+	public function hook_render_article($article) {
 		return $this->rewrite_contents($article);
 	}
 
-	function hook_render_article_cdm($article) {
+	public function hook_render_article_cdm($article) {
 		return $this->rewrite_contents($article);
 	}
 
-	function hook_prefs_tab($args) {
+	public function hook_prefs_tab($args) {
 		if ($args != "prefPrefs") return;
 
 		$tags = $this->host->get($this, "tags");
@@ -108,7 +108,7 @@ class NSFW extends Plugin {
 		<?php
 	}
 
-	function save() : void {
+	public function save() : void {
 		$tags = implode(", ",
 			FeedItem_Common::normalize_categories(explode(",", $_POST["tags"] ?? "")));
 
@@ -117,7 +117,7 @@ class NSFW extends Plugin {
 		echo __("Configuration saved.");
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 }

@@ -10,7 +10,7 @@ class Scheduler {
 
 	private string $name;
 
-	function __construct(string $name = self::DEFAULT_NAME) {
+	public function __construct(string $name = self::DEFAULT_NAME) {
 		$this->set_name($name);
 
 		if ($name === self::DEFAULT_NAME) {
@@ -48,7 +48,7 @@ class Scheduler {
 	 * @param string $cron_expression schedule for this task in cron format
 	 * @param Closure $callback task code that gets executed
 	*/
-	function add_scheduled_task(string $task_name, string $cron_expression, Closure $callback) : bool {
+	public function add_scheduled_task(string $task_name, string $cron_expression, Closure $callback) : bool {
 		$task_name = strtolower($task_name);
 
 		if (isset($this->scheduled_tasks[$task_name])) {
@@ -73,7 +73,7 @@ class Scheduler {
 	/**
 	 * Execute scheduled tasks which are due to run and record last run timestamps.
 	 */
-	function run_due_tasks() : void {
+	public function run_due_tasks() : void {
 		Debug::log("[$this->name] Processing all scheduled tasks...");
 
 		$tasks_succeeded = 0;

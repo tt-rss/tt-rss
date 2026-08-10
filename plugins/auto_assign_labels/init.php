@@ -1,13 +1,13 @@
 <?php
 class Auto_Assign_Labels extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Assign labels automatically based on article title, content, and tags",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
 	}
 
@@ -36,7 +36,7 @@ class Auto_Assign_Labels extends Plugin {
 	}
 
 
-	function hook_article_filter($article) {
+	public function hook_article_filter($article) {
 		$owner_uid = $article["owner_uid"];
 		$labels = $this->get_all_labels_filter_format($owner_uid);
 		$tags_str = join(",", $article["tags"]);
@@ -53,7 +53,7 @@ class Auto_Assign_Labels extends Plugin {
 		return $article;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 }

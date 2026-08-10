@@ -1,7 +1,7 @@
 <?php
 class Logger_Syslog implements Logger_Adapter {
 
-	function log_error(int $errno, string $errstr, string $file, int $line, string $context): bool {
+	public function log_error(int $errno, string $errstr, string $file, int $line, string $context): bool {
 
 		$priority = match ($errno) {
             E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR => LOG_ERR,

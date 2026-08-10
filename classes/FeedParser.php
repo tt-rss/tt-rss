@@ -24,7 +24,7 @@ class FeedParser {
 	const FEED_RSS = 1;
 	const FEED_ATOM = 2;
 
-	function __construct(string $data) {
+	public function __construct(string $data) {
 		libxml_use_internal_errors(true);
 		libxml_clear_errors();
 
@@ -70,7 +70,7 @@ class FeedParser {
 	/**
 	 * @return bool false if initialization couldn't occur (e.g. parsing error or unrecognized feed type), otherwise true
 	 */
-	function init(): bool {
+	public function init(): bool {
 		if ($this->error)
 			return false;
 
@@ -163,24 +163,24 @@ class FeedParser {
 	}
 
 	/** @deprecated use Errors::format_libxml_error() instead */
-	function format_error(LibXMLError $error) : string {
+	public function format_error(LibXMLError $error) : string {
 		return Errors::format_libxml_error($error);
 	}
 
 	// libxml may have invalid unicode data in error messages
-	function error() : string {
+	public function error() : string {
 		return UConverter::transcode($this->error ?? '', 'UTF-8', 'UTF-8');
 	}
 
 	/** @return array<string> - WARNING: may return invalid unicode data */
-	function errors() : array {
+	public function errors() : array {
 		return $this->libxml_errors;
 	}
 
 	/**
 	 * @return FeedParser::FEED_*
 	 */
-	function get_type(): int {
+	public function get_type(): int {
 		if ($this->type !== self::FEED_UNKNOWN || $this->error)
 			return $this->type;
 
@@ -204,21 +204,21 @@ class FeedParser {
 		return $this->type;
 	}
 
-	function get_link() : string {
+	public function get_link() : string {
 		return clean($this->link ?? '');
 	}
 
-	function get_title() : string {
+	public function get_title() : string {
 		return clean($this->title ?? '');
 	}
 
 	/** @return array<FeedItem> */
-	function get_items() : array {
+	public function get_items() : array {
 		return $this->items;
 	}
 
 	/** @return array<string> */
-	function get_links(string $rel) : array {
+	public function get_links(string $rel) : array {
 		$rv = [];
 
 		switch ($this->type) {

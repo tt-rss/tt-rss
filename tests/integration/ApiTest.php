@@ -11,7 +11,7 @@ final class ApiTest extends TestCase {
 	/** @param array<mixed> $payload
 	 * @return array<mixed>
 	 */
-	function api(array $payload) : ?array {
+	public function api(array $payload) : ?array {
 		$ch = curl_init($this->api_url);
 
 		if ($this->sid)

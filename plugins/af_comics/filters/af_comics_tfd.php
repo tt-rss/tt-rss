@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_Tfd extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["Toothpaste For Dinner", "Married to the Sea"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 		if (str_contains($article["link"], "toothpastefordinner.com") ||
 			str_contains($article["link"], "marriedtothesea.com")) {
 			$res = UrlHelper::fetch([

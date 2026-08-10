@@ -5,7 +5,7 @@ class Pref_Feeds extends Handler_Protected {
 	const E_ICON_UPLOAD_FAILED = 'E_ICON_UPLOAD_FAILED';
 	const E_ICON_UPLOAD_SUCCESS = 'E_ICON_UPLOAD_SUCCESS';
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return in_array($method, ['index', 'getfeedtree']);
 	}
 
@@ -17,7 +17,7 @@ class Pref_Feeds extends Handler_Protected {
 			array_column(ORM::for_table('pg_ts_config')->select('cfgname')->find_array(), 'cfgname'));
 	}
 
-	function renameCat(): void {
+	public function renameCat(): void {
 		$cat = ORM::for_table("ttrss_feed_categories")
 			->where("owner_uid", $_SESSION["uid"])
 			->find_one($_REQUEST['id']);
@@ -105,14 +105,14 @@ class Pref_Feeds extends Handler_Protected {
 		return $items;
 	}
 
-	function getfeedtree(): void {
+	public function getfeedtree(): void {
 		print json_encode($this->_makefeedtree());
 	}
 
 	/**
 	 * @return array{identifier: 'id', label: 'name', items: array{id: 'root', name: string, items: array<mixed>, param: string, type: 'category'}|array<mixed>}
 	 */
-	function _makefeedtree(): array {
+	public function _makefeedtree(): array {
 		$profile = $_SESSION['profile'] ?? null;
 
 		if (clean($_REQUEST['mode'] ?? 0) != 2)
@@ -336,13 +336,13 @@ class Pref_Feeds extends Handler_Protected {
 		];
 	}
 
-	function catsortreset(): void {
+	public function catsortreset(): void {
 		$sth = $this->pdo->prepare("UPDATE ttrss_feed_categories
 				SET order_id = 0 WHERE owner_uid = ?");
 		$sth->execute([$_SESSION['uid']]);
 	}
 
-	function feedsortreset(): void {
+	public function feedsortreset(): void {
 		$sth = $this->pdo->prepare("UPDATE ttrss_feeds
 				SET order_id = 0 WHERE owner_uid = ?");
 		$sth->execute([$_SESSION['uid']]);
@@ -420,7 +420,7 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function savefeedorder(): void {
+	public function savefeedorder(): void {
 		$data = json_decode($_POST['payload'], true);
 
 		if (!is_array($data['items']))
@@ -443,7 +443,7 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function removeIcon(): void {
+	public function removeIcon(): void {
 		$feed_id = (int) $_REQUEST["feed_id"];
 
 		$cache = DiskCache::instance('feed-icons');
@@ -464,7 +464,7 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function uploadIcon(): void {
+	public function uploadIcon(): void {
 		$feed_id = (int) $_REQUEST['feed_id'];
 		$tmp_file = tempnam(Config::get(Config::CACHE_DIR) . '/upload', 'icon');
 
@@ -509,7 +509,7 @@ class Pref_Feeds extends Handler_Protected {
 			Feeds::_get_icon($feed_id) . "?ts=" . time() ]);
 	}
 
-	function editfeed(): void {
+	public function editfeed(): void {
 		global $purge_intervals;
 		global $update_intervals;
 
@@ -579,7 +579,7 @@ class Pref_Feeds extends Handler_Protected {
 					["data-control-for" => $name, "title" => __("Check to enable field"), "onchange" => "App.dialogOf(this).toggleField(this)"]);
 	}
 
-	function editfeeds(): void {
+	public function editfeeds(): void {
 		global $purge_intervals;
 		global $update_intervals;
 
@@ -685,11 +685,11 @@ class Pref_Feeds extends Handler_Protected {
 		<?php
 	}
 
-	function batchEditSave(): void {
+	public function batchEditSave(): void {
 		$this->editsaveops(true);
 	}
 
-	function editSave(): void {
+	public function editSave(): void {
 		$this->editsaveops(false);
 	}
 
@@ -851,27 +851,27 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function remove(): void {
+	public function remove(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		foreach ($ids as $id)
 			self::remove_feed($id, $_SESSION["uid"]);
 	}
 
-	function removeCat(): void {
+	public function removeCat(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		foreach ($ids as $id)
 			Feeds::_remove_cat($id, $_SESSION["uid"]);
 	}
 
-	function addCat(): void {
+	public function addCat(): void {
 		$feed_cat = clean($_REQUEST["cat"]);
 
 		Feeds::_add_cat($feed_cat, $_SESSION['uid']);
 	}
 
-	function importOpml(): void {
+	public function importOpml(): void {
 		$opml = new OPML($_REQUEST);
 		$opml->opml_import($_SESSION["uid"]);
 	}
@@ -1031,7 +1031,7 @@ class Pref_Feeds extends Handler_Protected {
 		PluginHost::getInstance()->run_hooks(PluginHost::HOOK_PREFS_TAB_SECTION, "prefFeedsPublishedGenerated");
 	}
 
-	function index(): void {
+	public function index(): void {
 		?>
 
 		<div dojoType='dijit.layout.TabContainer' tabPosition='left-h'>
@@ -1107,7 +1107,7 @@ class Pref_Feeds extends Handler_Protected {
 		];
 	}
 
-	function inactiveFeeds(): void {
+	public function inactiveFeeds(): void {
 
 		$inactive_feeds = ORM::for_table('ttrss_feeds')
 			->table_alias('f')
@@ -1135,7 +1135,7 @@ class Pref_Feeds extends Handler_Protected {
 		print json_encode($inactive_feeds);
 	}
 
-	function feedsWithErrors(): void {
+	public function feedsWithErrors(): void {
 		print json_encode(ORM::for_table('ttrss_feeds')
 			->select_many('id', 'title', 'feed_url', 'last_error', 'site_url')
 			->where_not_equal('last_error', '')
@@ -1144,7 +1144,7 @@ class Pref_Feeds extends Handler_Protected {
 			->find_array());
 	}
 
-	static function remove_feed(int $id, int $owner_uid): void {
+	public static function remove_feed(int $id, int $owner_uid): void {
 
 		if (PluginHost::getInstance()->run_hooks_until(PluginHost::HOOK_UNSUBSCRIBE_FEED, true, $id, $owner_uid))
 			return;
@@ -1186,14 +1186,14 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function batchSubscribe(): void {
+	public function batchSubscribe(): void {
 		print json_encode([
 			"enable_cats" => (int)Prefs::get(Prefs::ENABLE_FEED_CATS, $_SESSION['uid'], $_SESSION['profile'] ?? null),
 			"cat_select" => \Controls\select_feeds_cats("cat")
 		]);
 	}
 
-	function batchAddFeeds(): void {
+	public function batchAddFeeds(): void {
 		$cat_id = clean($_REQUEST['cat']);
 		$feeds = explode("\n", clean($_REQUEST['feeds']));
 		$login = clean($_REQUEST['login']);
@@ -1231,11 +1231,11 @@ class Pref_Feeds extends Handler_Protected {
 		}
 	}
 
-	function clearKeys(): void {
+	public function clearKeys(): void {
 		Feeds::_clear_access_keys($_SESSION['uid']);
 	}
 
-	function regenFeedKey(): void {
+	public function regenFeedKey(): void {
 		$feed_id = clean($_REQUEST['id']);
 		$is_cat = self::_param_to_bool($_REQUEST['is_cat'] ?? false);
 
@@ -1244,7 +1244,7 @@ class Pref_Feeds extends Handler_Protected {
 		print json_encode(["link" => $new_key]);
 	}
 
-	function getSharedURL(): void {
+	public function getSharedURL(): void {
 		$feed_id = clean($_REQUEST['id']);
 		$is_cat = self::_param_to_bool($_REQUEST['is_cat'] ?? false);
 		$search = clean($_REQUEST['search']);

@@ -46,7 +46,7 @@ class Feeds extends Handler_Protected {
 	const NEVER_GROUP_FEEDS = [ Feeds::FEED_RECENTLY_READ, Feeds::FEED_ARCHIVED ];
 	const NEVER_GROUP_BY_DATE = [ Feeds::FEED_PUBLISHED, Feeds::FEED_STARRED, Feeds::FEED_FRESH ];
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return $method === 'index';
 	}
 
@@ -419,7 +419,7 @@ class Feeds extends Handler_Protected {
 		return [$topmost_article_ids, $headlines_count, $feed, $disable_cache, $reply];
 	}
 
-	function catchupAll(): void {
+	public function catchupAll(): void {
 		$sth = $this->pdo->prepare("UPDATE ttrss_user_entries SET
 						last_read = NOW(), unread = false WHERE unread = true AND owner_uid = ?");
 		$sth->execute([$_SESSION['uid']]);
@@ -427,7 +427,7 @@ class Feeds extends Handler_Protected {
 		print json_encode(["message" => "UPDATE_COUNTERS"]);
 	}
 
-	function view(): void {
+	public function view(): void {
 		$profile = $_SESSION['profile'] ?? null;
 
 		$reply = [];
@@ -541,7 +541,7 @@ class Feeds extends Handler_Protected {
 		];
 	}
 
-	function subscribeToFeed(): void {
+	public function subscribeToFeed(): void {
 		global $update_intervals;
 
 		$local_update_intervals = $update_intervals;
@@ -555,7 +555,7 @@ class Feeds extends Handler_Protected {
 		]);
 	}
 
-	function search(): void {
+	public function search(): void {
 		print json_encode([
 			"show_language" => true,
 			"show_syntax_help" => count(PluginHost::getInstance()->get_hooks(PluginHost::HOOK_SEARCH)) == 0,
@@ -564,7 +564,7 @@ class Feeds extends Handler_Protected {
 		]);
 	}
 
-	function opensite(): void {
+	public function opensite(): void {
 		$feed = ORM::for_table('ttrss_feeds')
 			->where('owner_uid', $_SESSION['uid'])
 			->find_one((int)$_REQUEST['feed_id']);
@@ -582,7 +582,7 @@ class Feeds extends Handler_Protected {
 		print "Feed not found or has an empty site URL.";
 	}
 
-	function updatedebugger(): void {
+	public function updatedebugger(): void {
 		header("Content-type: text/html");
 
 		$xdebug = isset($_REQUEST["xdebug"]) ? (int)$_REQUEST["xdebug"] : Debug::LOG_VERBOSE;
@@ -714,7 +714,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @param array<int, string> $search
 	 */
-	static function _catchup(string $feed_id_or_tag_name, bool $cat_view, ?int $owner_uid = null, string $mode = 'all', ?array $search = null): void {
+	public static function _catchup(string $feed_id_or_tag_name, bool $cat_view, ?int $owner_uid = null, string $mode = 'all', ?array $search = null): void {
 		if (!$owner_uid) $owner_uid = $_SESSION['uid'];
 		$profile = isset($_SESSION['uid']) && $owner_uid == $_SESSION['uid'] && isset($_SESSION['profile']) ? $_SESSION['profile'] : null;
 
@@ -857,7 +857,7 @@ class Feeds extends Handler_Protected {
 	 * @param int|string $feed feed id or tag name
 	 * @throws PDOException
 	 */
-	static function _get_counters(int|string $feed, bool $is_cat = false, bool $unread_only = false, ?int $owner_uid = null): int {
+	public static function _get_counters(int|string $feed, bool $is_cat = false, bool $unread_only = false, ?int $owner_uid = null): int {
 		$n_feed = (int) $feed;
 		$need_entries = false;
 
@@ -942,7 +942,7 @@ class Feeds extends Handler_Protected {
 		}
 	}
 
-	function add(): void {
+	public function add(): void {
 		$feed = clean($_REQUEST['feed']);
 		$cat = (int) clean($_REQUEST['cat'] ?? '');
 		$need_auth = isset($_REQUEST['need_auth']);
@@ -974,7 +974,7 @@ class Feeds extends Handler_Protected {
 	 * 7 - Error while creating feed database entry.
 	 * 8 - Permission denied (ACCESS_LEVEL_READONLY).
 	 */
-	static function _subscribe(string $url, int $cat_id = 0, string $auth_login = '', string $auth_pass = '', int $update_interval = 0): array {
+	public static function _subscribe(string $url, int $cat_id = 0, string $auth_login = '', string $auth_pass = '', int $update_interval = 0): array {
 
 		$user = ORM::for_table('ttrss_users')
 			->select_many('id', 'login', 'access_level')
@@ -1070,13 +1070,13 @@ class Feeds extends Handler_Protected {
 		}
 	}
 
-	static function _get_icon_file(int $feed_id): string {
+	public static function _get_icon_file(int $feed_id): string {
 		$favicon_cache = DiskCache::instance('feed-icons');
 
 		return $favicon_cache->get_full_path((string)$feed_id);
 	}
 
-	static function _get_icon_url(int $feed_id, string $fallback_url = "") : string {
+	public static function _get_icon_url(int $feed_id, string $fallback_url = "") : string {
 		if (self::_has_icon($feed_id)) {
 			$icon_url = Config::get_self_url() . "/public.php?" . http_build_query([
 				'op' => 'feed_icon',
@@ -1089,7 +1089,7 @@ class Feeds extends Handler_Protected {
 		return $fallback_url;
 	}
 
-	static function _has_icon(int $feed_id): bool {
+	public static function _has_icon(int $feed_id): bool {
 		$favicon_cache = DiskCache::instance('feed-icons');
 
 		return $favicon_cache->exists((string)$feed_id);
@@ -1098,7 +1098,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @return false|string false if the icon ID was unrecognized, otherwise, the icon identifier string
 	 */
-	static function _get_icon(int $id): false|string {
+	public static function _get_icon(int $id): false|string {
 		return match ($id) {
 			Feeds::FEED_ARCHIVED => 'archive',
 			Feeds::FEED_STARRED => 'star',
@@ -1113,7 +1113,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @return false|int false if the feed couldn't be found by URL+owner, otherwise the feed ID
 	 */
-	static function _find_by_url(string $feed_url, int $owner_uid): false|int {
+	public static function _find_by_url(string $feed_url, int $owner_uid): false|int {
 		$feed = ORM::for_table('ttrss_feeds')
 			->where('owner_uid', $owner_uid)
 			->where('feed_url', $feed_url)
@@ -1127,7 +1127,7 @@ class Feeds extends Handler_Protected {
 	 *
 	 * @return false|int false if the category/feed couldn't be found by title, otherwise its ID
 	 */
-	static function _find_by_title(string $title, bool $cat = false, int $owner_uid = 0): false|int {
+	public static function _find_by_title(string $title, bool $cat = false, int $owner_uid = 0): false|int {
 
 		if ($cat) {
 			$res = ORM::for_table('ttrss_feed_categories')
@@ -1144,7 +1144,7 @@ class Feeds extends Handler_Protected {
 		return $res ? $res->id : false;
 	}
 
-	static function _get_title(int|string $id, int $owner_uid, bool $cat = false): string {
+	public static function _get_title(int|string $id, int $owner_uid, bool $cat = false): string {
 		if ($cat) {
 			return self::_get_cat_title($id, $owner_uid);
 		} else if ($id == Feeds::FEED_STARRED) {
@@ -1185,7 +1185,7 @@ class Feeds extends Handler_Protected {
 	}
 
 	// only real cats
-	static function _get_cat_marked(int $cat, int $owner_uid = 0): int {
+	public static function _get_cat_marked(int $cat, int $owner_uid = 0): int {
 
 		if (!$owner_uid) $owner_uid = $_SESSION["uid"];
 
@@ -1210,7 +1210,7 @@ class Feeds extends Handler_Protected {
 	}
 
 	// only real cats
-	static function _get_cat_published(int $cat, int $owner_uid = 0): int {
+	public static function _get_cat_published(int $cat, int $owner_uid = 0): int {
 
 			if (!$owner_uid) $owner_uid = $_SESSION["uid"];
 
@@ -1234,7 +1234,7 @@ class Feeds extends Handler_Protected {
 			return 0;
 		}
 
-	static function _get_cat_unread(int $cat, int $owner_uid = 0): int {
+	public static function _get_cat_unread(int $cat, int $owner_uid = 0): int {
 
 		if (!$owner_uid) $owner_uid = $_SESSION["uid"];
 
@@ -1273,7 +1273,7 @@ class Feeds extends Handler_Protected {
 	}
 
 	// only accepts real cats (>= 0)
-	static function _get_cat_children_unread(int $cat, int $owner_uid = 0): int {
+	public static function _get_cat_children_unread(int $cat, int $owner_uid = 0): int {
 		if (!$owner_uid) $owner_uid = $_SESSION["uid"];
 
 		$pdo = Db::pdo();
@@ -1292,7 +1292,7 @@ class Feeds extends Handler_Protected {
 		return $unread;
 	}
 
-	static function _get_global_unread(int $user_id = 0): int {
+	public static function _get_global_unread(int $user_id = 0): int {
 
 		if (!$user_id) $user_id = $_SESSION["uid"];
 
@@ -1309,7 +1309,7 @@ class Feeds extends Handler_Protected {
 		return $row["count"] ?? 0;
 	}
 
-	static function _get_cat_title(int $cat_id, int $owner_uid): string {
+	public static function _get_cat_title(int $cat_id, int $owner_uid): string {
 		switch ($cat_id) {
 			case Feeds::CATEGORY_UNCATEGORIZED:
 				return __("Uncategorized");
@@ -1351,7 +1351,7 @@ class Feeds extends Handler_Protected {
 	 *   8: string
 	 * } $result, $feed_title, $feed_site_url, $last_error, $last_updated, $highlight_words, $first_id, $is_vfeed, $query_error_override
 	 */
-	static function _get_headlines($params): array {
+	public static function _get_headlines($params): array {
 		$pdo = Db::pdo();
 
 		// WARNING: due to highly dynamic nature of this query its going to quote parameters
@@ -1803,7 +1803,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @return array<int, int>
 	 */
-	static function _get_parent_cats(int $cat, int $owner_uid): array {
+	public static function _get_parent_cats(int $cat, int $owner_uid): array {
 		$rv = [];
 
 		$feed_cats = ORM::for_table('ttrss_feed_categories')
@@ -1823,7 +1823,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @return array<int, int>
 	 */
-	static function _get_child_cats(int $cat, int $owner_uid): array {
+	public static function _get_child_cats(int $cat, int $owner_uid): array {
 		$rv = [];
 
 		$feed_cats = ORM::for_table('ttrss_feed_categories')
@@ -1841,7 +1841,7 @@ class Feeds extends Handler_Protected {
 	 * @param array<int, int> $feeds
 	 * @return array<int, int>
 	 */
-	static function _cats_of(array $feeds, int $owner_uid, bool $with_parents = false): array {
+	public static function _cats_of(array $feeds, int $owner_uid, bool $with_parents = false): array {
 		if (count($feeds) == 0)
 			return [];
 
@@ -1871,7 +1871,7 @@ class Feeds extends Handler_Protected {
 	}
 
 	// returns Uncategorized as 0
-	static function _cat_of(int $feed): int {
+	public static function _cat_of(int $feed): int {
 		$feed = ORM::for_table('ttrss_feeds')->select('cat_id')->find_one($feed);
 		return $feed ? (int) $feed->cat_id : -1;
 	}
@@ -1919,11 +1919,11 @@ class Feeds extends Handler_Protected {
 		return $feedUrls;
 	}
 
-	static function _is_html(string $content): bool {
+	public static function _is_html(string $content): bool {
 		return preg_match("/<html|DOCTYPE html/i", substr($content, 0, 8192)) !== 0;
 	}
 
-	static function _remove_cat(int $id, int $owner_uid): void {
+	public static function _remove_cat(int $id, int $owner_uid): void {
 		$cat = ORM::for_table('ttrss_feed_categories')
 			->where('owner_uid', $owner_uid)
 			->find_one($id);
@@ -1932,7 +1932,7 @@ class Feeds extends Handler_Protected {
 			$cat->delete();
 	}
 
-	static function _add_cat(string $title, int $owner_uid, ?int $parent_cat = null, int $order_id = 0): bool {
+	public static function _add_cat(string $title, int $owner_uid, ?int $parent_cat = null, int $order_id = 0): bool {
 
 		$cat = ORM::for_table('ttrss_feed_categories')
 			->where(['owner_uid' => $owner_uid, 'parent_cat' => $parent_cat, 'title' => $title])
@@ -1954,7 +1954,7 @@ class Feeds extends Handler_Protected {
 		return false;
 	}
 
-	static function _clear_access_keys(int $owner_uid): void {
+	public static function _clear_access_keys(int $owner_uid): void {
 		ORM::for_table('ttrss_access_keys')
 			->where('owner_uid', $owner_uid)
 			->delete_many();
@@ -1965,7 +1965,7 @@ class Feeds extends Handler_Protected {
 	 *
 	 * @see Handler_Public#generate_syndicated_feed()
 	 */
-	static function _update_access_key(string $feed_id, bool $is_cat, int $owner_uid): ?string {
+	public static function _update_access_key(string $feed_id, bool $is_cat, int $owner_uid): ?string {
 		ORM::for_table('ttrss_access_keys')
 			->where(['owner_uid' => $owner_uid, 'feed_id' => $feed_id, 'is_cat' => $is_cat])
 			->delete_many();
@@ -1978,7 +1978,7 @@ class Feeds extends Handler_Protected {
 	 *
 	 * @see Handler_Public#generate_syndicated_feed()
 	 */
-	static function _get_access_key(string $feed_id, bool $is_cat, int $owner_uid): ?string {
+	public static function _get_access_key(string $feed_id, bool $is_cat, int $owner_uid): ?string {
 		$key = ORM::for_table('ttrss_access_keys')
 			->where(['owner_uid' => $owner_uid, 'feed_id' => $feed_id, 'is_cat' => $is_cat])
 			->find_one();
@@ -2001,7 +2001,7 @@ class Feeds extends Handler_Protected {
 		return null;
 	}
 
-	static function _purge(int $feed_id, int $purge_interval): ?int {
+	public static function _purge(int $feed_id, int $purge_interval): ?int {
 
 		if (!$purge_interval) $purge_interval = self::_get_purge_interval($feed_id);
 
@@ -2352,7 +2352,7 @@ class Feeds extends Handler_Protected {
 	/**
 	 * @return array{0: string, 1: bool}
 	 */
-	static function _order_to_override_query(string $order): array {
+	public static function _order_to_override_query(string $order): array {
 		$query = "";
 		$skip_first_id = false;
 
@@ -2392,7 +2392,7 @@ class Feeds extends Handler_Protected {
 	 *
 	 * @return string plaintext representation of an encrypted feed password if encrypted or plaintext password otherwise
 	 * */
-	static function decrypt_feed_pass(string $auth_pass) : string {
+	public static function decrypt_feed_pass(string $auth_pass) : string {
 		$key = Config::get(Config::ENCRYPTION_KEY);
 
 		if ($auth_pass && $key) {

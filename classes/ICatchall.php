@@ -1,4 +1,4 @@
 <?php
 interface ICatchall {
-	function catchall(string $method): void;
+	public function catchall(string $method): void;
 }

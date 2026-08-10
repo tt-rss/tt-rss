@@ -4,15 +4,15 @@ class Pref_System extends Handler_Administrative {
 
 	private const LOG_PAGE_LIMIT = 15;
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return $method === 'index';
 	}
 
-	function clearLog(): void {
+	public function clearLog(): void {
 		$this->pdo->query("DELETE FROM ttrss_error_log");
 	}
 
-	function sendTestEmail(): void {
+	public function sendTestEmail(): void {
 		$mail_address = clean($_REQUEST["mail_address"]);
 
 		$mailer = new Mailer();
@@ -27,7 +27,7 @@ class Pref_System extends Handler_Administrative {
 		print json_encode(['rc' => $rc, 'error' => $mailer->error()]);
 	}
 
-	function getscheduledtasks(): void {
+	public function getscheduledtasks(): void {
 		?>
 		<table width='100%' class='event-log'>
 		<tr>
@@ -62,7 +62,7 @@ class Pref_System extends Handler_Administrative {
 		<?php
 	}
 
-	function getphpinfo(): void {
+	public function getphpinfo(): void {
 		ob_start();
 		phpinfo();
 		$info = ob_get_contents();
@@ -187,7 +187,7 @@ class Pref_System extends Handler_Administrative {
 		<?php
 	}
 
-	function index(): void {
+	public function index(): void {
 
 		$severity = (int) ($_REQUEST["severity"] ?? E_USER_WARNING);
 		$page = (int) ($_REQUEST["page"] ?? 0);

@@ -26,7 +26,7 @@ class Logger {
 		16384		=> 'E_USER_DEPRECATED',
 		32767		=> 'E_ALL'];
 
-	static function log_error(int $errno, string $errstr, string $file, int $line, string $context): bool {
+	public static function log_error(int $errno, string $errstr, string $file, int $line, string $context): bool {
 		return self::get_instance()->_log_error($errno, $errstr, $file, $line, $context);
 	}
 
@@ -39,7 +39,7 @@ class Logger {
 			return false;
 	}
 
-	static function log(int $errno, string $errstr, string $context = ""): bool {
+	public static function log(int $errno, string $errstr, string $context = ""): bool {
 		return self::get_instance()->_log($errno, $errstr, $context);
 	}
 
@@ -54,7 +54,7 @@ class Logger {
 		//
 	}
 
-	function __construct() {
+	public function __construct() {
 		$this->adapter = match (Config::get(Config::LOG_DESTINATION)) {
 			self::LOG_DEST_SQL => new Logger_SQL(),
 			self::LOG_DEST_SYSLOG => new Logger_Syslog(),
@@ -73,7 +73,7 @@ class Logger {
 		return self::$instance;
 	}
 
-	static function get() : Logger {
+	public static function get() : Logger {
 		user_error("Please don't use Logger::get(), call Logger::log(...) instead.", E_USER_DEPRECATED);
 		return self::get_instance();
 	}

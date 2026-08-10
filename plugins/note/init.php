@@ -1,30 +1,30 @@
 <?php
 class Note extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Adds support for setting article notes",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_ARTICLE_BUTTON, $this);
 	}
 
-	function get_js() {
+	public function get_js() {
 		return file_get_contents(__DIR__ . "/note.js");
 	}
 
-	function get_css() {
+	public function get_css() {
 		return file_get_contents(__DIR__ . "/note.css");
 	}
 
-	function hook_article_button($line) {
+	public function hook_article_button($line) {
 		return "<i class='material-icons' onclick=\"Plugins.Note.edit(".$line["id"].")\"
 			style='cursor : pointer' title=\"".__('Edit article note')."\">note</i>";
 	}
 
-	function edit() : void {
+	public function edit() : void {
 		$id = clean($_REQUEST['id']);
 
 		$sth = $this->pdo->prepare("SELECT note FROM ttrss_user_entries WHERE
@@ -52,7 +52,7 @@ class Note extends Plugin {
 		<?php
 	}
 
-	function setNote() : void {
+	public function setNote() : void {
 		$id = (int)clean($_REQUEST["id"]);
 		$note = clean($_REQUEST["note"]);
 
@@ -63,7 +63,7 @@ class Note extends Plugin {
 		print json_encode(["id" => $id, "note" => $note]);
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

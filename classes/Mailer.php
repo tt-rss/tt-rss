@@ -6,7 +6,7 @@ class Mailer {
 	 * @param array{to_name?: string, to_address: string, subject: string, message: string, from_name?: string, from_address?: string, headers?: array<string, mixed>} $params
 	 * @return bool|int bool if the default mail function handled the request, otherwise an int as described in Mailer#mail()
 	 */
-	function mail(array $params): bool|int {
+	public function mail(array $params): bool|int {
 
 		$to_name = $params["to_name"] ?? "";
 		$to_address = $params["to_address"];
@@ -56,12 +56,12 @@ class Mailer {
 		return $rc;
 	}
 
-	function set_error(string $message): void {
+	public function set_error(string $message): void {
 		$this->last_error = $message;
 		user_error("Error sending email: $message", E_USER_WARNING);
 	}
 
-	function error(): string {
+	public function error(): string {
 		return $this->last_error;
 	}
 }

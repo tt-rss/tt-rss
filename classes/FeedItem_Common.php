@@ -4,7 +4,7 @@ abstract class FeedItem_Common extends FeedItem {
 	protected readonly DOMDocument $doc;
 	protected readonly DOMXPath $xpath;
 
-	function __construct(DOMElement $elem, DOMDocument $doc, DOMXPath $xpath) {
+	public function __construct(DOMElement $elem, DOMDocument $doc, DOMXPath $xpath) {
 		$this->elem = $elem;
 		$this->doc = $doc;
 		$this->xpath = $xpath;
@@ -20,11 +20,11 @@ abstract class FeedItem_Common extends FeedItem {
 		}
 	}
 
-	function get_element(): DOMElement {
+	public function get_element(): DOMElement {
 		return $this->elem;
 	}
 
-	function get_author(): string {
+	public function get_author(): string {
 		/** @var DOMElement|null */
 		$author = $this->elem->getElementsByTagName("author")->item(0);
 
@@ -50,7 +50,7 @@ abstract class FeedItem_Common extends FeedItem {
 		return implode(", ", $authors);
 	}
 
-	function get_comments_url(): string {
+	public function get_comments_url(): string {
 		//RSS only. Use a query here to avoid namespace clashes (e.g. with slash).
 		//might give a wrong result if a default namespace was declared (possible with XPath 2.0)
 		$com_url = $this->xpath->query("comments", $this->elem)->item(0);
@@ -68,7 +68,7 @@ abstract class FeedItem_Common extends FeedItem {
 		return '';
 	}
 
-	function get_comments_count(): int {
+	public function get_comments_count(): int {
 		//also query for ATE stuff here
 		$query = "slash:comments|thread:total|atom:link[@rel='replies']/@thread:count";
 		$comments = $this->xpath->query($query, $this->elem)->item(0);
@@ -86,7 +86,7 @@ abstract class FeedItem_Common extends FeedItem {
 	 * @see https://www.rssboard.org/media-rss
 	 * @return array<int, FeedEnclosure>
 	 */
-	function get_enclosures(): array {
+	public function get_enclosures(): array {
 		$encs = [];
 
 		$enclosures = $this->xpath->query("media:content", $this->elem);
@@ -158,14 +158,14 @@ abstract class FeedItem_Common extends FeedItem {
 		return $encs;
 	}
 
-	function count_children(DOMElement $node): int {
+	public function count_children(DOMElement $node): int {
 		return $node->getElementsByTagName("*")->length;
 	}
 
 	/**
 	 * @return false|string false on failure, otherwise string contents
 	 */
-	function subtree_or_text(DOMElement $node): false|string {
+	public function subtree_or_text(DOMElement $node): false|string {
 		if ($this->count_children($node) == 0) {
 			return $node->nodeValue;
 		} else {
@@ -178,7 +178,7 @@ abstract class FeedItem_Common extends FeedItem {
 	 *
 	 * @return array<int, string>
 	 */
-	static function normalize_categories(array $cats): array {
+	public static function normalize_categories(array $cats): array {
 
 		$tmp = [];
 

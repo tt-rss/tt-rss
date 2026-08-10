@@ -1,17 +1,17 @@
 <?php
 class No_Iframes extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Remove embedded iframes (unless whitelisted)",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_SANITIZE, $this);
 	}
 
-	function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id) {
+	public function hook_sanitize($doc, $site_url, $allowed_elements, $disallowed_attributes, $article_id) {
 
 		$xpath = new DOMXpath($doc);
 		$entries = $xpath->query('//iframe');
@@ -25,7 +25,7 @@ class No_Iframes extends Plugin {
 		return [$doc, $allowed_elements, $disallowed_attributes];
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

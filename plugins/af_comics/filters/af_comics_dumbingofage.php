@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_DumbingOfAge extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["Dumbing of Age"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 		if (str_contains($article["link"], "dumbingofage.com")) {
 				$res = UrlHelper::fetch([
 					'url' => $article['link'],

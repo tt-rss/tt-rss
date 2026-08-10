@@ -6,14 +6,14 @@ class Auth_Remote extends Auth_Base {
 	 */
 	const AUTH_REMOTE_POST_LOGOUT_URL = "AUTH_REMOTE_POST_LOGOUT_URL";
 
-	function about() {
+	public function about() {
 		return [null,
 			"Authenticates against external passwords (HTTP Authentication, SSL certificates)",
 			"fox",
 			true];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_AUTH_USER, $this);
 
 		Config::add(self::AUTH_REMOTE_POST_LOGOUT_URL, "", Config::T_STRING);
@@ -23,7 +23,7 @@ class Auth_Remote extends Auth_Base {
 		}
 	}
 
-	function get_login_by_ssl_certificate() : string {
+	public function get_login_by_ssl_certificate() : string {
 		$cert_serial = Pref_Prefs::_get_ssl_certificate_id();
 
 		if ($cert_serial) {
@@ -40,7 +40,7 @@ class Auth_Remote extends Auth_Base {
 		return "";
 	}
 
-	function authenticate($login, $password, $service = '') {
+	public function authenticate($login, $password, $service = '') {
 		$try_login = "";
 
 		foreach (["REMOTE_USER", "HTTP_REMOTE_USER", "REDIRECT_REMOTE_USER", "PHP_AUTH_USER"] as $hdr) {
@@ -84,13 +84,13 @@ class Auth_Remote extends Auth_Base {
 		return false;
 	}
 
-	function hook_post_logout($login, $user_id) {
+	public function hook_post_logout($login, $user_id) {
 		return [
 			Config::get(self::AUTH_REMOTE_POST_LOGOUT_URL)
 			];
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

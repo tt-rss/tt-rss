@@ -1,17 +1,17 @@
 <?php
 class Hotkeys_Swap_JK extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Swap j and k hotkeys (for vi brethren)",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_HOTKEY_MAP, $this);
 	}
 
-	function hook_hotkey_map($hotkeys) {
+	public function hook_hotkey_map($hotkeys) {
 
 		$hotkeys["j"] = "next_feed";
 		$hotkeys["J"] = "next_unread_feed";
@@ -21,7 +21,7 @@ class Hotkeys_Swap_JK extends Plugin {
 		return $hotkeys;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

@@ -256,7 +256,7 @@ class Handler_Public extends Handler {
 		}
 	}
 
-	function getProfiles(): void {
+	public function getProfiles(): void {
 		$login = clean($_REQUEST["login"]);
 		$rv = [];
 
@@ -280,7 +280,7 @@ class Handler_Public extends Handler {
 		print json_encode($rv);
 	}
 
-	function logout(): void {
+	public function logout(): void {
 		if (validate_csrf($_POST["csrf_token"])) {
 
 			$login = $_SESSION["name"];
@@ -307,7 +307,7 @@ class Handler_Public extends Handler {
 		}
 	}
 
-	function rss(): void {
+	public function rss(): void {
 		$feed = clean($_REQUEST["id"]);
 		$key = clean($_REQUEST["key"]);
 		$is_cat = self::_param_to_bool($_REQUEST["is_cat"] ?? false);
@@ -342,7 +342,7 @@ class Handler_Public extends Handler {
 		header('HTTP/1.1 403 Forbidden');
 	}
 
-	function login(): void {
+	public function login(): void {
 		if (!Config::get(Config::SINGLE_USER_MODE)) {
 
 			$login = clean($_POST["login"]);
@@ -393,12 +393,12 @@ class Handler_Public extends Handler {
 		}
 	}
 
-	function index(): void {
+	public function index(): void {
 		header("Content-Type: text/plain");
 		print Errors::to_json(Errors::E_UNKNOWN_METHOD);
 	}
 
-	function forgotpass(): void {
+	public function forgotpass(): void {
 		if (Config::get(Config::DISABLE_LOGIN_FORM) || !str_contains(Config::get(Config::PLUGINS), "auth_internal")) {
 			header($_SERVER["SERVER_PROTOCOL"]." 403 Forbidden");
 			echo "Forbidden.";
@@ -609,7 +609,7 @@ class Handler_Public extends Handler {
 		print "</html>";
 	}
 
-	function dbupdate(): void {
+	public function dbupdate(): void {
 		startup_gettext();
 
 		if (!Config::get(Config::SINGLE_USER_MODE) && ($_SESSION["access_level"] ?? 0) < 10) {
@@ -752,7 +752,7 @@ class Handler_Public extends Handler {
 		<?php
 	}
 
-	function cached(): void {
+	public function cached(): void {
 		[$cache_dir, $filename] = explode("/", $_GET["file"], 2);
 
 		// we do not allow files with extensions at the moment
@@ -768,7 +768,7 @@ class Handler_Public extends Handler {
 		}
 	}
 
-	function feed_icon() : void {
+	public function feed_icon() : void {
 		$id = (int)$_REQUEST['id'];
 		$cache = DiskCache::instance('feed-icons');
 
@@ -822,7 +822,7 @@ class Handler_Public extends Handler {
 		}
 	}
 
-	static function _render_login_form(string $return_to = ""): void {
+	public static function _render_login_form(string $return_to = ""): void {
 		header('Cache-Control: public');
 
 		if ($return_to)

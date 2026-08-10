@@ -3,37 +3,37 @@ class Share extends Plugin {
 	/** @var PluginHost $host */
 	private $host;
 
-	function about() {
+	public function about() {
 		return [null,
 			"Share article by unique URL",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$this->host = $host;
 
 		$host->add_hook($host::HOOK_ARTICLE_BUTTON, $this);
 		$host->add_hook($host::HOOK_PREFS_TAB_SECTION, $this);
 	}
 
-	function is_public_method($method) {
+	public function is_public_method($method) {
 		return $method == "get";
 	}
 
-	function get_js() {
+	public function get_js() {
 		return file_get_contents(__DIR__ . "/share.js");
 	}
 
-	function get_css() {
+	public function get_css() {
 		return file_get_contents(__DIR__ . "/share.css");
 	}
 
-	function get_prefs_js() {
+	public function get_prefs_js() {
 		return file_get_contents(__DIR__ . "/share_prefs.js");
 	}
 
 	/** @return void */
-	function unshare() {
+	public function unshare() {
 		$id = $_REQUEST['id'];
 
 		$sth = $this->pdo->prepare("UPDATE ttrss_user_entries SET uuid = '' WHERE int_id = ?
@@ -46,7 +46,7 @@ class Share extends Plugin {
 	/**
 	 * @param string $id
 	 * @return void */
-	function hook_prefs_tab_section($id) {
+	public function hook_prefs_tab_section($id) {
 		if ($id == "prefFeedsPublishedGenerated") {
 			?>
 			<hr/>
@@ -61,7 +61,7 @@ class Share extends Plugin {
 	}
 
 	/** @return void */
-	function clearArticleKeys() {
+	public function clearArticleKeys() {
 		$sth = $this->pdo->prepare("UPDATE ttrss_user_entries SET uuid = '' WHERE
 			owner_uid = ?");
 		$sth->execute([$_SESSION['uid']]);
@@ -70,7 +70,7 @@ class Share extends Plugin {
 	}
 
 	/** @return void */
-	function newkey() {
+	public function newkey() {
 		$id = $_REQUEST['id'];
 		$uuid = uniqid_short();
 
@@ -85,7 +85,7 @@ class Share extends Plugin {
 	 * @param array<string,mixed> $line
 	 *
 	 * @return string */
-	function hook_article_button($line) {
+	public function hook_article_button($line) {
 		$icon_class = !empty($line['uuid']) ? "is-shared" : "";
 
 		return "<i class='material-icons icon-share share-icon-".$line['int_id']." $icon_class'
@@ -94,7 +94,7 @@ class Share extends Plugin {
 	}
 
 	/** @return void */
-	function get() {
+	public function get() {
 		$uuid = clean($_REQUEST["key"] ?? "");
 
 		if ($uuid) {
@@ -241,7 +241,7 @@ class Share extends Plugin {
 	}
 
 	/** @return void */
-	function shareDialog() {
+	public function shareDialog() {
 		$id = (int)clean($_REQUEST['id'] ?? 0);
 
 		$sth = $this->pdo->prepare("SELECT uuid FROM ttrss_user_entries WHERE int_id = ?
@@ -287,7 +287,7 @@ class Share extends Plugin {
 	}
 
 	/** @return int */
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

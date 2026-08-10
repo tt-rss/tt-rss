@@ -4,7 +4,7 @@ class Counters {
 	/**
 	 * @return array<int, array<string, int|string>>
 	 */
-	static function get_all(): array {
+	public static function get_all(): array {
 		return [
 			...self::get_global(),
 			...self::get_virt(),
@@ -19,7 +19,7 @@ class Counters {
 	 * @param array<int>|null $label_ids
 	 * @return array<int, array<string, int|string>>
 	 */
-	static function get_conditional(?array $feed_ids = null, ?array $label_ids = null): array {
+	public static function get_conditional(?array $feed_ids = null, ?array $label_ids = null): array {
 		return [
 			...self::get_global(),
 			...self::get_virt(),
@@ -253,7 +253,7 @@ class Counters {
 	 * @param array<int>|null $label_ids
 	 * @return array<int, array{id: int, counter: int, auxcounter: int, markedcounter: int, publishedcounter: int, description: string}>
 	 */
-	static function get_labels(?array $label_ids = null): array {
+	public static function get_labels(?array $label_ids = null): array {
 		$ret = [];
 
 		$pdo = Db::pdo();

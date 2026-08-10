@@ -4,7 +4,7 @@ class Bookmarklets extends Plugin {
 	/** @var PluginHost $host */
 	private $host;
 
-	function about() {
+	public function about() {
 		return [null,
 			"Easy feed subscription and web page sharing using bookmarklets",
 			"fox",
@@ -12,17 +12,17 @@ class Bookmarklets extends Plugin {
 			"https://tt-rss.org/docs/Share-Anything.html"];
   }
 
-	function init($host) {
+	public function init($host) {
 		$this->host = $host;
 
 		$host->add_hook($host::HOOK_PREFS_TAB, $this);
 	}
 
-	function is_public_method($method) {
+	public function is_public_method($method) {
 		return in_array($method, ["subscribe", "sharepopup"]);
 	}
 
-	function subscribe() : void {
+	public function subscribe() : void {
 		if (Config::get(Config::SINGLE_USER_MODE)) {
 			UserHelper::login_sequence();
 		}
@@ -173,7 +173,7 @@ class Bookmarklets extends Plugin {
 		}
 	}
 
-	function sharepopup() : void {
+	public function sharepopup() : void {
 		if (Config::get(Config::SINGLE_USER_MODE)) {
 			UserHelper::login_sequence();
 		}
@@ -338,7 +338,7 @@ class Bookmarklets extends Plugin {
 		<?php
 	}
 
-	function hook_prefs_tab($args) {
+	public function hook_prefs_tab($args) {
 		if ($args != "prefFeeds")
 			return;
 
@@ -374,7 +374,7 @@ class Bookmarklets extends Plugin {
 		<?php
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

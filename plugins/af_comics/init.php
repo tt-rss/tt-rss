@@ -4,13 +4,13 @@ class Af_Comics extends Plugin {
 	/** @var array<object> $filters */
 	private $filters = [];
 
-	function about() {
+	public function about() {
 		return [null,
 			"Fixes RSS feeds of assorted comic strips",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_FETCH_FEED, $this);
 		$host->add_hook($host::HOOK_FEED_BASIC_INFO, $this);
 		$host->add_hook($host::HOOK_SUBSCRIBE_FEED, $this);
@@ -45,7 +45,7 @@ class Af_Comics extends Plugin {
 		}
 	}
 
-	function hook_prefs_tab($args) {
+	public function hook_prefs_tab($args) {
 		if ($args != "prefFeeds") return;
 
 		$comics = [];
@@ -75,7 +75,7 @@ class Af_Comics extends Plugin {
 		<?php
 	}
 
-	function hook_article_filter($article) {
+	public function hook_article_filter($article) {
 		foreach ($this->filters as $f) {
 			if ($f->process($article))
 				break;
@@ -84,7 +84,7 @@ class Af_Comics extends Plugin {
 		return $article;
 	}
 
-	function hook_fetch_feed($feed_data, $fetch_url, $owner_uid, $feed, $last_article_timestamp, $auth_login, $auth_pass) {
+	public function hook_fetch_feed($feed_data, $fetch_url, $owner_uid, $feed, $last_article_timestamp, $auth_login, $auth_pass) {
 		foreach ($this->filters as $f) {
 			$res = $f->on_fetch($fetch_url);
 
@@ -95,7 +95,7 @@ class Af_Comics extends Plugin {
 		return $feed_data;
 	}
 
-	function hook_subscribe_feed($contents, $url, $auth_login, $auth_pass) {
+	public function hook_subscribe_feed($contents, $url, $auth_login, $auth_pass) {
 		foreach ($this->filters as $f) {
 			$res = $f->on_subscribe($url);
 
@@ -106,7 +106,7 @@ class Af_Comics extends Plugin {
 		return $contents;
 	}
 
-	function hook_feed_basic_info($basic_info, $fetch_url, $owner_uid, $feed, $auth_login, $auth_pass) {
+	public function hook_feed_basic_info($basic_info, $fetch_url, $owner_uid, $feed, $auth_login, $auth_pass) {
 		foreach ($this->filters as $f) {
 			$res = $f->on_basic_info($fetch_url);
 
@@ -117,7 +117,7 @@ class Af_Comics extends Plugin {
 		return $basic_info;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

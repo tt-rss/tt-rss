@@ -1,21 +1,21 @@
 <?php
 class Af_Zz_VidMute extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Mute audio in HTML5 videos",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 
 	}
 
-	function get_js() {
+	public function get_js() {
 		return file_get_contents(__DIR__ . "/init.js");
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

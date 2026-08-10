@@ -1,11 +1,11 @@
 <?php
 class Pref_Labels extends Handler_Protected {
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return in_array($method, ['index', 'getlabeltree']);
 	}
 
-	function edit(): void {
+	public function edit(): void {
 		$label = ORM::for_table('ttrss_labels2')
 			->where('owner_uid', $_SESSION['uid'])
 			->find_one($_REQUEST['id']);
@@ -15,7 +15,7 @@ class Pref_Labels extends Handler_Protected {
 		}
 	}
 
-	function getlabeltree(): void {
+	public function getlabeltree(): void {
 		$root = [];
 		$root['id'] = 'root';
 		$root['name'] = __('Labels');
@@ -46,7 +46,7 @@ class Pref_Labels extends Handler_Protected {
 		]);
 	}
 
-	function colorset(): void {
+	public function colorset(): void {
 		$kind = clean($_REQUEST["kind"]);
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 		$color = clean($_REQUEST["color"]);
@@ -79,7 +79,7 @@ class Pref_Labels extends Handler_Protected {
 		}
 	}
 
-	function colorreset(): void {
+	public function colorreset(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		foreach ($ids as $id) {
@@ -96,7 +96,7 @@ class Pref_Labels extends Handler_Protected {
 		}
 	}
 
-	function save(): void {
+	public function save(): void {
 
 		$id = clean($_REQUEST["id"]);
 		$caption = clean($_REQUEST["caption"]);
@@ -143,7 +143,7 @@ class Pref_Labels extends Handler_Protected {
 
 	}
 
-	function remove(): void {
+	public function remove(): void {
 		$ids = self::_param_to_int_array($_REQUEST['ids'] ?? '');
 
 		foreach ($ids as $id) {
@@ -152,7 +152,7 @@ class Pref_Labels extends Handler_Protected {
 
 	}
 
-	function add(): void {
+	public function add(): void {
 		$caption = clean($_REQUEST["caption"]);
 		$output = clean($_REQUEST["output"] ?? false);
 
@@ -165,7 +165,7 @@ class Pref_Labels extends Handler_Protected {
 		}
 	}
 
-	function index(): void {
+	public function index(): void {
 		?>
 		<div dojoType='dijit.layout.BorderContainer' gutters='false'>
 			<div style='padding : 0px' dojoType='dijit.layout.ContentPane' region='top'>

@@ -2,7 +2,7 @@
 class FeedItem_Atom extends FeedItem_Common {
 	const NS_XML = "http://www.w3.org/XML/1998/namespace";
 
-	function get_id(): string {
+	public function get_id(): string {
 		$id = $this->elem->getElementsByTagName("id")->item(0);
 
 		if ($id) {
@@ -15,7 +15,7 @@ class FeedItem_Atom extends FeedItem_Common {
 	/**
 	 * @return int|false a timestamp on success, false otherwise
 	 */
-	function get_date(): false|int {
+	public function get_date(): false|int {
 		$updated = $this->elem->getElementsByTagName("updated")->item(0);
 
 		if ($updated) {
@@ -39,7 +39,7 @@ class FeedItem_Atom extends FeedItem_Common {
 	}
 
 
-	function get_link(): string {
+	public function get_link(): string {
 		$links = $this->elem->getElementsByTagName("link");
 
 		foreach ($links as $link) {
@@ -59,7 +59,7 @@ class FeedItem_Atom extends FeedItem_Common {
 		return '';
 	}
 
-	function get_title(): string {
+	public function get_title(): string {
 		$title = $this->elem->getElementsByTagName("title")->item(0);
 		return $title ? clean(trim($title->nodeValue)) : '';
 	}
@@ -100,7 +100,7 @@ class FeedItem_Atom extends FeedItem_Common {
 		return $content;
 	}
 
-	function get_content(): string {
+	public function get_content(): string {
 		/** @var DOMElement|null */
 		$content = $this->elem->getElementsByTagName("content")->item(0);
 
@@ -126,7 +126,7 @@ class FeedItem_Atom extends FeedItem_Common {
 	}
 
 	// TODO: duplicate code should be merged with get_content()
-	function get_description(): string {
+	public function get_description(): string {
 		/** @var DOMElement|null */
 		$content = $this->elem->getElementsByTagName("summary")->item(0);
 
@@ -154,7 +154,7 @@ class FeedItem_Atom extends FeedItem_Common {
 	/**
 	 * @return array<int, string>
 	 */
-	function get_categories(): array {
+	public function get_categories(): array {
 		$categories = $this->elem->getElementsByTagName("category");
 		$cats = [];
 
@@ -174,7 +174,7 @@ class FeedItem_Atom extends FeedItem_Common {
 	/**
 	 * @return array<int, FeedEnclosure>
 	 */
-	function get_enclosures(): array {
+	public function get_enclosures(): array {
 		$links = $this->elem->getElementsByTagName("link");
 
 		$encs = [];
@@ -203,7 +203,7 @@ class FeedItem_Atom extends FeedItem_Common {
 		return $encs;
 	}
 
-	function get_language(): string {
+	public function get_language(): string {
 		$lang = $this->elem->getAttributeNS(self::NS_XML, "lang");
 
 		if (!empty($lang)) {

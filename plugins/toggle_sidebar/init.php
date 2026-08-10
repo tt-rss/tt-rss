@@ -1,21 +1,21 @@
 <?php
 class Toggle_Sidebar extends Plugin {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Adds a main toolbar button to toggle sidebar",
 			"fox"];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_MAIN_TOOLBAR_BUTTON, $this);
 	}
 
-	function get_js() {
+	public function get_js() {
 		return file_get_contents(__DIR__ . "/init.js");
 	}
 
-	function hook_main_toolbar_button() {
+	public function hook_main_toolbar_button() {
 		?>
 
 		<button dojoType="dijit.form.Button" onclick="Plugins.Toggle_Sidebar.toggle(this)">
@@ -26,7 +26,7 @@ class Toggle_Sidebar extends Plugin {
 		<?php
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

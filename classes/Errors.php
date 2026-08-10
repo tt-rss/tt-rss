@@ -11,11 +11,11 @@ class Errors {
 	 * @param Errors::E_* $code
 	 * @param array<string, string> $params
 	 */
-	static function to_json(string $code, array $params = []): string {
+	public static function to_json(string $code, array $params = []): string {
 		return json_encode(["error" => ["code" => $code, "params" => $params]]);
 	}
 
-	static function libxml_last_error() : string {
+	public static function libxml_last_error() : string {
 		$error = libxml_get_last_error();
 		$error_formatted = "";
 
@@ -32,7 +32,7 @@ class Errors {
 		return UConverter::transcode($error_formatted, 'UTF-8', 'UTF-8');
 	}
 
-	static function format_libxml_error(LibXMLError $error) : string {
+	public static function format_libxml_error(LibXMLError $error) : string {
 		return sprintf("LibXML error %s at line %d (column %d): %s",
 			$error->code, $error->line, $error->column,
 			$error->message);

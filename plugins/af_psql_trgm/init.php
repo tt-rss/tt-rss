@@ -10,14 +10,14 @@ class Af_Psql_Trgm extends Plugin {
 	/** @var int */
 	private $default_min_length = 32;
 
-	function about() {
+	public function about() {
 		return [null,
 			"Marks similar articles as read (requires pg_trgm)",
 			"fox"];
 	}
 
 	/** @return void */
-	function save() {
+	public function save() {
 		$similarity = (float) $_POST["similarity"];
 		$min_title_length = (int) $_POST["min_title_length"];
 		$enable_globally = checkbox_to_sql_bool($_POST["enable_globally"] ?? "");
@@ -34,7 +34,7 @@ class Af_Psql_Trgm extends Plugin {
 		echo T_sprintf("Data saved (%s, %d)", $similarity, $enable_globally);
 	}
 
-	function init($host) {
+	public function init($host) {
 		$this->host = $host;
 
 		$host->add_hook($host::HOOK_ARTICLE_FILTER, $this);
@@ -44,12 +44,12 @@ class Af_Psql_Trgm extends Plugin {
 		$host->add_hook($host::HOOK_ARTICLE_BUTTON, $this);
 	}
 
-	function get_js() {
+	public function get_js() {
 		return file_get_contents(__DIR__ . "/init.js");
 	}
 
 	/** @return void */
-	function showrelated() {
+	public function showrelated() {
 		$id = (int) $_REQUEST['id'];
 		$owner_uid = $_SESSION["uid"];
 
@@ -119,13 +119,13 @@ class Af_Psql_Trgm extends Plugin {
 
 	}
 
-	function hook_article_button($line) {
+	public function hook_article_button($line) {
 		return "<i style=\"cursor : pointer\" class='material-icons'
 			onclick=\"Plugins.Psql_Trgm.showRelated(".$line["id"].")\"
 			title=\"".__('Show related articles')."\">bookmark_outline</i>";
 	}
 
-	function hook_prefs_tab($args) {
+	public function hook_prefs_tab($args) {
 		if ($args != "prefFeeds") return;
 
 		$similarity = $this->host->get($this, "similarity", $this->default_similarity);
@@ -220,7 +220,7 @@ class Af_Psql_Trgm extends Plugin {
 		<?php
 	}
 
-	function hook_prefs_edit_feed($feed_id) {
+	public function hook_prefs_edit_feed($feed_id) {
 			$enabled_feeds = $this->host->get_array($this, "enabled_feeds");
 		?>
 			<header><?= __("Similarity (af_psql_trgm)") ?></header>
@@ -237,7 +237,7 @@ class Af_Psql_Trgm extends Plugin {
 		<?php
 	}
 
-	function hook_prefs_save_feed($feed_id) {
+	public function hook_prefs_save_feed($feed_id) {
 		$enabled_feeds = $this->host->get_array($this, "enabled_feeds");
 
 		$enable = checkbox_to_sql_bool($_POST["trgm_similarity_enabled"] ?? "");
@@ -254,7 +254,7 @@ class Af_Psql_Trgm extends Plugin {
 		$this->host->set($this, "enabled_feeds", $enabled_feeds);
 	}
 
-	function hook_article_filter($article) {
+	public function hook_article_filter($article) {
 
 		$res = $this->pdo->query("select 'similarity'::regproc");
 		if (!$res || !$res->fetch()) return $article;
@@ -329,7 +329,7 @@ class Af_Psql_Trgm extends Plugin {
 		return $article;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

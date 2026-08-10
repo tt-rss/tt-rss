@@ -57,7 +57,7 @@ class UserHelper {
 		}
 	}
 
-	static function authenticate(?string $login = null, ?string $password = null, bool $check_only = false, ?string $service = null): bool {
+	public static function authenticate(?string $login = null, ?string $password = null, bool $check_only = false, ?string $service = null): bool {
 		if (!Config::get(Config::SINGLE_USER_MODE)) {
 			$user_id = false;
 			$auth_module = false;
@@ -117,7 +117,7 @@ class UserHelper {
 		}
 	}
 
-	static function set_session_for_user(int $owner_uid): void {
+	public static function set_session_for_user(int $owner_uid): void {
 		$_SESSION["uid"] = $owner_uid;
 		$_SESSION["last_login_update"] = time();
 		$_SESSION["ip_address"] = UserHelper::get_user_ip();
@@ -126,7 +126,7 @@ class UserHelper {
 			$_SESSION["csrf_token"] = bin2hex(get_random_bytes(16));
 	}
 
-	static function load_user_plugins(int $owner_uid, ?PluginHost $pluginhost = null): void {
+	public static function load_user_plugins(int $owner_uid, ?PluginHost $pluginhost = null): void {
 
 		if (!$pluginhost) $pluginhost = PluginHost::getInstance();
 
@@ -142,7 +142,7 @@ class UserHelper {
 		}
 	}
 
-	static function login_sequence(): void {
+	public static function login_sequence(): void {
 		$pdo = Db::pdo();
 
 		if (Config::get(Config::SINGLE_USER_MODE)) {
@@ -185,7 +185,7 @@ class UserHelper {
 		}
 	}
 
-	static function print_user_stylesheet(): void {
+	public static function print_user_stylesheet(): void {
 		$value = Prefs::get(Prefs::USER_STYLESHEET, $_SESSION['uid'], $_SESSION['profile'] ?? null);
 
 		if ($value) {
@@ -196,7 +196,7 @@ class UserHelper {
 
 	}
 
-	static function get_user_ip(): ?string {
+	public static function get_user_ip(): ?string {
 		foreach (["HTTP_X_REAL_IP", "REMOTE_ADDR"] as $hdr) {
 			if (isset($_SERVER[$hdr]))
 				return $_SERVER[$hdr];
@@ -205,14 +205,14 @@ class UserHelper {
 		return null;
 	}
 
-	static function get_login_by_id(int $id): ?string {
+	public static function get_login_by_id(int $id): ?string {
 		$user = ORM::for_table('ttrss_users')
 			->find_one($id);
 
 		return $user ? $user->login : null;
 	}
 
-	static function find_user_by_login(string $login): ?int {
+	public static function find_user_by_login(string $login): ?int {
 		$user = ORM::for_table('ttrss_users')
 			->where_raw('LOWER(login) = LOWER(?)', [$login])
 			->find_one();
@@ -220,7 +220,7 @@ class UserHelper {
 		return $user ? $user->id : null;
 	}
 
-	static function logout(): void {
+	public static function logout(): void {
 		if (session_status() === PHP_SESSION_ACTIVE)
 			session_destroy();
 
@@ -231,12 +231,12 @@ class UserHelper {
 		session_commit();
 	}
 
-	static function get_salt(): string {
+	public static function get_salt(): string {
 		return substr(bin2hex(get_random_bytes(125)), 0, 250);
 	}
 
 	/** TODO: this should invoke UserHelper::user_modify() */
-	static function reset_password(int $uid, bool $format_output = false, string $new_password = ""): void {
+	public static function reset_password(int $uid, bool $format_output = false, string $new_password = ""): void {
 
 		$user = ORM::for_table('ttrss_users')->find_one($uid);
 
@@ -264,13 +264,13 @@ class UserHelper {
 			print $message;
 	}
 
-	static function check_otp(int $owner_uid, int $otp_check) : bool {
+	public static function check_otp(int $owner_uid, int $otp_check) : bool {
 		$otp = TOTP::create(self::get_otp_secret($owner_uid, true));
 
 		return $otp->now()  == $otp_check;
 	}
 
-	static function disable_otp(int $owner_uid) : bool {
+	public static function disable_otp(int $owner_uid) : bool {
 		$user = ORM::for_table('ttrss_users')->find_one($owner_uid);
 
 		if ($user) {
@@ -289,7 +289,7 @@ class UserHelper {
 		}
 	}
 
-	static function enable_otp(int $owner_uid, int $otp_check) : bool {
+	public static function enable_otp(int $owner_uid, int $otp_check) : bool {
 		$secret = self::get_otp_secret($owner_uid);
 
 		if ($secret) {
@@ -308,12 +308,12 @@ class UserHelper {
 	}
 
 
-	static function is_otp_enabled(int $owner_uid) : bool {
+	public static function is_otp_enabled(int $owner_uid) : bool {
 		$user = ORM::for_table('ttrss_users')->find_one($owner_uid);
 		return $user ? $user->otp_enabled : false;
 	}
 
-	static function get_otp_secret(int $owner_uid, bool $show_if_enabled = false): ?string {
+	public static function get_otp_secret(int $owner_uid, bool $show_if_enabled = false): ?string {
 		$user = ORM::for_table('ttrss_users')->find_one($owner_uid);
 
 		if ($user) {
@@ -347,7 +347,7 @@ class UserHelper {
 	 * @throws PDOException
 	 * @throws Exception
 	 */
-	static function is_default_password(?int $owner_uid = null): bool {
+	public static function is_default_password(?int $owner_uid = null): bool {
 		return self::user_has_password($owner_uid, 'password');
 	}
 
@@ -356,7 +356,7 @@ class UserHelper {
 	 *
 	 * @return false|string False if the password couldn't be hashed, otherwise the hash string.
 	 */
-	static function hash_password(string $pass, string $salt, string $algo = self::HASH_ALGOS[0]): false|string {
+	public static function hash_password(string $pass, string $salt, string $algo = self::HASH_ALGOS[0]): false|string {
 		$pass_hash = match ($algo) {
 			self::HASH_ALGO_SHA1 => sha1($pass),
 			self::HASH_ALGO_SHA1X => sha1("$salt:$pass"),
@@ -377,7 +377,7 @@ class UserHelper {
 	 * @param UserHelper::ACCESS_LEVEL_* $access_level Access level for new user
 	 * @return bool true if user has been created
 	 */
-	static function user_add(string $login, string $password, int $access_level) : bool {
+	public static function user_add(string $login, string $password, int $access_level) : bool {
 		$login = clean($login);
 
 		if ($login &&
@@ -407,7 +407,7 @@ class UserHelper {
 	 *
 	 * NOTE: $access_level is of mixed type because of intellephense
 	 */
-	static function user_modify(int $uid, string $new_password = '', $access_level = self::ACCESS_LEVEL_KEEP_CURRENT) : bool {
+	public static function user_modify(int $uid, string $new_password = '', $access_level = self::ACCESS_LEVEL_KEEP_CURRENT) : bool {
 		$user = ORM::for_table('ttrss_users')->find_one($uid);
 
 		if ($user) {
@@ -433,7 +433,7 @@ class UserHelper {
 	 * @param int $uid user ID to delete (this won't delete built-in admin user with UID 1)
 	 * @return bool true if user has been deleted
 	 */
-	static function user_delete(int $uid) : bool {
+	public static function user_delete(int $uid) : bool {
 		if ($uid != 1) {
 
 			$user = ORM::for_table('ttrss_users')->find_one($uid);
@@ -460,7 +460,7 @@ class UserHelper {
 	 * @param null|int $owner_uid if null, checks current user via session-specific auth module, if set works on internal database only
 	 * @param string $password password to compare hash against
 	 */
-	static function user_has_password(?int $owner_uid, string $password) : bool {
+	public static function user_has_password(?int $owner_uid, string $password) : bool {
 		if ($owner_uid) {
 			$authenticator = new Auth_Internal();
 

@@ -327,7 +327,7 @@ class Config {
 
 	private Db_Migrations $migrations;
 
-	function __construct() {
+	public function __construct() {
 		$this->reload();
 	}
 
@@ -343,7 +343,7 @@ class Config {
 	}
 
 	/** load data from environment variables */
-	function reload(): void {
+	public function reload(): void {
 		$ref = new ReflectionClass(static::class);
 
 		foreach ($ref->getConstants() as $const => $cvalue) {
@@ -358,7 +358,7 @@ class Config {
 	}
 
 	/** this is primarily needed for tests, normally global config is not changed at runtime */
-	static function set(string $key, mixed $value): bool {
+	public static function set(string $key, mixed $value): bool {
 			if (!getenv('IS_INTEGRATION_TESTING') && !getenv('IS_TESTING')) {
 				user_error("This method is only available for tests.", E_USER_WARNING);
 				return false;
@@ -381,12 +381,12 @@ class Config {
 	 * based on source git tree commit used when creating the package
 	 * @return array<string, mixed>|string
 	 */
-	static function get_version(bool $as_string = true): array|string {
+	public static function get_version(bool $as_string = true): array|string {
 		return self::get_instance()->_get_version($as_string);
 	}
 
 	// returns version showing (if possible) full timestamp of commit id
-	static function get_version_html() : string {
+	public static function get_version_html() : string {
 		$version = self::get_version(false);
 
 		return sprintf("<span title=\"%s\n%s\n%s\">%s</span>",
@@ -438,7 +438,7 @@ class Config {
 	/**
 	 * @return array{status: int, version: string, branch: string, commit: string, timestamp: string}
 	 */
-	static function get_version_from_git(string $dir): array {
+	public static function get_version_from_git(string $dir): array {
 		$descriptorspec = [
 			1 => ["pipe", "w"], // STDOUT
 			2 => ["pipe", "w"], // STDERR
@@ -484,7 +484,7 @@ class Config {
 		return $rv;
 	}
 
-	static function get_migrations() : Db_Migrations {
+	public static function get_migrations() : Db_Migrations {
 		return self::get_instance()->_get_migrations();
 	}
 
@@ -497,15 +497,15 @@ class Config {
 		return $this->migrations;
 	}
 
-	static function is_migration_needed() : bool {
+	public static function is_migration_needed() : bool {
 		return self::get_migrations()->is_migration_needed();
 	}
 
-	static function get_schema_version() : int {
+	public static function get_schema_version() : int {
 		return self::get_migrations()->get_version();
 	}
 
-	static function cast_to(string $value, int $type_hint): bool|int|string {
+	public static function cast_to(string $value, int $type_hint): bool|int|string {
 		return match ($type_hint) {
 			self::T_BOOL => sql_bool_to_bool($value),
 			self::T_INT => (int) $value,
@@ -525,19 +525,19 @@ class Config {
 		$this->params[$param] = [ self::cast_to($override !== false ? $override : $default, $type_hint), $type_hint ];
 	}
 
-	static function add(string $param, string $default, int $type_hint = Config::T_STRING): void {
+	public static function add(string $param, string $default, int $type_hint = Config::T_STRING): void {
 		$instance = self::get_instance();
 
 		$instance->_add($param, $default, $type_hint);
 	}
 
-	static function get(string $param): bool|int|string {
+	public static function get(string $param): bool|int|string {
 		$instance = self::get_instance();
 
 		return $instance->_get($param);
 	}
 
-	static function is_server_https() : bool {
+	public static function is_server_https() : bool {
 		return (!empty($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] != 'off')) ||
 			(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https');
 	}
@@ -547,7 +547,7 @@ class Config {
 	 * The SELF_URL_PATH configuration variable is always used when running under
 	 * the CLI SAPI or when FORCE_SELF_URL_PATH_USAGE is enabled.
 	 */
-	static function get_self_url(bool $always_detect = false) : string {
+	public static function get_self_url(bool $always_detect = false) : string {
 		if ((!$always_detect && php_sapi_name() == 'cli') || self::get(self::FORCE_SELF_URL_PATH_USAGE)) {
 			$self_url_path = self::get(Config::SELF_URL_PATH);
 		} else {
@@ -564,7 +564,7 @@ class Config {
 	/**
 	 * @return bool true if the provided URL has the same origin (scheme+host+port) and path prefix as tt-rss's self URL, otherwise false
 	 */
-	static function matches_self_url(string $url_to_check, bool $always_detect_self_url = false): bool {
+	public static function matches_self_url(string $url_to_check, bool $always_detect_self_url = false): bool {
 		$check_url_parts = parse_url($url_to_check);
 
 		// check the basics first
@@ -607,7 +607,7 @@ class Config {
 
 	/* sanity check stuff */
 
-	static function sanity_check(): void {
+	public static function sanity_check(): void {
 
 		/*
 			we don't actually need the DB object right now but some checks below might use ORM which won't be initialized
@@ -734,7 +734,7 @@ class Config {
 		return "<div class=\"alert alert-danger\">$msg</div>";
 	}
 
-	static function get_override_links(): string {
+	public static function get_override_links(): string {
 		$rv = "";
 
 		$local_css = get_theme_path(self::get(self::LOCAL_OVERRIDE_STYLESHEET));
@@ -746,11 +746,11 @@ class Config {
 		return $rv;
 	}
 
-	static function get_user_agent(): string {
+	public static function get_user_agent(): string {
 		return sprintf(self::get(self::HTTP_USER_AGENT), self::get_version());
 	}
 
-	static function get_self_dir() : string {
+	public static function get_self_dir() : string {
 		return dirname(__DIR__); # we're in classes/Config.php
 	}
 

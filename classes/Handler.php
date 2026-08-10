@@ -8,20 +8,20 @@ class Handler implements IHandler {
 	/**
 	 * @param array<int|string, mixed> $args
 	 */
-	function __construct(array $args) {
+	public function __construct(array $args) {
 		$this->pdo = Db::pdo();
 		$this->args = $args;
 	}
 
-	function csrf_ignore(string $method): bool {
+	public function csrf_ignore(string $method): bool {
 		return false;
 	}
 
-	function before(string $method): bool {
+	public function before(string $method): bool {
 		return true;
 	}
 
-	function after(): bool {
+	public function after(): bool {
 		return true;
 	}
 

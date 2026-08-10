@@ -1,11 +1,11 @@
 <?php
 class Af_Comics_TheOatmeal extends Af_ComicFilter {
 
-	function supported() {
+	public function supported() {
 		return ["The Oatmeal"];
 	}
 
-	function process(&$article) {
+	public function process(&$article) {
 		if (str_contains($article["guid"], "theoatmeal.com")) {
 				$res = UrlHelper::fetch([
 					'url' => $article['link'],

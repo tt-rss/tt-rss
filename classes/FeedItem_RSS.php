@@ -1,6 +1,6 @@
 <?php
 class FeedItem_RSS extends FeedItem_Common {
-	function get_id(): string {
+	public function get_id(): string {
 		$id = $this->elem->getElementsByTagName("guid")->item(0);
 
 		if ($id) {
@@ -13,7 +13,7 @@ class FeedItem_RSS extends FeedItem_Common {
 	/**
 	 * @return int|false a timestamp on success, false otherwise
 	 */
-	function get_date(): false|int {
+	public function get_date(): false|int {
 		$pubDate = $this->elem->getElementsByTagName("pubDate")->item(0);
 
 		if ($pubDate) {
@@ -30,7 +30,7 @@ class FeedItem_RSS extends FeedItem_Common {
 		return false;
 	}
 
-	function get_link(): string {
+	public function get_link(): string {
 		$links = $this->xpath->query("atom:link", $this->elem);
 
 		/** @var DOMElement $link */
@@ -60,7 +60,7 @@ class FeedItem_RSS extends FeedItem_Common {
 		return '';
 	}
 
-	function get_title(): string {
+	public function get_title(): string {
 		$title = $this->xpath->query("title", $this->elem)->item(0);
 
 		if ($title) {
@@ -78,7 +78,7 @@ class FeedItem_RSS extends FeedItem_Common {
 		return '';
 	}
 
-	function get_content(): string {
+	public function get_content(): string {
 		/** @var DOMElement|null */
 		$contentA = $this->xpath->query("content:encoded", $this->elem)->item(0);
 
@@ -103,7 +103,7 @@ class FeedItem_RSS extends FeedItem_Common {
 		return '';
 	}
 
-	function get_description(): string {
+	public function get_description(): string {
 		$summary = $this->elem->getElementsByTagName("description")->item(0);
 
 		if ($summary) {
@@ -116,7 +116,7 @@ class FeedItem_RSS extends FeedItem_Common {
 	/**
 	 * @return array<int, string>
 	 */
-	function get_categories(): array {
+	public function get_categories(): array {
 		$cats = [];
 
 		foreach ($this->elem->getElementsByTagName('category') as $cat)
@@ -131,7 +131,7 @@ class FeedItem_RSS extends FeedItem_Common {
 	/**
 	 * @return array<int, FeedEnclosure>
 	 */
-	function get_enclosures(): array {
+	public function get_enclosures(): array {
 		$enclosures = $this->elem->getElementsByTagName("enclosure");
 
 		$encs = [];
@@ -152,7 +152,7 @@ class FeedItem_RSS extends FeedItem_Common {
 		return $encs;
 	}
 
-	function get_language(): string {
+	public function get_language(): string {
 		$languages = $this->doc->getElementsByTagName('language');
 
 		if (count($languages) == 0) {

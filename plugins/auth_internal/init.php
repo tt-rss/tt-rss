@@ -1,19 +1,19 @@
 <?php
 class Auth_Internal extends Auth_Base implements IAuthModule2 {
 
-	function about() {
+	public function about() {
 		return [null,
 			"Authenticates against internal tt-rss database",
 			"fox",
 			true];
 	}
 
-	function init($host) {
+	public function init($host) {
 		$host->add_hook($host::HOOK_AUTH_USER, $this);
 	}
 
 	/** @param string $service */
-	function authenticate($login, $password, $service = '') {
+	public function authenticate($login, $password, $service = '') {
 
 		$otp = (int) ($_REQUEST["otp"] ?? 0);
 
@@ -171,7 +171,7 @@ class Auth_Internal extends Auth_Base implements IAuthModule2 {
 	 * @throws PDOException
 	 * @throws Exception
 	 */
-	function check_password(int $owner_uid, string $password, string $service = ''): false|int {
+	public function check_password(int $owner_uid, string $password, string $service = ''): false|int {
 
 		$user = ORM::for_table('ttrss_users')->find_one($owner_uid);
 
@@ -207,7 +207,7 @@ class Auth_Internal extends Auth_Base implements IAuthModule2 {
 		return false;
 	}
 
-	function change_password(int $owner_uid, string $old_password, string $new_password) : string {
+	public function change_password(int $owner_uid, string $old_password, string $new_password) : string {
 
 		if ($this->check_password($owner_uid, $old_password)) {
 
@@ -293,7 +293,7 @@ class Auth_Internal extends Auth_Base implements IAuthModule2 {
 		return false;
 	}
 
-	function api_version() {
+	public function api_version() {
 		return 2;
 	}
 

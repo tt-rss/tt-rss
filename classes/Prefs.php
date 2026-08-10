@@ -163,15 +163,15 @@ class Prefs {
 		return self::$instance;
 	}
 
-	static function is_valid(string $pref_name): bool {
+	public static function is_valid(string $pref_name): bool {
 		return isset(self::_DEFAULTS[$pref_name]);
 	}
 
-	static function get_default(string $pref_name): bool|int|null|string {
+	public static function get_default(string $pref_name): bool|int|null|string {
 		return self::is_valid($pref_name) ? self::_DEFAULTS[$pref_name][0] : null;
 	}
 
-	function __construct() {
+	public function __construct() {
 		$this->pdo = Db::pdo();
 
 		if (!empty($_SESSION["uid"])) {
@@ -188,7 +188,7 @@ class Prefs {
 	}
 
 	    /** @returns ID of profile if exists or -1 */
-	static function get_profile_id(int $owner_uid, string $title): int {
+	public static function get_profile_id(int $owner_uid, string $title): int {
 		$sth = Db::pdo()->prepare("SELECT id FROM ttrss_settings_profiles
 			WHERE owner_uid = :uid AND title = :title");
 		$sth->execute(["uid" => $owner_uid, "title" => $title]);
@@ -201,7 +201,7 @@ class Prefs {
 	}
 
 	/** @returns true if profile_id exists for user */
-	static function profile_exists(int $owner_uid, int $profile_id): bool {
+	public static function profile_exists(int $owner_uid, int $profile_id): bool {
 		$sth = Db::pdo()->prepare("SELECT id FROM ttrss_settings_profiles
 			WHERE owner_uid = :uid AND id = :id");
 		$sth->execute(["uid" => $owner_uid, "id" => $profile_id]);
@@ -214,7 +214,7 @@ class Prefs {
 	}
 
 	/** @returns ID of created profile if successful, -1 otherwise */
-	static function create_profile(int $owner_uid, string $title): int {
+	public static function create_profile(int $owner_uid, string $title): int {
 		if (self::get_profile_id($owner_uid, $title) != -1)
 			return -1;
 
@@ -228,7 +228,7 @@ class Prefs {
 	}
 
 	/** @returns ID of created profile if successful, -1 otherwise */
-	static function clone_profile(int $owner_uid, int $old_profile_id, string $new_title): int {
+	public static function clone_profile(int $owner_uid, int $old_profile_id, string $new_title): int {
 
 		if (!self::profile_exists($owner_uid, $old_profile_id))
 			return -1;
@@ -261,7 +261,7 @@ class Prefs {
 			return -1;
 	}
 
-	static function remove_profile(int $owner_uid, int $profile_id): bool {
+	public static function remove_profile(int $owner_uid, int $profile_id): bool {
 		if (!self::profile_exists($owner_uid, $profile_id))
 			return false;
 
@@ -274,7 +274,7 @@ class Prefs {
 	/** @param int[] $profile_ids
 	 * @param int $current_profile is not removed (if passed)
 	 */
-	static function remove_profiles(int $owner_uid, array $profile_ids, int $current_profile = 0): bool {
+	public static function remove_profiles(int $owner_uid, array $profile_ids, int $current_profile = 0): bool {
 		if (empty($profile_ids)) {
 			return false;
 		}
@@ -289,7 +289,7 @@ class Prefs {
 	/**
 	 * @return array<int, array{pref_name: string, value: bool|int|string|null, type_hint: Config::T_*}>
 	 */
-	static function get_all(int $owner_uid, ?int $profile_id = null): array {
+	public static function get_all(int $owner_uid, ?int $profile_id = null): array {
 		return self::get_instance()->_get_all($owner_uid, $profile_id);
 	}
 
@@ -346,7 +346,7 @@ class Prefs {
 		}
 	}
 
-	static function get(string $pref_name, int $owner_uid, ?int $profile_id = null): bool|int|null|string {
+	public static function get(string $pref_name, int $owner_uid, ?int $profile_id = null): bool|int|null|string {
 		return self::get_instance()->_get($pref_name, $owner_uid, $profile_id);
 	}
 
@@ -402,7 +402,7 @@ class Prefs {
 		$this->cache[$cache_key] = $value;
 	}
 
-	static function set(string $pref_name, bool|int|string $value, int $owner_uid, ?int $profile_id, bool $strip_tags = true): bool {
+	public static function set(string $pref_name, bool|int|string $value, int $owner_uid, ?int $profile_id, bool $strip_tags = true): bool {
 		return self::get_instance()->_set($pref_name, $value, $owner_uid, $profile_id);
 	}
 
@@ -458,7 +458,7 @@ class Prefs {
 		return false;
 	}
 
-	function migrate(int $owner_uid, ?int $profile_id): void {
+	public function migrate(int $owner_uid, ?int $profile_id): void {
 		if (Config::get_schema_version() < 141)
 			return;
 
@@ -503,7 +503,7 @@ class Prefs {
 		}
 	}
 
-	static function reset(int $owner_uid, ?int $profile_id): void {
+	public static function reset(int $owner_uid, ?int $profile_id): void {
 		// If explicitly null, 0 (e.g. from the frontend), or otherwise falsy,
 		// normalize to null to represent the default profile.
 		if (!$profile_id)

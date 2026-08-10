@@ -7,7 +7,7 @@ class Crypt {
 	/** currently only generates keys using sodium_crypto_aead_chacha20poly1305_keygen() i.e. one supported Crypt::ENCRYPT_ALGO
 	 * @return string random 256-bit (for ChaCha20-Poly1305) binary string
 	*/
-	static function generate_key() : string {
+	public static function generate_key() : string {
 		return sodium_crypto_aead_chacha20poly1305_keygen();
 	}
 
@@ -15,7 +15,7 @@ class Crypt {
 	 *
 	 * @return array{'algo': string, 'nonce': string, 'payload': string} encrypted data object containing algo, nonce, and encrypted data
 	*/
-	static function encrypt_string(string $ciphertext) : array {
+	public static function encrypt_string(string $ciphertext) : array {
 		$key = Config::get(Config::ENCRYPTION_KEY);
 
 		if (!$key)
@@ -44,7 +44,7 @@ class Crypt {
 	 *
 	 * @return string decrypted string payload
 	 */
-	static function decrypt_string(array $encrypted_data) : string {
+	public static function decrypt_string(array $encrypted_data) : string {
 		$key = Config::get(Config::ENCRYPTION_KEY);
 
 		if (!$key)

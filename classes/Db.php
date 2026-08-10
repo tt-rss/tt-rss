@@ -4,7 +4,7 @@ class Db {
 
 	private ?PDO $pdo = null;
 
-	function __construct() {
+	public function __construct() {
 		ORM::configure(self::get_dsn());
 		ORM::configure('username', Config::get(Config::DB_USER));
 		ORM::configure('password', Config::get(Config::DB_PASS));
@@ -15,7 +15,7 @@ class Db {
 	 * @param int $delta adjust generated timestamp by this value in seconds (either positive or negative)
 	 * @return string
 	 */
-	static function NOW(int $delta = 0): string {
+	public static function NOW(int $delta = 0): string {
 		return date("Y-m-d H:i:s", time() + $delta);
 	}
 
