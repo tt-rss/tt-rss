@@ -306,7 +306,7 @@ class UrlHelper {
 				return true;
 
 			// Explicit check for IPv6 Unique Local Addresses (fc00::/7)
-			if ($bin !== false && strlen($bin) === 16 && (ord($bin[0]) & 0xfe) === 0xfc)
+			if (!$is_standard_port && $bin !== false && strlen($bin) === 16 && (ord($bin[0]) & 0xfe) === 0xfc)
 				return true;
 
 			// Reject RFC1918 / private ranges on non-standard ports
