@@ -315,7 +315,7 @@ const	Feeds = {
 		} else {
 			setTimeout(() => {
 				this.requestCounters();
-				setInterval(() => { this.requestCounters(); }, 60 * 1000)
+				App.pollWhileVisible(() => this.requestCounters(), 60 * 1000);
 			}, 250);
 		}
 	},

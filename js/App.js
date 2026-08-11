@@ -776,6 +776,38 @@ const App = {
 
       return errorMsg === "";
    },
+   /**
+    * Call fn() every interval_ms, but only while the page is visible.
+    *
+    * A phone spends most of its time with the tab backgrounded or the screen
+    * locked, and a poll issued then has to wake the cellular radio, which
+    * costs considerably more battery than the request costs bytes.  So nothing
+    * is polled while hidden.  Becoming visible refreshes immediately if a full
+    * interval went by in the meantime, and otherwise waits out the remainder,
+    * so that switching back and forth between tabs cannot turn into one
+    * request per switch.
+    */
+   pollWhileVisible: function(fn, interval_ms) {
+      let last_run = Date.now();
+      let timer = 0;
+
+      const run = () => {
+         last_run = Date.now();
+         fn();
+         timer = setTimeout(run, interval_ms);
+      };
+
+      document.addEventListener("visibilitychange", () => {
+         clearTimeout(timer);
+
+         if (document.hidden)
+            return;
+
+         timer = setTimeout(run, Math.max(0, interval_ms - (Date.now() - last_run)));
+      });
+
+      timer = setTimeout(run, interval_ms);
+   },
    updateRuntimeInfo: function() {
       xhr.json("backend.php", {op: "RPC", method: "getruntimeinfo"}, () => {
          // handled by xhr.json()
@@ -1013,9 +1045,7 @@ const App = {
       }
 
       if (!this.getInitParam("bw_limit"))
-         window.setInterval(() => {
-            App.updateRuntimeInfo();
-         }, 60 * 1000)
+         this.pollWhileVisible(() => App.updateRuntimeInfo(), 60 * 1000);
 
 		if (App.getInitParam("safe_mode") && this.isPrefs()) {
 			CommonDialogs.safeModeWarning();
