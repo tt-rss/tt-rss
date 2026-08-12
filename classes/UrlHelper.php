@@ -455,6 +455,8 @@ class UrlHelper {
 
 		if ($encoding)
 			$req_options[GuzzleHttp\RequestOptions::HEADERS]['Accept-Encoding'] = $encoding;
+		else
+			$req_options['curl'][\CURLOPT_ENCODING] = '';
 
 		if  ($http_referrer)
 			$req_options[GuzzleHttp\RequestOptions::HEADERS]['Referer'] = $http_referrer;
