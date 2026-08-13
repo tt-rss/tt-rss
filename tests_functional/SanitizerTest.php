@@ -99,4 +99,65 @@ final class SanitizerTest extends TestCase {
         $this->assertCount(1, $paragraphs);
     }
 
+    // ──────────────────────────────────────────────────────────────────────
+    // sanitize_svg() — SVG favicon sanitization
+    // ──────────────────────────────────────────────────────────────────────
+
+    public function test_sanitize_svg_keeps_benign_markup(): void {
+        $result = Sanitizer::sanitize_svg('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+            <rect width="16" height="16" fill="#fff"/>
+            <path d="M2 2h12v12H2z" fill="#000"/>
+        </svg>');
+
+        $this->assertNotFalse($result);
+        $this->assertStringContainsString('<rect', $result);
+        $this->assertStringContainsString('<path', $result);
+        $this->assertStringContainsString('viewBox="0 0 16 16"', $result);
+    }
+
+    public function test_sanitize_svg_keeps_color_scheme_style(): void {
+        // the reason we bother with SVG favicons at all: embedded prefers-color-scheme support
+        $result = Sanitizer::sanitize_svg('<svg xmlns="http://www.w3.org/2000/svg">
+            <style>path { fill: #000; } @media (prefers-color-scheme: dark) { path { fill: #fff; } }</style>
+            <path d="M2 2h12v12H2z"/>
+        </svg>');
+
+        $this->assertNotFalse($result);
+        $this->assertStringContainsString('prefers-color-scheme: dark', $result);
+    }
+
+    public function test_sanitize_svg_removes_scripts_and_handlers(): void {
+        $result = Sanitizer::sanitize_svg('<svg xmlns="http://www.w3.org/2000/svg" onload="alert(1)">
+            <script>alert(2)</script>
+            <circle r="8" onclick="alert(3)"/>
+            <foreignObject><body xmlns="http://www.w3.org/1999/xhtml"><img src="x" onerror="alert(4)"/></body></foreignObject>
+        </svg>');
+
+        $this->assertNotFalse($result);
+        $this->assertStringNotContainsString('script', $result);
+        $this->assertStringNotContainsString('alert', $result);
+        $this->assertStringNotContainsString('foreignObject', $result);
+        $this->assertStringNotContainsString('onclick', $result);
+        $this->assertStringNotContainsString('onload', $result);
+    }
+
+    public function test_sanitize_svg_removes_external_references(): void {
+        $result = Sanitizer::sanitize_svg('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <use href="https://example.com/evil.svg#x"/>
+            <use xlink:href="javascript:alert(1)"/>
+            <use href="#local"/>
+        </svg>');
+
+        $this->assertNotFalse($result);
+        $this->assertStringNotContainsString('example.com', $result);
+        $this->assertStringNotContainsString('javascript:', $result);
+        $this->assertStringContainsString('href="#local"', $result);
+    }
+
+    public function test_sanitize_svg_rejects_non_svg(): void {
+        $this->assertFalse(Sanitizer::sanitize_svg('<html><body>hello</body></html>'));
+        $this->assertFalse(Sanitizer::sanitize_svg('not xml at all'));
+        $this->assertFalse(Sanitizer::sanitize_svg(''));
+    }
+
 }

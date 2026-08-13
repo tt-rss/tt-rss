@@ -480,7 +480,13 @@ class Pref_Feeds extends Handler_Protected {
 
 				$cache = DiskCache::instance('feed-icons');
 
-				if ($cache->put((string)$feed_id, file_get_contents($tmp_file))) {
+				$icon_data = file_get_contents($tmp_file);
+
+				// feed icons are served unauthenticated from our origin so SVG has to be sanitized
+				if (RSSUtils::detect_favicon_mime_type((string)$icon_data) == 'image/svg+xml')
+					$icon_data = Sanitizer::sanitize_svg((string)$icon_data);
+
+				if ($icon_data && $cache->put((string)$feed_id, $icon_data)) {
 
 					$feed->set([
 						'favicon_avg_color' => null,
