@@ -42,6 +42,63 @@ class Sanitizer {
 		return $doc;
 	}
 
+	/**
+	 * Sanitize an SVG image so it may be served from our origin (e.g. as a feed icon):
+	 * keeps only well-known presentational elements (notably including <style>, which
+	 * scheme-adaptive icons rely on for prefers-color-scheme media queries) and drops
+	 * scripting-capable elements, event handler attributes, and non-fragment href targets.
+	 *
+	 * @return false|string the sanitized SVG document, or false if input couldn't be parsed as SVG
+	 */
+	public static function sanitize_svg(string $svg_data) {
+		// SVG is XML so element names are case-sensitive, match them exactly
+		$allowed_elements = ['svg', 'circle', 'clipPath', 'defs', 'desc', 'ellipse', 'g',
+			'line', 'linearGradient', 'mask', 'path', 'pattern', 'polygon', 'polyline',
+			'radialGradient', 'rect', 'stop', 'style', 'symbol', 'text', 'title', 'tspan', 'use'];
+
+		if (trim($svg_data) == '')
+			return false;
+
+		libxml_use_internal_errors(true);
+
+		$doc = new DOMDocument();
+
+		if (!$doc->loadXML($svg_data, LIBXML_NONET)
+			|| !$doc->documentElement
+			|| $doc->documentElement->localName != 'svg') {
+			return false;
+		}
+
+		$xpath = new DOMXPath($doc);
+
+		foreach ($xpath->query('//processing-instruction()') as $pi)
+			$pi->parentNode->removeChild($pi);
+
+		foreach ($xpath->query('//*') as $entry) {
+			/** @var DOMElement $entry */
+
+			if (!in_array($entry->localName, $allowed_elements)) {
+				$entry->parentNode->removeChild($entry);
+				continue;
+			}
+
+			$attrs_to_remove = [];
+
+			foreach ($entry->attributes as $attr) {
+				/** @var DOMAttr $attr */
+				if (str_starts_with(strtolower($attr->nodeName), 'on')
+						|| ($attr->localName == 'href' && !str_starts_with(trim($attr->value), '#'))) {
+					$attrs_to_remove[] = $attr;
+				}
+			}
+
+			foreach ($attrs_to_remove as $attr)
+				$entry->removeAttributeNode($attr);
+		}
+
+		return $doc->saveXML();
+	}
+
 	public static function iframe_whitelisted(DOMElement $entry): bool {
 		$src = parse_url($entry->getAttribute("src"), PHP_URL_HOST);
 

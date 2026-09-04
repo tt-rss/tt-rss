@@ -312,7 +312,8 @@ class DiskCache implements Cache_Adapter {
 		return false;
 	}
 
-	public function send(string $filename) {
+	/** @param bool $allow_svg serve SVG (only for content sanitized at ingestion, e.g. feed icons) */
+	public function send(string $filename, bool $allow_svg = false) {
 		$filename = basename($filename);
 
 		if (!$this->exists($filename)) {
@@ -349,7 +350,7 @@ class DiskCache implements Cache_Adapter {
 				$mimetype = "video/mp4";
 
 		# block SVG because of possible embedded javascript (.....)
-		$mimetype_blacklist = [ "image/svg+xml" ];
+		$mimetype_blacklist = $allow_svg ? [] : [ "image/svg+xml" ];
 
 		/* only serve video and images */
 		if (!preg_match("/(image|audio|video)\//", (string)$mimetype) || in_array($mimetype, $mimetype_blacklist)) {
@@ -358,6 +359,13 @@ class DiskCache implements Cache_Adapter {
 
 			print "Stored file has disallowed content type ($mimetype)";
 			return false;
+		}
+
+		if ($mimetype == "image/svg+xml") {
+			// second layer on top of ingestion-time sanitization: no script execution
+			// or external loads if the file ends up opened as a document
+			header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; sandbox");
+			header("X-Content-Type-Options: nosniff");
 		}
 
 		$fake_extension = $this->get_fake_extension($filename);

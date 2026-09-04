@@ -11,6 +11,7 @@ class RSSUtils {
 		'image/gif',
 		'image/jpeg',
 		'image/png',
+		'image/svg+xml',
 		'image/vnd.microsoft.icon',
 	];
 
@@ -669,7 +670,15 @@ class RSSUtils {
 
 				/* terrible hack: if we crash on floicon shit here, we won't check
 				 * the icon avgcolor again (unless icon got updated) */
-				if (file_exists($favicon_cache->get_full_path($feed)) && function_exists("imagecreatefromstring") && empty($feed_obj->favicon_avg_color)) {
+				if (file_exists($favicon_cache->get_full_path($feed)) && empty($feed_obj->favicon_avg_color)
+					&& $favicon_cache->get_mime_type($feed) == 'image/svg+xml') {
+					// GD can't rasterize SVG, mark the icon so we don't keep retrying
+					Debug::log("favicon: skipping average color calculation for SVG icon", Debug::LOG_VERBOSE);
+
+					$feed_obj->favicon_avg_color = 'fail';
+					$feed_obj->save();
+
+				} else if (file_exists($favicon_cache->get_full_path($feed)) && function_exists("imagecreatefromstring") && empty($feed_obj->favicon_avg_color)) {
 					Debug::log("favicon: trying to calculate average color...", Debug::LOG_VERBOSE);
 
 					$feed_obj->favicon_avg_color = 'fail';
@@ -1791,22 +1800,30 @@ class RSSUtils {
 
 			if (!$contents) {
 				Debug::log("favicon: fetching $favicon_url failed.  Skipping...", Debug::LOG_VERBOSE);
-				break;
+				continue;
 			}
 
-			$finfo = new finfo(FILEINFO_MIME_TYPE);
-			$mime_type = $finfo->buffer($contents);
+			$mime_type = self::detect_favicon_mime_type($contents);
 
 			if ($mime_type === false) {
 				Debug::log("favicon: $favicon_url MIME type couldn't be detected.  Skipping...", Debug::LOG_VERBOSE);
-				break;
+				continue;
 			}
 
 			Debug::log("favicon: $favicon_url MIME type '$mime_type'", Debug::LOG_VERBOSE);
 
 			if (!in_array($mime_type, self::FAVICON_ALLOWED_MIME_TYPES)) {
 				Debug::log("favicon: $favicon_url MIME type '$mime_type' is not allowed.  Skipping...", Debug::LOG_VERBOSE);
-				break;
+				continue;
+			}
+
+			if ($mime_type == 'image/svg+xml') {
+				$contents = Sanitizer::sanitize_svg($contents);
+
+				if ($contents === false) {
+					Debug::log("favicon: $favicon_url SVG couldn't be sanitized.  Skipping...", Debug::LOG_VERBOSE);
+					continue;
+				}
 			}
 
 			$favicon_cache = DiskCache::instance('feed-icons');
@@ -1825,6 +1842,24 @@ class RSSUtils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Detect the MIME type of favicon data; unlike plain finfo, recognizes SVG
+	 * even when it's detected as generic XML/HTML/text (e.g. no XML prolog).
+	 *
+	 * @return false|string the MIME type, or false if it couldn't be detected
+	 */
+	static function detect_favicon_mime_type(string $contents): false|string {
+		$finfo = new finfo(FILEINFO_MIME_TYPE);
+		$mime_type = $finfo->buffer($contents);
+
+		if (in_array($mime_type, ['image/svg', 'text/xml', 'application/xml', 'text/html', 'text/plain'])
+			&& preg_match('/<svg[\s>]/i', substr($contents, 0, 4096))) {
+			return 'image/svg+xml';
+		}
+
+		return $mime_type;
 	}
 
 	static function is_gzipped(string $feed_data): bool {
@@ -1971,13 +2006,31 @@ class RSSUtils {
 
 				$entries = $xpath->query('/html/head/link[@rel="shortcut icon" or @rel="icon" or @rel="alternate icon"]');
 
+				$svg_favicon_urls = [];
+
 				/** @var DOMElement $entry */
 				foreach ($entries as $entry) {
+					// scheme-specific icons (e.g. media="(prefers-color-scheme: dark)") would be
+					// wrong for users of the opposite scheme, we serve one icon to everybody
+					$media = trim($entry->getAttribute('media'));
+
+					if ($media && strtolower($media) != 'all')
+						continue;
+
 					$favicon_url = UrlHelper::rewrite_relative($url, $entry->getAttribute("href"));
 
-					if ($favicon_url)
-						$favicon_urls[] = $favicon_url;
+					if ($favicon_url) {
+						// prefer SVG icons regardless of document order: they scale and may
+						// adapt to the user's color scheme via embedded media queries
+						if (strtolower($entry->getAttribute('type')) == 'image/svg+xml'
+							|| str_ends_with(strtolower((string)parse_url($favicon_url, PHP_URL_PATH)), '.svg'))
+							$svg_favicon_urls[] = $favicon_url;
+						else
+							$favicon_urls[] = $favicon_url;
+					}
 				}
+
+				$favicon_urls = array_merge($svg_favicon_urls, $favicon_urls);
 			}
 		}
 

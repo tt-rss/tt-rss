@@ -891,7 +891,7 @@ class API extends Handler {
 		$cache = DiskCache::instance('feed-icons');
 
 		if ($cache->exists((string)$id)) {
-			return $cache->send((string)$id) > 0;
+			return $cache->send((string)$id, allow_svg: true) > 0;
 		} else {
 			return $this->_wrap(self::STATUS_ERR, ["error" => self::E_NOT_FOUND]);
 		}

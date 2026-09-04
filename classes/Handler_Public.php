@@ -773,7 +773,7 @@ class Handler_Public extends Handler {
 		$cache = DiskCache::instance('feed-icons');
 
 		if ($cache->exists((string)$id)) {
-			$cache->send((string)$id);
+			$cache->send((string)$id, allow_svg: true);
 		} else {
 			header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
 			echo "File not found.";
