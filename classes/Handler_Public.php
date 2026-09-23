@@ -823,7 +823,13 @@ class Handler_Public extends Handler {
 	}
 
 	static function _render_login_form(string $return_to = ""): void {
-		header('Cache-Control: public');
+		// The form is session-specific: include/login_form.php renders
+		// $_SESSION['login_error_msg'] (and then clears it), plus auth_remote's
+		// prefilled $_SESSION['fake_login'].  'public' let a shared cache store
+		// one visitor's copy and replay it to others, disclosing that login name
+		// and the reason their session failed, and re-showing an error the server
+		// had already cleared.
+		header('Cache-Control: private, no-cache');
 
 		if ($return_to)
 			$_REQUEST['return'] = $return_to;

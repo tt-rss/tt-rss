@@ -8,9 +8,7 @@ final class SanitizerUnitTest extends TestCase {
 
 	protected function setUp(): void {
 		// Initialize session variables that Sanitizer may check
-		if (!isset($_SESSION)) {
-			$_SESSION = [];
-		}
+		$_SESSION ??= [];
 	}
 
 	protected function tearDown(): void {
@@ -88,6 +86,14 @@ final class SanitizerUnitTest extends TestCase {
 		$this->assertStringNotContainsString('class="myclass"', $result);
 		$this->assertStringContainsString('Content', $result);
 	}
+
+	public function test_sanitize_removes_srcdoc_attribute(): void {
+		$input = '<iframe src="url" srcdoc="&lt;script&gt;parent.eval(&quot;alert(' . "'" . 'XSS | ' . "'" . '+document.cookie)&quot;)&lt;/script&gt;"></iframe>';
+		$result = Sanitizer::sanitize($input);
+
+		$this->assertNotFalse($result);
+		$this->assertStringNotContainsString('srcdoc', $result);
+}
 
 	public function test_sanitize_adds_noopener_noreferrer_to_links(): void {
 		$input = '<a href="https://example.com">Link</a>';
@@ -310,9 +316,10 @@ final class SanitizerUnitTest extends TestCase {
 		$words = ['tëst'];
 		$result = Sanitizer::highlight_words_str($str, $words);
 
-		// HTML entities are used for multibyte characters
+		$expected = (LIBXML_VERSION >= 21200) ? 'tëst' : 't&euml;st';
+
 		$this->assertStringContainsString('class="highlight"', $result);
-		$this->assertStringContainsString('t&euml;st', $result);
+		$this->assertStringContainsString($expected, $result);
 	}
 
 	public function test_highlight_words_str_multiple_occurrences(): void {
@@ -805,4 +812,3 @@ final class SanitizerUnitTest extends TestCase {
 		$this->assertStringNotContainsString('127.0.0.1', $result);
 	}
 }
-

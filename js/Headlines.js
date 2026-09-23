@@ -329,7 +329,7 @@ const Headlines = {
 		}
 	},
 	unpackVisible: function(container) {
-		const rows = document.querySelectorAll('#headlines-frame > div[id*=RROW][data-content].cdm');
+		const rows = document.querySelectorAll('#headlines-frame > div[id*=RROW][data-is-packed="1"].cdm');
 
 		for (let i = 0; i < rows.length; i++) {
 			if (App.Scrollable.isChildVisible(rows[i], container)) {
@@ -509,8 +509,6 @@ const Headlines = {
 						data-orig-feed-id="${hl.feed_id}"
 						data-orig-feed-title="${App.escapeHtml(hl.feed_title)}"
 						data-is-packed="1"
-						data-content="${App.escapeHtml(hl.content)}"
-						data-rendered-enclosures="${App.escapeHtml(Article.renderEnclosures(hl.enclosures))}"
 						data-score="${hl.score}"
 						data-article-title="${App.escapeHtml(hl.title)}"
 						onmouseover="Article.mouseIn(${hl.id})"

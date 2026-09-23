@@ -43,7 +43,7 @@
 		"mervick/material-design-icons": "4.0.1",
 		"j4mie/idiorm": "dev-master",
 		"soundasleep/html2text": "^2.1",
-		"guzzlehttp/guzzle": "^7.0",
+		"guzzlehttp/guzzle": "^8.0",
 		"dragonmantank/cron-expression": "^3.4"
 	}
 }

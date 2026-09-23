@@ -276,7 +276,7 @@ class Sanitizer {
 
 		if ($_SESSION['hasSandbox'] ?? false) $allowed_elements[] = 'iframe';
 
-		$disallowed_attributes = ['id', 'style', 'class', 'width', 'height', 'allow'];
+		$disallowed_attributes = ['id', 'style', 'class', 'width', 'height', 'allow', 'srcdoc'];
 
 		PluginHost::getInstance()->chain_hooks_callback(PluginHost::HOOK_SANITIZE,
 			function ($result) use (&$doc, &$allowed_elements, &$disallowed_attributes) {

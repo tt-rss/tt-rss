@@ -14,7 +14,7 @@ if (!class_exists('Config')) {
 		const SELF_URL_PATH = 'SELF_URL_PATH';
 		const SCHEMA_VERSION = 151;
 		const ENCRYPTION_KEY = 'ENCRYPTION_KEY';
-		
+
 		public static function get(string $key) {
 			$values = [
 				'SELF_URL_PATH' => 'http://localhost/tt-rss',
@@ -23,15 +23,15 @@ if (!class_exists('Config')) {
 			];
 			return $values[$key] ?? null;
 		}
-		
+
 		public static function get_self_url(bool $always_detect = false): string {
 			return 'http://localhost/tt-rss';
 		}
-		
+
 		public static function is_server_https(): bool {
 			return false;
 		}
-		
+
 		public static function get_user_agent(): string {
 			return 'Tiny Tiny RSS/test (https://tt-rss.org/)';
 		}
@@ -88,26 +88,24 @@ if (!class_exists('PluginHost')) {
 		const HOOK_HEADLINES_CUSTOM_SORT_OVERRIDE = 47;
 		const HOOK_HEADLINE_TOOLBAR_SELECT_MENU_ITEM = 48;
 		const HOOK_POST_LOGOUT = 49;
-		
+
 		private static $instance = null;
-		
+
 		public static function getInstance(): PluginHost {
-			if (self::$instance === null) {
-				self::$instance = new self();
-			}
+			self::$instance ??= new self();
 			return self::$instance;
 		}
-		
+
 		public function run_hooks_until($hook, $check, ...$params) {
 			// Mock: always return false (no plugin handled it)
 			return false;
 		}
-		
+
 		public function chain_hooks_callback($hook, $callback, ...$params) {
 			// Mock: just call the callback with the original params
 			call_user_func($callback, ...$params);
 		}
-		
+
 		public function get_plugin_names(): array {
 			return [];
 		}
@@ -125,7 +123,7 @@ if (!class_exists('Prefs')) {
 		const SHOW_CONTENT_PREVIEW = 'SHOW_CONTENT_PREVIEW';
 		const SHORT_DATE_FORMAT = 'SHORT_DATE_FORMAT';
 		const LONG_DATE_FORMAT = 'LONG_DATE_FORMAT';
-		
+
 		// CRITICAL: Override the static get() method to prevent instantiation
 		// The real Prefs::get() calls get_instance() which calls __construct()
 		// which tries to call Db::pdo() - we must avoid that entirely
@@ -133,17 +131,15 @@ if (!class_exists('Prefs')) {
 			// Mock: return false for all preferences without touching the database
 			return false;
 		}
-		
+
 		// Also mock get_instance() to prevent accidental instantiation
 		private static $instance = null;
-		
+
 		public static function get_instance(): Prefs {
-			if (self::$instance === null) {
-				self::$instance = new self();
-			}
+			self::$instance ??= new self();
 			return self::$instance;
 		}
-		
+
 		// Empty constructor to prevent DB access
 		public function __construct() {
 			// Do nothing - don't call Db::pdo()

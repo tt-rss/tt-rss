@@ -24,6 +24,15 @@ class UrlHelper {
 	static string $fetch_effective_ip_addr;
 
 	public static ?GuzzleHttp\ClientInterface $client = null;
+	private static ?bool $using_curl = null;
+
+	/**
+	 * Basic check for whether Guzzle will use a curl handler (indicating we can add curl options as needed).
+	 * This doesn't fully mirror Guzzle's logic, but should hopefully be close enough.
+	 */
+	private static function using_curl(): bool {
+		return self::$using_curl ??= function_exists('curl_exec') || function_exists('curl_multi_exec');
+	}
 
 	private static function get_client(): GuzzleHttp\ClientInterface {
 		if (self::$client == null) {
@@ -203,6 +212,38 @@ class UrlHelper {
 	}
 
 	/**
+	 * Normalize dotted IPv4 literals that may use octal, hexadecimal, or decimal syntax
+	 * into a canonical dotted-quad string.
+	 *
+	 * e.g. "0177.0.0.1", "0x7f.0.0.1", and "127.0.0.1" all normalize to "127.0.0.1"
+	 *
+	 * @param string $host hostname or IPv4 literal to normalize
+	 * @return ?string canonical dotted-quad IPv4 string, or null if the input is not a valid dotted IPv4 literal
+	 */
+	static function canonicalize_ipv4_literal(string $host): ?string {
+		// Match 1 to 4 dot-separated octal, hex, or decimal integers
+		if (!preg_match('/^(0x[0-9a-f]+|\d+)(\.(0x[0-9a-f]+|\d+)){0,3}$/i', $host))
+			return null;
+
+		$parts = explode('.', $host);
+		$parts_count = count($parts);
+		$val = 0;
+
+		foreach ($parts as $i => $part) {
+			$octet = intval($part, 0);
+
+			if ($octet < 0 || $octet > ($i === $parts_count - 1 ? (1 << (8 * (5 - $parts_count))) - 1 : 255))
+				return null;
+
+			$val = ($i === $parts_count - 1)
+				? ($val << (8 * (5 - $parts_count))) | $octet
+				: ($val << 8) | $octet;
+		}
+
+		return long2ip($val);
+	}
+
+	/**
 	 * Check if a URL targets a disallowed IP (localhost, loopback, or private IPs on non-standard ports).
 	 *
 	 * Traffic to private IPs on standard ports (80 and 443) is allowed to mimic the original behavior of
@@ -217,55 +258,69 @@ class UrlHelper {
 	 * @return bool true if the URL should be rejected, false otherwise
 	 */
 	static function has_disallowed_ip(string|array $url_or_tokens, bool $validate_resolved_ip = false): bool {
-		$tokens = is_array($url_or_tokens)? $url_or_tokens : parse_url($url_or_tokens);
+		$tokens = is_array($url_or_tokens) ? $url_or_tokens : parse_url($url_or_tokens);
 
 		if (empty($tokens['host']))
 			return false;
 
-		$host = strtolower($tokens['host']);
-
+		$host = trim(strtolower($tokens['host']), '[].');
 		$port = $tokens['port'] ?? null;
-		$standard_port = (($tokens['scheme'] ?? 'http') === 'https') ? 443 : 80;
-		$is_standard_port = ($port === null || $port === $standard_port);
+		$is_standard_port = ($port === null || $port === 80 || $port === 443);
 
-		// strip IPv6 brackets
-		if (str_starts_with($host, '[') && str_ends_with($host, ']'))
-			$host = substr($host, 1, -1);
-
-		if ($host === 'localhost' || str_starts_with($host, '127.'))
+		if ($host === '' || $host === 'localhost')
 			return true;
 
-		if ($host === '::1' || $host === '0:0:0:0:0:0:0:1')
-			return true;
+		// Collect IPs to evaluate-- literal IPs (canonicalizing octal/hex/IPv6) or those from DNS resolution
+		$ips = [];
 
-		// TODO: Improve IPv6 support (fc00::/7 unique local, fe80::/10 link-local)
+		if (filter_var($host, FILTER_VALIDATE_IP)) {
+			$ips[] = $host;
+		} elseif (($canon_ipv4 = self::canonicalize_ipv4_literal($host)) !== null) {
+			$ips[] = $canon_ipv4;
+		} elseif ($validate_resolved_ip) {
+			$records = dns_get_record($host, DNS_A | DNS_AAAA);
 
-		// IPv4 link-local / cloud metadata
-		if (str_starts_with($host, '169.254.'))
-			return true;
+			if (is_array($records)) {
+				foreach ($records as $r) {
+					if (isset($r['ip']))
+						$ips[] = $r['ip'];
 
-		if (!$is_standard_port && preg_match('/^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $host))
-			return true;
+					if (isset($r['ipv6']))
+						$ips[] = $r['ipv6'];
+				}
+			}
 
-		// if needed, try resolving the hostname and checking the resulting IP
-		if ($validate_resolved_ip && !str_contains($host, ':') && !preg_match('/^\d+\./', $host)) {
-			$ip_addr = gethostbyname($host);
+			// Also include OS resolver results (e.g. '/etc/hosts', local container hostnames)
+			$sys_ips = gethostbynamel($host);
+			if ($sys_ips !== false)
+				$ips = array_unique([...$ips, ...$sys_ips]);
+		}
 
-			// failed to resolve
-			// TODO: return true instead?
-			if (!$ip_addr || $ip_addr === $host)
-				return false;
+		// Fail if we need to validate IPs but couldn't determine any.
+		if (empty($ips))
+			return $validate_resolved_ip;
 
-			if (str_starts_with($ip_addr, '127.'))
+		foreach ($ips as $ip) {
+			// Canonicalize IPv6 and unwrap IPv4-mapped IPv6 (e.g., ::ffff:127.0.0.1 -> 127.0.0.1)
+			if (($bin = inet_pton($ip)) !== false) {
+				$ip = inet_ntop($bin);
+				if (str_starts_with($ip, '::ffff:') && str_contains($ip, '.')) {
+					$ip = substr($ip, 7);
+					$bin = inet_pton($ip);
+				}
+			}
+
+			// Reject loopback, link-local, and reserved ranges (127.0.0.0/8, 169.254.0.0/16, ::1, fe80::/10)
+			if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE))
 				return true;
 
-			// TODO: maybe check for IPv6 loopback (::1) using dns_get_record()
-
-			if (str_starts_with($ip_addr, '169.254.'))
+			// Explicit check for IPv6 Unique Local Addresses (fc00::/7)
+			if (!$is_standard_port && $bin !== false && strlen($bin) === 16 && (ord($bin[0]) & 0xfe) === 0xfc)
 				return true;
 
-			if (!$is_standard_port && preg_match('/^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/', $ip_addr))
-					return true;
+			// Reject RFC1918 / private ranges on non-standard ports
+			if (!$is_standard_port && !filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE))
+				return true;
 		}
 
 		return false;
@@ -392,7 +447,7 @@ class UrlHelper {
 				'on_redirect' => function(RequestInterface $request, ResponseInterface $response, UriInterface $uri) {
 					if (!self::validate($uri, true)) {
 						self::$fetch_effective_url = (string) $uri;
-						throw new GuzzleHttp\Exception\RequestException('URL received during redirection failed extended validation.',
+						throw new GuzzleHttp\Exception\ResponseException('URL received during redirection failed extended validation.',
 							$request, $response);
 					}
 				},
@@ -409,15 +464,16 @@ class UrlHelper {
 
 		if ($encoding)
 			$req_options[GuzzleHttp\RequestOptions::HEADERS]['Accept-Encoding'] = $encoding;
+		elseif (self::using_curl())
+			$req_options['curl'][\CURLOPT_ENCODING] = '';
 
 		if  ($http_referrer)
 			$req_options[GuzzleHttp\RequestOptions::HEADERS]['Referer'] = $http_referrer;
 
-		if ($login && $pass && in_array($auth_type, ['basic', 'digest', 'ntlm'])) {
+		if (in_array($auth_type, ['basic', 'digest']) && $login && $pass) {
 			// Let Guzzle handle the details for auth types it supports
 			$req_options[GuzzleHttp\RequestOptions::AUTH] = [$login, $pass, $auth_type];
-		} elseif ($auth_type === 'any') {
-			// https://docs.guzzlephp.org/en/stable/faq.html#how-can-i-add-custom-curl-options
+		} elseif ($auth_type === 'any' && self::using_curl()) {
 			$req_options['curl'][\CURLOPT_HTTPAUTH] = \CURLAUTH_ANY;
 			if ($login && $pass)
 				$req_options['curl'][\CURLOPT_USERPWD] = "$login:$pass";
@@ -458,7 +514,7 @@ class UrlHelper {
 		} catch (GuzzleHttp\Exception\GuzzleException $ex) {
 			self::$fetch_last_error = $ex->getMessage();
 
-			if ($ex instanceof GuzzleHttp\Exception\RequestException) {
+			if ($ex instanceof GuzzleHttp\Exception\ResponseException) {
 				if ($ex instanceof GuzzleHttp\Exception\BadResponseException) {
 					// 4xx or 5xx
 					self::$fetch_last_error_code = $ex->getResponse()->getStatusCode();
@@ -474,14 +530,12 @@ class UrlHelper {
 
 					if ($type && !str_contains(self::$fetch_last_content_type, "$type"))
 						self::$fetch_last_error_content = (string) $ex->getResponse()->getBody();
-				} elseif (array_key_exists('errno', $ex->getHandlerContext())) {
-					$errno = (int) $ex->getHandlerContext()['errno'];
-
+				} elseif ($ex instanceof GuzzleHttp\Exception\ResponseTransferException) {
 					// By default, all supported encoding types are sent via `Accept-Encoding` and decoding of
 					// responses with `Content-Encoding` is automatically attempted.  If this fails, we do a
-					// single retry with `Accept-Encoding: none` to try and force an unencoded response.
-					if (($errno === \CURLE_WRITE_ERROR || $errno === \CURLE_BAD_CONTENT_ENCODING) &&
-						$ex->getRequest()->getHeaderLine('accept-encoding') !== 'none') {
+					// single retry with `Accept-Encoding: none` (intentionally invalid) to try and force an
+					// unencoded response.
+					if ($ex->getRequest()->getHeaderLine('accept-encoding') !== 'none') {
 						$options['encoding'] = 'none';
 						return self::fetch($options);
 					}
