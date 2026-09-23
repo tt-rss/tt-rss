@@ -2157,6 +2157,11 @@ class Feeds extends Handler_Protected {
 						$query_keywords[] = "($not (LOWER(author) LIKE " . $pdo->quote("%{$keyword_value_untrimmed}%") . '))';
 						$valid_keyword_processed = true;
 						break;
+					case 'feed':
+						$query_keywords[] = "(ttrss_user_entries.feed_id $not IN (SELECT id FROM ttrss_feeds WHERE LOWER(title) LIKE " .
+							$pdo->quote("%{$keyword_value_untrimmed}%") . '))';
+						$valid_keyword_processed = true;
+						break;
 					case 'note':
 						if ($keyword_value == 'true')
 							$query_keywords[] = "($not (note IS NOT NULL AND note != ''))";
