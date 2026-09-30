@@ -1276,20 +1276,28 @@ class Feeds extends Handler_Protected {
 	static function _get_cat_children_unread(int $cat, int $owner_uid = 0): int {
 		if (!$owner_uid) $owner_uid = $_SESSION["uid"];
 
+		$child_cats = self::_get_child_cats($cat, $owner_uid);
+
+		if (count($child_cats) == 0)
+			return 0;
+
 		$pdo = Db::pdo();
 
-		$sth = $pdo->prepare("SELECT id FROM ttrss_feed_categories WHERE parent_cat = ?
-				AND owner_uid = ?");
-		$sth->execute([$cat, $owner_uid]);
+		$cats_qmarks = arr_qmarks($child_cats);
 
-		$unread = 0;
+		$sth = $pdo->prepare("SELECT COUNT(*) AS unread
+				FROM ttrss_user_entries ue
+					JOIN ttrss_feeds f ON (f.id = ue.feed_id)
+				WHERE f.cat_id IN ($cats_qmarks)
+					AND ue.unread = true
+					AND ue.owner_uid = ?");
+		$sth->execute([...$child_cats, $owner_uid]);
 
-		while ($line = $sth->fetch()) {
-			$unread += self::_get_cat_unread($line["id"], $owner_uid);
-			$unread += self::_get_cat_children_unread($line["id"], $owner_uid);
+		if ($row = $sth->fetch()) {
+			return (int) $row["unread"];
 		}
 
-		return $unread;
+		return 0;
 	}
 
 	static function _get_global_unread(int $user_id = 0): int {
@@ -1824,17 +1832,21 @@ class Feeds extends Handler_Protected {
 	 * @return array<int, int>
 	 */
 	static function _get_child_cats(int $cat, int $owner_uid): array {
-		$rv = [];
+		$pdo = Db::pdo();
 
-		$feed_cats = ORM::for_table('ttrss_feed_categories')
-			->select('id')
-			->where(['parent_cat' => $cat, 'owner_uid' => $owner_uid])
-			->find_many();
+		// UNION (not UNION ALL) also stops the recursion if categories form a cycle
+		$sth = $pdo->prepare("WITH RECURSIVE child_cats AS (
+					SELECT id FROM ttrss_feed_categories
+						WHERE parent_cat = :cat AND owner_uid = :uid
+				UNION
+					SELECT fc.id FROM ttrss_feed_categories fc
+						JOIN child_cats cc ON (fc.parent_cat = cc.id)
+						WHERE fc.owner_uid = :uid
+				)
+				SELECT id FROM child_cats");
+		$sth->execute(["cat" => $cat, "uid" => $owner_uid]);
 
-		foreach ($feed_cats as $feed_cat)
-			array_push($rv, $feed_cat->id, ...self::_get_child_cats($feed_cat->id, $owner_uid));
-
-		return $rv;
+		return array_map(intval(...), $sth->fetchAll(PDO::FETCH_COLUMN));
 	}
 
 	/**
