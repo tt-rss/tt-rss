@@ -788,4 +788,29 @@ final class RSSUtilsTest extends TestCase {
         $result = RSSUtils::eval_article_filters($filters, "Test article", "", "", "", []);
         $this->assertCount(0, $result);
     }
+
+    // ------------------------------------------------------------------------
+    // detect_favicon_mime_type() — favicon MIME detection with SVG sniffing
+    // ------------------------------------------------------------------------
+
+    public function test_detect_favicon_mime_type_png(): void {
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        $this->assertEquals('image/png', RSSUtils::detect_favicon_mime_type($png));
+    }
+
+    public function test_detect_favicon_mime_type_svg_with_prolog(): void {
+        $svg = '<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h16v16H0z"/></svg>';
+        $this->assertEquals('image/svg+xml', RSSUtils::detect_favicon_mime_type($svg));
+    }
+
+    public function test_detect_favicon_mime_type_svg_without_prolog(): void {
+        // finfo tends to report these as generic XML/text
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h16v16H0z"/></svg>';
+        $this->assertEquals('image/svg+xml', RSSUtils::detect_favicon_mime_type($svg));
+    }
+
+    public function test_detect_favicon_mime_type_html_is_not_svg(): void {
+        $html = '<!DOCTYPE html><html><head><title>hi</title></head><body>hello</body></html>';
+        $this->assertNotEquals('image/svg+xml', RSSUtils::detect_favicon_mime_type($html));
+    }
 }
