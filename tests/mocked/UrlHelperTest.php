@@ -619,4 +619,38 @@ final class UrlHelperTest extends TestCase {
 		$result = UrlHelper::url_to_youtube_vid($url);
 		$this->assertEquals('dQw4w9WgXcQ', $result);
 	}
+
+	// ===== curl_handler_supported() Tests =====
+
+	private function requireCurlConstants(): void {
+		foreach (['CURL_VERSION_SSL', 'CURL_SSLVERSION_TLSv1_2', 'CURLMOPT_MAX_HOST_CONNECTIONS', 'CURLMOPT_MAX_TOTAL_CONNECTIONS'] as $const) {
+			if (!defined($const))
+				$this->markTestSkipped("$const is not available in this PHP build");
+		}
+	}
+
+	public function testCurlHandlerSupportedWithCurrentLibcurlAndSsl(): void {
+		$this->requireCurlConstants();
+		$this->assertTrue(UrlHelper::curl_handler_supported(['version' => '8.5.0', 'features' => \CURL_VERSION_SSL]));
+	}
+
+	public function testCurlHandlerSupportedAtMinimumVersion(): void {
+		$this->requireCurlConstants();
+		$this->assertTrue(UrlHelper::curl_handler_supported(['version' => '7.34.0', 'features' => \CURL_VERSION_SSL]));
+	}
+
+	public function testCurlHandlerNotSupportedWithOldLibcurl(): void {
+		$this->requireCurlConstants();
+		// e.g. CentOS 7 ships libcurl 7.29.0, which Guzzle won't use
+		$this->assertFalse(UrlHelper::curl_handler_supported(['version' => '7.29.0', 'features' => \CURL_VERSION_SSL]));
+	}
+
+	public function testCurlHandlerNotSupportedWithoutSsl(): void {
+		$this->requireCurlConstants();
+		$this->assertFalse(UrlHelper::curl_handler_supported(['version' => '8.5.0', 'features' => 0]));
+	}
+
+	public function testCurlHandlerNotSupportedWithoutVersionInfo(): void {
+		$this->assertFalse(UrlHelper::curl_handler_supported(false));
+	}
 }

@@ -27,11 +27,28 @@ class UrlHelper {
 	private static ?bool $using_curl = null;
 
 	/**
-	 * Basic check for whether Guzzle will use a curl handler (indicating we can add curl options as needed).
-	 * This doesn't fully mirror Guzzle's logic, but should hopefully be close enough.
+	 * Whether Guzzle will use a curl handler (indicating we can add curl options as needed).
 	 */
 	private static function using_curl(): bool {
-		return self::$using_curl ??= function_exists('curl_exec') || function_exists('curl_multi_exec');
+		return self::$using_curl ??= self::curl_handler_supported(function_exists('curl_version') ? curl_version() : false);
+	}
+
+	/**
+	 * Mirrors the requirements Guzzle checks before choosing a curl handler (see
+	 * GuzzleHttp\Handler\CurlVersion::supportsCurlHandler(), which is internal to Guzzle).
+	 * When they aren't met Guzzle falls back to its stream handler, which rejects the 'curl' request option.
+	 *
+	 * @param array<string, mixed>|false $version_info the result of curl_version()
+	 */
+	public static function curl_handler_supported(array|false $version_info): bool {
+		return (function_exists('curl_exec') || function_exists('curl_multi_exec'))
+			&& defined('CURL_VERSION_SSL')
+			&& defined('CURL_SSLVERSION_TLSv1_2')
+			&& defined('CURLMOPT_MAX_HOST_CONNECTIONS')
+			&& defined('CURLMOPT_MAX_TOTAL_CONNECTIONS')
+			&& is_array($version_info)
+			&& version_compare($version_info['version'] ?? '0', '7.34.0', '>=')
+			&& (\CURL_VERSION_SSL & ($version_info['features'] ?? 0)) !== 0;
 	}
 
 	private static function get_client(): GuzzleHttp\ClientInterface {
