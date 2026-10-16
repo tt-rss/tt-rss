@@ -1,7 +1,7 @@
 <?php
 class API extends Handler {
 
-	const API_LEVEL  = 23;
+	const API_LEVEL  = 24;
 
 	const STATUS_OK  = 0;
 	const STATUS_ERR = 1;
@@ -864,9 +864,13 @@ class API extends Handler {
 		$category_id = (int) clean($_REQUEST["category_id"]);
 		$login = clean($_REQUEST["login"] ?? "");
 		$password = clean($_REQUEST["password"] ?? "");
+		$update_interval = filter_var($_REQUEST["update_interval"] ?? 0, FILTER_VALIDATE_INT);
+
+		if ($update_interval === false || $update_interval < -1)
+			return $this->_wrap(self::STATUS_ERR, ["error" => self::E_INCORRECT_USAGE]);
 
 		if ($feed_url) {
-			$rc = Feeds::_subscribe($feed_url, $category_id, $login, $password);
+			$rc = Feeds::_subscribe($feed_url, $category_id, $login, $password, $update_interval);
 
 			return $this->_wrap(self::STATUS_OK, ["status" => $rc]);
 		} else {

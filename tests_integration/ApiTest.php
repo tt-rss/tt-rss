@@ -34,6 +34,23 @@ final class ApiTest extends IntegrationTestCase {
         $this->assertArrayHasKey("feed_id", $resp['content']['status']);
     }
 
+    public function test_subscribeToFeedWithUpdateInterval() : void {
+        $feed_url = $this->app_url . "/tests_integration/feed.xml";
+
+        $resp = $this->api([
+            "op" => "subscribeToFeed",
+            "feed_url" => $feed_url,
+            "update_interval" => 60,
+        ]);
+        $this->common_assertions($resp);
+        $this->assertEquals(1, $resp['content']['status']['code']);
+        $this->assertArrayHasKey('feed_id', $resp['content']['status']);
+        $feed_id = $resp['content']['status']['feed_id'];
+
+        $feed = ORM::for_table('ttrss_feeds')->find_one($feed_id);
+        $this->assertEquals(60, $feed->update_interval);
+    }
+
     public function test_getCounters() : void {
         $resp = $this->api(["op" => "getCounters"]);
         $this->common_assertions($resp);
