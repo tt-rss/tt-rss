@@ -866,7 +866,7 @@ class API extends Handler {
 		$password = clean($_REQUEST["password"] ?? "");
 		$update_interval = filter_var($_REQUEST["update_interval"] ?? 0, FILTER_VALIDATE_INT);
 
-		if ($update_interval === false || $update_interval < -1)
+		if (!in_array($update_interval, array_keys(Feeds::_get_update_intervals())))
 			return $this->_wrap(self::STATUS_ERR, ["error" => self::E_INCORRECT_USAGE]);
 
 		if ($feed_url) {

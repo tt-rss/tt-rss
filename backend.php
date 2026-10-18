@@ -51,35 +51,10 @@
 		return;
 	}
 
-	$purge_intervals = [
-		0  => __("Use default"),
-		-1 => __("Never purge"),
-		7  => __("1 week old"),
-		14 => __("2 weeks old"),
-		31 => __("1 month old"),
-		60 => __("2 months old"),
-		90 => __("3 months old")];
-
-	$update_intervals = [
-		0   => __("Default interval"),
-		-1  => __("Disable updates"),
-		15  => __("15 minutes"),
-		30  => __("30 minutes"),
-		60  => __("Hourly"),
-		240 => __("4 hours"),
-		720 => __("12 hours"),
-		1440 => __("Daily"),
-		10080 => __("Weekly")];
-
-	$update_intervals_nodefault = [
-		-1  => __("Disable updates"),
-		15  => __("15 minutes"),
-		30  => __("30 minutes"),
-		60  => __("Hourly"),
-		240 => __("4 hours"),
-		720 => __("12 hours"),
-		1440 => __("Daily"),
-		10080 => __("Weekly")];
+	// TODO: Replace references to these with function calls.  Also look for plugin usage.
+	$purge_intervals = Feeds::_get_purge_intervals();
+	$update_intervals = Feeds::_get_update_intervals();
+	$update_intervals_nodefault = Feeds::_get_update_intervals(with_default: false);
 
 	$access_level_names = [
 		UserHelper::ACCESS_LEVEL_DISABLED 	=> __("Disabled"),
