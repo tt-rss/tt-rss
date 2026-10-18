@@ -1,7 +1,7 @@
 <?php
 class API extends Handler {
 
-	const API_LEVEL  = 24;
+	const API_LEVEL  = 25;
 
 	const STATUS_OK  = 0;
 	const STATUS_ERR = 1;
@@ -876,6 +876,10 @@ class API extends Handler {
 		} else {
 			return $this->_wrap(self::STATUS_ERR, ["error" => self::E_INCORRECT_USAGE]);
 		}
+	}
+
+	function getFeedUpdateIntervals(): bool {
+		return $this->_wrap(self::STATUS_OK, ['update_intervals' => Feeds::_get_update_intervals()]);
 	}
 
 	function getFeedTree(): bool {
