@@ -2418,6 +2418,9 @@ class Feeds extends Handler_Protected {
 		return $auth_pass;
 	}
 
+	/**
+	 * @return array<int, string>
+	 */
 	static function _get_purge_intervals(): array {
 		return [
 			0 => __('Use default'),
@@ -2430,6 +2433,9 @@ class Feeds extends Handler_Protected {
 		];
 	}
 
+	/**
+	 * @return array<int, string>
+	 */
 	static function _get_update_intervals(bool $with_default = true): array {
 		return ($with_default ? [0 => __('Default interval')] : []) + [
 			-1 => __('Disable updates'),
