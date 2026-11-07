@@ -1012,7 +1012,9 @@ const App = {
          PluginHost.run(PluginHost.HOOK_INIT_COMPLETE, null);
       }
 
-      if (!this.getInitParam("bw_limit"))
+      // the main UI gets runtime info piggybacked on its periodic counters
+      // request (see Feeds.requestCounters), prefs has no such poll
+      if (this.is_prefs && !this.getInitParam("bw_limit"))
          window.setInterval(() => {
             App.updateRuntimeInfo();
          }, 60 * 1000)
