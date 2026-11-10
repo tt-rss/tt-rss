@@ -525,7 +525,7 @@ const Headlines = {
 						<div class="header-sticky-guard"></div>
 						<div class="header">
 							<div class="left">
-								<input dojoType="dijit.form.CheckBox" type="checkbox" onclick="Headlines.onRowChecked(this)" class='rchk'>
+								<input dojoType="dijit.form.CheckBox" type="checkbox" onclick="Headlines.onRowChecked(this, arguments[0])" class='rchk'>
 								<i class="marked-pic marked-${hl.id} material-icons" onclick="Headlines.toggleMark(${hl.id})">star</i>
 								<i class="pub-pic pub-${hl.id} material-icons" onclick="Headlines.togglePub(${hl.id})">rss_feed</i>
 							</div>
@@ -596,7 +596,7 @@ const Headlines = {
 				onmouseover="Article.mouseIn(${hl.id})"
 				onmouseout="Article.mouseOut(${hl.id})">
 			<div class="left">
-				<input dojoType="dijit.form.CheckBox" type="checkbox" onclick="Headlines.onRowChecked(this)" class='rchk'>
+				<input dojoType="dijit.form.CheckBox" type="checkbox" onclick="Headlines.onRowChecked(this, arguments[0])" class='rchk'>
 					<i class="marked-pic marked-${hl.id} material-icons" onclick="Headlines.toggleMark(${hl.id})">star</i>
 					<i class="pub-pic pub-${hl.id} material-icons" onclick="Headlines.togglePub(${hl.id})">rss_feed</i>
 			</div>
@@ -1221,8 +1221,19 @@ const Headlines = {
 
 		return rv;
 	},
-	onRowChecked: function (elem) {
+	onRowChecked: function (elem, event) {
 		const row = elem.domNode.closest("div[id*=RROW]");
+		const id = parseInt(row.getAttribute('data-article-id'));
+		const last_id = this._last_checked_id;
+
+		this._last_checked_id = id;
+
+		if (event?.shiftKey && last_id && document.getElementById(`RROW-${last_id}`)) {
+			const mode = row.classList.contains('active') || elem.attr('checked') ? 'all' : 'none';
+
+			Headlines.getRange(last_id, id).forEach((range_id) => Headlines.select(mode, range_id));
+			return;
+		}
 
 		// do not allow unchecking active article checkbox
 		if (row.classList.contains('active')) {
