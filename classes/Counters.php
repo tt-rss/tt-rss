@@ -30,35 +30,51 @@ class Counters {
 	}
 
 	/**
-	 * @return array<int, int>
+	 * Sums a category's own counters with those of all its descendants.
+	 *
+	 * @param array<int, array<int>> $children parent category id => child category ids
+	 * @param array<int, array{int, int, int}> $own category id => [unread, marked, published] of its own feeds
+	 * @param array<int, array{int, int, int}> $totals memoised results, keyed by category id
+	 * @param array<int, bool> $visiting categories on the current path, guards against cycles
+	 * @return array{int, int, int}
 	 */
-	static private function get_cat_children(int $cat_id, int $owner_uid): array {
-		$unread = 0;
-		$marked = 0;
-		$published = 0;
+	private static function sum_cat_tree(int $cat_id, array $children, array $own, array &$totals, array &$visiting): array {
+		if (isset($totals[$cat_id]))
+			return $totals[$cat_id];
 
-		$cats = ORM::for_table('ttrss_feed_categories')
-					->where('owner_uid', $owner_uid)
-					->where('parent_cat', $cat_id)
-					->find_many();
+		[$unread, $marked, $published] = $own[$cat_id] ?? [0, 0, 0];
 
-		foreach ($cats as $cat) {
-			[$tmp_unread, $tmp_marked, $tmp_published] = self::get_cat_children($cat->id, $owner_uid);
+		$visiting[$cat_id] = true;
 
-			$unread += $tmp_unread + Feeds::_get_cat_unread($cat->id, $owner_uid);
-			$marked += $tmp_marked + Feeds::_get_cat_marked($cat->id, $owner_uid);
-			$published += $tmp_published + Feeds::_get_cat_published($cat->id, $owner_uid);
+		foreach ($children[$cat_id] ?? [] as $child_id) {
+			if (isset($visiting[$child_id]))
+				continue;
+
+			[$child_unread, $child_marked, $child_published] = self::sum_cat_tree($child_id, $children, $own, $totals, $visiting);
+
+			$unread += $child_unread;
+			$marked += $child_marked;
+			$published += $child_published;
 		}
 
-		return [$unread, $marked, $published];
+		unset($visiting[$cat_id]);
+
+		return $totals[$cat_id] = [$unread, $marked, $published];
 	}
 
 	/**
+	 * Loads the category tree and per-category counters once and sums them in PHP,
+	 * so the number of queries doesn't grow with category nesting depth.
+	 *
 	 * @param array<int>|null $cat_ids
 	 * @return array<int, array{id: int, kind: 'cat', counter: int, markedcounter?: int, publishedcounter?: int}>
 	 */
 	private static function get_cats(?array $cat_ids = null): array {
+		if (is_array($cat_ids) && count($cat_ids) == 0)
+			return [];
+
 		$pdo = Db::pdo();
+		$owner_uid = $_SESSION['uid'];
 
 		/* Labels category */
 
@@ -70,77 +86,77 @@ class Counters {
 			],
 		];
 
-		if (is_array($cat_ids)) {
-			if (count($cat_ids) == 0)
-				return [];
+		$cats = ORM::for_table('ttrss_feed_categories')
+			->select_many('id', 'parent_cat')
+			->where('owner_uid', $owner_uid)
+			->find_array();
 
-			$cat_ids_qmarks = arr_qmarks($cat_ids);
+		$all_cat_ids = [];
+		$children = [];
 
-			$sth = $pdo->prepare("SELECT fc.id,
-					SUM(CASE WHEN unread THEN 1 ELSE 0 END) AS count,
-					SUM(CASE WHEN marked THEN 1 ELSE 0 END) AS count_marked,
-					SUM(CASE WHEN published THEN 1 ELSE 0 END) AS count_published,
-					(SELECT COUNT(id) FROM ttrss_feed_categories fcc
-						WHERE fcc.parent_cat = fc.id) AS num_children
-				FROM ttrss_feed_categories fc
-					LEFT JOIN ttrss_feeds f ON (f.cat_id = fc.id)
-					LEFT JOIN ttrss_user_entries ue ON (ue.feed_id = f.id)
-				WHERE fc.owner_uid = ? AND fc.id IN ($cat_ids_qmarks)
-				GROUP BY fc.id
-			UNION
-				SELECT 0,
-					SUM(CASE WHEN unread THEN 1 ELSE 0 END) AS count,
-					SUM(CASE WHEN marked THEN 1 ELSE 0 END) AS count_marked,
-					SUM(CASE WHEN published THEN 1 ELSE 0 END) AS count_published,
-					0
-				FROM ttrss_feeds f, ttrss_user_entries ue
-				WHERE f.cat_id IS NULL AND
-					ue.feed_id = f.id AND
-					ue.owner_uid = ?");
+		foreach ($cats as $cat) {
+			$all_cat_ids[] = (int) $cat['id'];
 
-			$sth->execute([$_SESSION['uid'], ...$cat_ids, $_SESSION['uid']]);
-
-		} else {
-			$sth = $pdo->prepare("SELECT fc.id,
-					SUM(CASE WHEN unread THEN 1 ELSE 0 END) AS count,
-					SUM(CASE WHEN marked THEN 1 ELSE 0 END) AS count_marked,
-					SUM(CASE WHEN published THEN 1 ELSE 0 END) AS count_published,
-					(SELECT COUNT(id) FROM ttrss_feed_categories fcc
-						WHERE fcc.parent_cat = fc.id) AS num_children
-				FROM ttrss_feed_categories fc
-					LEFT JOIN ttrss_feeds f ON (f.cat_id = fc.id)
-					LEFT JOIN ttrss_user_entries ue ON (ue.feed_id = f.id)
-				WHERE fc.owner_uid = :uid
-				GROUP BY fc.id
-			UNION
-				SELECT 0,
-					SUM(CASE WHEN unread THEN 1 ELSE 0 END) AS count,
-					SUM(CASE WHEN marked THEN 1 ELSE 0 END) AS count_marked,
-					SUM(CASE WHEN published THEN 1 ELSE 0 END) AS count_published,
-					0
-				FROM ttrss_feeds f, ttrss_user_entries ue
-				WHERE f.cat_id IS NULL AND
-					ue.feed_id = f.id AND
-					ue.owner_uid = :uid");
-
-			$sth->execute(["uid" => $_SESSION['uid']]);
+			if ($cat['parent_cat'])
+				$children[(int) $cat['parent_cat']][] = (int) $cat['id'];
 		}
 
-		while ($line = $sth->fetch()) {
-			if ($line["num_children"] > 0) {
-				[$child_counter, $child_marked_counter, $child_published_counter] = self::get_cat_children($line["id"], $_SESSION["uid"]);
-			} else {
-				$child_counter = 0;
-				$child_marked_counter = 0;
-				$child_published_counter = 0;
+		$wanted_cat_ids = is_array($cat_ids) ?
+			array_values(array_intersect($all_cat_ids, array_map(intval(...), $cat_ids))) : $all_cat_ids;
+
+		/* conditional counters: only count feeds in the requested categories and their descendants */
+
+		$cat_filter_qpart = "";
+		$counted_cat_ids = [];
+
+		if (is_array($cat_ids)) {
+			$pending = $wanted_cat_ids;
+
+			while (($id = array_pop($pending)) !== null) {
+				if (isset($counted_cat_ids[$id]))
+					continue;
+
+				$counted_cat_ids[$id] = true;
+				array_push($pending, ...($children[$id] ?? []));
 			}
 
+			$cat_filter_qpart = count($counted_cat_ids) > 0 ?
+				"AND (f.cat_id IS NULL OR f.cat_id IN (" . arr_qmarks(array_keys($counted_cat_ids)) . "))" :
+				"AND f.cat_id IS NULL";
+		}
+
+		$sth = $pdo->prepare("SELECT f.cat_id,
+				SUM(CASE WHEN unread THEN 1 ELSE 0 END) AS count,
+				SUM(CASE WHEN marked THEN 1 ELSE 0 END) AS count_marked,
+				SUM(CASE WHEN published THEN 1 ELSE 0 END) AS count_published
+			FROM ttrss_feeds f
+				JOIN ttrss_user_entries ue ON (ue.feed_id = f.id)
+			WHERE ue.owner_uid = ? $cat_filter_qpart
+			GROUP BY f.cat_id");
+
+		$sth->execute([$owner_uid, ...array_keys($counted_cat_ids)]);
+
+		/* uncategorized (cat_id IS NULL) ends up under 0 */
+
+		$own = [];
+
+		while ($line = $sth->fetch()) {
+			$own[(int) $line['cat_id']] = [(int) $line['count'], (int) $line['count_marked'], (int) $line['count_published']];
+		}
+
+		$totals = [];
+		$visiting = [];
+
+		foreach ([0, ...$wanted_cat_ids] as $id) {
+			[$unread, $marked, $published] = $id == 0 ?
+				($own[0] ?? [0, 0, 0]) : self::sum_cat_tree($id, $children, $own, $totals, $visiting);
+
 			$ret[] = [
-				'id' => (int) $line['id'],
+				'id' => $id,
 				'kind' => 'cat',
-				'markedcounter' => (int) $line['count_marked'] + $child_marked_counter,
-				'publishedcounter' => (int) $line['count_published'] + $child_published_counter,
-				'counter' => (int) $line['count'] + $child_counter,
+				'markedcounter' => $marked,
+				'publishedcounter' => $published,
+				'counter' => $unread,
 			];
 		}
 
