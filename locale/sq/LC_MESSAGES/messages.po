@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-29 01:22+0000\n"
-"PO-Revision-Date: 2026-06-10 21:01+0000\n"
-"Last-Translator: Besnik Bleta <besnik@programeshqip.org>\n"
-"Language-Team: Albanian <https://hosted.weblate.org/projects/tt-rss/webui/sq/"
-">\n"
+"PO-Revision-Date: 2026-11-12 10:51+0000\n"
+"Last-Translator: Besnik Bleta <besnik_b@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Albanian <https://hosted.weblate.org/projects/tt-rss/webui/"
+"sq/>\n"
 "Language: sq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6\n"
+"X-Generator: Weblate 2026.11.2.dev0\n"
 
 #: backend.php:55
 msgid "Use default"
@@ -697,7 +697,7 @@ msgstr "Lejon përdorimin e kësaj llogarie përmes API-t"
 
 #: classes/Pref_Prefs.php:111
 msgid "Enable browser-based API access"
-msgstr ""
+msgstr "Aktivizo hyrje API me bazë shfletuesin"
 
 #: classes/Pref_Prefs.php:111
 msgid ""
@@ -1110,10 +1110,8 @@ msgid "Session failed to validate (password changed)"
 msgstr "S’u arrit të vlerësohet sesioni (ka ndryshuar fjalëkalimi)"
 
 #: classes/Sessions.php:139
-#, fuzzy
-#| msgid "Session failed to validate (password changed)"
 msgid "Session failed to validate (access level changed)"
-msgstr "S’u arrit të vlerësohet sesioni (ka ndryshuar fjalëkalimi)"
+msgstr "S’u arrit të vlerësohej sesioni (ka ndryshuar shkallë hyrjesh)"
 
 #: classes/Sessions.php:144
 msgid "Session failed to validate (account is disabled)"
