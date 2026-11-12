@@ -71,6 +71,8 @@ jobs:
         include:
         - php: '8.6'
           experimental: true
+        - php: '8.7'
+          experimental: true
 
     steps:
     - name: Check out code
