@@ -541,6 +541,9 @@ class Pref_Filters extends Handler_Protected {
 		// intentionally not doing clean() here to allow for '<', etc. in titles
 		$title = trim($_REQUEST['title'] ?? '');
 
+		if (!ORM::for_table('ttrss_filters2')->where(['id' => $filter_id, 'owner_uid' => $_SESSION['uid']])->count())
+			return;
+
 		$this->pdo->beginTransaction();
 
 		$sth = $this->pdo->prepare("UPDATE ttrss_filters2 SET enabled = ?,
