@@ -4,6 +4,15 @@ DST_DIR=/backups
 KEEP_DAYS=28
 APP_ROOT=$APP_INSTALL_BASE_DIR/tt-rss
 
+if [ -n "${TTRSS_DB_PASS__FILE:-}" ]; then
+	if [ ! -r "$TTRSS_DB_PASS__FILE" ]; then
+		echo "backup failed: database password secret file is not readable: $TTRSS_DB_PASS__FILE" >&2
+		exit 1
+	fi
+
+	TTRSS_DB_PASS=$(cat "$TTRSS_DB_PASS__FILE")
+fi
+
 if pg_isready -h $TTRSS_DB_HOST -U $TTRSS_DB_USER -p $TTRSS_DB_PORT; then
 	DST_FILE=ttrss-backup-$(date +%Y%m%d).sql.gz
 
