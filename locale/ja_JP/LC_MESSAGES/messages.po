@@ -3237,10 +3237,8 @@ msgid ""
 msgstr ""
 
 #: js/Headlines.js:1434
-#, fuzzy
-#| msgid "Display article URL"
 msgid "Copy article URL"
-msgstr "記事の URL を表示"
+msgstr "記事の URL をコピー"
 
 #: js/CommonFilters.js:64
 msgid "No recent articles matching this filter have been found."
