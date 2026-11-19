@@ -289,7 +289,7 @@ msgstr "すべてのフィード:"
 
 #: index.php:310
 msgid "(Un)hide read feeds"
-msgstr "読んだフィードを隠す/再表示する"
+msgstr "読んだフィードを隠す／再表示する"
 
 #: index.php:311
 msgid "UI layout:"
@@ -435,7 +435,7 @@ msgstr "公開を切り替える"
 
 #: classes/RPC.php:498 js/Headlines.js:1444 js/Headlines.js:692
 msgid "Toggle unread"
-msgstr "未読/既読を切り替える"
+msgstr "未読／既読を切り替える"
 
 #: classes/RPC.php:499
 msgid "Edit tags"
@@ -529,7 +529,7 @@ msgstr "現在のフィードを更新する"
 
 #: classes/RPC.php:522
 msgid "Un/hide read feeds"
-msgstr "読んだフィードを隠す/再表示する"
+msgstr "読んだフィードを隠す／再表示する"
 
 #: classes/RPC.php:523 classes/Pref_Feeds.php:926 js/CommonDialogs.js:31
 msgid "Subscribe to feed"
@@ -1108,7 +1108,7 @@ msgstr "メールプラグイン"
 
 #: classes/Pref_Prefs.php:927
 msgid "Personal data / Authentication"
-msgstr "個人データ / 認証"
+msgstr "個人データ／認証"
 
 #: classes/Pref_Prefs.php:941 classes/Pref_Feeds.php:1062
 #: js/CommonDialogs.js:622
