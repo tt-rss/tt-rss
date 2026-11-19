@@ -75,9 +75,13 @@ class Handler_Public extends Handler {
 		$feed_site_url = $qfh_ret[2];
 		/* $last_error = $qfh_ret[3]; */
 
-		$feed_self_url = Config::get_self_url() .
-			"/public.php?op=rss&id=$feed&key=" .
-			Feeds::_get_access_key($feed, false, $owner_uid);
+		$feed_self_url = Config::get_self_url() . "/public.php?" . http_build_query([
+			'op' => 'rss',
+			'id' => $feed,
+			'is_cat' => (int)$is_cat,
+			'q' => $search,
+			'key' => Feeds::_get_access_key($feed, $is_cat, $owner_uid),
+		]);
 
 		if (!$feed_site_url)
 			$feed_site_url = Config::get_self_url();
