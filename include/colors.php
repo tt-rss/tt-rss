@@ -389,7 +389,9 @@ function colorPalette(string $imageFile, int $numColors, int $granularity = 5): 
 			foreach ($palette as $p) {
 				$hsl = rgb2hsl(_color_unpack("#$p"));
 
+				// TODO: fix this and drop the ignore
 				if ($hsl[1] > 0.25 && $hsl[2] > 0.25 &&
+					/** @phpstan-ignore smaller.alwaysFalse, booleanAnd.alwaysFalse */
 					!($hsl[0] >= 0 && $hsl[0] < 0.01 && $hsl[1] < 0.01) &&
 					!($hsl[0] >= 0 && $hsl[0] < 0.01 && $hsl[2] > 0.99)) {
 

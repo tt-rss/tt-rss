@@ -26,7 +26,9 @@
 
 	ob_start();
 
-	$_REQUEST = json_decode((string)file_get_contents("php://input"), true);
+	$_REQUEST = json_decode((string)file_get_contents('php://input'), true);
+	if (!is_array($_REQUEST))
+		$_REQUEST = [];
 
 	if (!empty($_REQUEST["sid"])) {
 		session_id($_REQUEST["sid"]);
@@ -55,7 +57,7 @@
 
 	$method = strtolower($_REQUEST["op"] ?? "");
 
-	$handler = new API($_REQUEST ?? []);
+	$handler = new API($_REQUEST);
 
 	if ($handler->before($method)) {
 		if ($method && method_exists($handler, $method)) {

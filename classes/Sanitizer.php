@@ -201,7 +201,7 @@ class Sanitizer {
 			}
 
 			// drop 'src' if invalid and the element wasn't replaced (i.e. 'srcset' was acceptable)
-			if (!$src_valid && $entry->hasAttribute('src'))
+			if (!$src_valid)
 				$entry->removeAttribute('src');
 
 			if ($entry->nodeName == 'img') {
