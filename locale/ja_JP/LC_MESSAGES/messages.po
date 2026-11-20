@@ -49,7 +49,7 @@ msgstr "3 ヶ月前"
 
 #: backend.php:64
 msgid "Default interval"
-msgstr "更新の間隔"
+msgstr "標準の間隔"
 
 #: backend.php:65 backend.php:75
 msgid "Disable updates"
@@ -624,7 +624,7 @@ msgstr "このウィンドウを閉じる"
 
 #: classes/TimeHelper.php:7
 msgid "Never"
-msgstr "未更新"
+msgstr "なし"
 
 #: classes/TimeHelper.php:13
 #, php-format
@@ -633,7 +633,7 @@ msgstr "%d 分"
 
 #: classes/Pref_Prefs.php:36 classes/Pref_Feeds.php:615 js/CommonDialogs.js:511
 msgid "General"
-msgstr "全体"
+msgstr "一般"
 
 #: classes/Pref_Prefs.php:59
 msgid "Articles"
@@ -731,7 +731,7 @@ msgstr "API を有効にする"
 
 #: classes/Pref_Prefs.php:110
 msgid "Allows accessing this account through the API"
-msgstr "このアカウントに対する API 経由でアクセスを許可する"
+msgstr "API 経由でこのアカウントにアクセスすることを許可する"
 
 #: classes/Pref_Prefs.php:111
 #, fuzzy
@@ -945,7 +945,7 @@ msgstr "新しい URL を生成する"
 
 #: classes/Pref_Prefs.php:407 classes/Pref_Feeds.php:947 js/PrefHelpers.js:226
 msgid "Remove selected"
-msgstr "選択したカテゴリーを削除"
+msgstr "選択項目を削除"
 
 #: classes/Pref_Prefs.php:443 classes/Pref_Prefs.php:495
 msgid "Your password:"
@@ -1214,8 +1214,9 @@ msgid ""
 "from article header context menu (applies to all selected articles) or use a "
 "filter."
 msgstr ""
-"表示する記事が見つかりません。手動でラベルに記事を割り当てるか(上の操作メ"
-"ニューを参照します)、フィルターを使うことができます。"
+"表示する記事が見つかりません。記事ヘッダーのコンテキストメニューから手動で記"
+"事をラベルに割り当てるか (選択したすべての記事に適用されます)、フィルター"
+"を使うことができます。"
 
 #: classes/Feeds.php:382
 msgid "No articles found to display."
@@ -1224,7 +1225,7 @@ msgstr "表示する記事が見つかりません。"
 #: classes/Feeds.php:399
 #, php-format
 msgid "Feeds last updated at %s"
-msgstr "%s に最終更新されたフィード"
+msgstr "フィードの最終更新: %s"
 
 #: classes/Feeds.php:409
 msgid "Some feeds have update errors (click for details)"
@@ -1294,7 +1295,7 @@ msgstr "重複したフィード: %s"
 #: classes/OPML.php:310
 #, php-format
 msgid "Adding label %s"
-msgstr "ラベル %s の割り当て"
+msgstr "ラベル %s を追加しています"
 
 #: classes/OPML.php:313
 #, php-format
@@ -1396,8 +1397,7 @@ msgstr "[tt-rss] パスワードリセットの要求"
 
 #: classes/Handler_Public.php:596
 msgid "Sorry, login and email combination not found."
-msgstr ""
-"ログイン名とメールアドレスの組み合わせが組み合わせが見つかりませんでした。"
+msgstr "ログイン名とメールアドレスの組み合わせが見つかりませんでした。"
 
 #: classes/Handler_Public.php:623
 msgid "Your access level is insufficient to run this script."
@@ -1491,7 +1491,7 @@ msgstr "更新された記事を未読にする"
 #: classes/Pref_Feeds.php:619 js/PrefFeedTree.js:439 js/CommonDialogs.js:58
 #: js/CommonDialogs.js:540
 msgid "Place in category:"
-msgstr "カテゴリーの場所:"
+msgstr "配置するカテゴリー:"
 
 #: classes/Pref_Feeds.php:626 js/Feeds.js:645 js/CommonDialogs.js:556
 msgid "Language:"
@@ -1703,7 +1703,7 @@ msgstr ""
 
 #: classes/Pref_Filters.php:786
 msgid "Combine"
-msgstr "組み合わせ"
+msgstr "結合"
 
 #: classes/Pref_Filters.php:792
 #, fuzzy
@@ -1768,7 +1768,7 @@ msgstr ""
 
 #: classes/Pref_System.php:110 js/PrefHelpers.js:621
 msgid "Refresh"
-msgstr "再描画"
+msgstr "再読み込み"
 
 #: classes/Pref_System.php:115
 msgid "&lt;&lt;"
@@ -2018,7 +2018,7 @@ msgstr "記事"
 
 #: plugins/share/init.php:58
 msgid "Unshare all articles"
-msgstr "すべての記事のお気に入りを解除する"
+msgstr "すべての記事の共有を解除する"
 
 #: plugins/share/init.php:69
 msgid "Shared URLs cleared."
@@ -2169,7 +2169,7 @@ msgstr "トラフィックを抑制する"
 
 #: include/login_form.php:176
 msgid "Does not display images in articles, reduces automatic refreshes."
-msgstr "記事中の画像を表示しないことで自動更新を減らす。"
+msgstr "記事中の画像を表示せず、自動更新を減らします。"
 
 #: include/login_form.php:184 js/CommonDialogs.js:13
 msgid "Safe mode"
@@ -2244,7 +2244,7 @@ msgstr "はじめにいくつかのフィードを選択してください。"
 
 #: js/App.js:1965
 msgid "You can't unsubscribe from the category."
-msgstr "カテゴリーから購読をやめることができません。"
+msgstr "カテゴリーの購読をやめることはできません。"
 
 #: js/App.js:1971 js/CommonDialogs.js:345 js/CommonDialogs.js:382
 #, java-printf-format, javascript-format
@@ -2554,7 +2554,7 @@ msgstr "記事が選択されていません。"
 
 #: js/Headlines.js:1365
 msgid "No articles found to mark"
-msgstr "設定する記事が見つかりませんでした"
+msgstr "既読にする記事が見つかりませんでした"
 
 #: js/Headlines.js:1367
 #, java-printf-format, javascript-format
@@ -2650,7 +2650,7 @@ msgstr "なし"
 
 #: js/CommonFilters.js:238
 msgid "Edit action"
-msgstr "動作の編集"
+msgstr "操作の編集"
 
 #: js/CommonFilters.js:238
 msgid "Add action"
@@ -3013,11 +3013,11 @@ msgstr "指定された URL は無効のようです。"
 
 #: js/CommonDialogs.js:164
 msgid "Specified URL doesn't seem to contain any feeds."
-msgstr "指定された URL にはフィードが含まれていなようです。"
+msgstr "指定された URL にはフィードが含まれていないようです。"
 
 #: js/CommonDialogs.js:177
 msgid "Expand to select feed"
-msgstr "選択したフィードを展開する"
+msgstr "展開してフィードを選択"
 
 #: js/CommonDialogs.js:189
 #, fuzzy
