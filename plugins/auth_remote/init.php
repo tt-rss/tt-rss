@@ -1,10 +1,26 @@
 <?php
 class Auth_Remote extends Auth_Base {
+	/**
+	 * The default list of $_SERVER keys trusted to potentially provide a username.
+	 *
+	 * IMPORTANT: To maintain backwards-compatibility the 'Remote-User' request header ('HTTP_REMOTE_USER')
+	 * is included in this list. If you don't want it checked you should either set environment variable
+	 * 'TTRSS_AUTH_REMOTE_TRUSTED_SOURCES' to your desired list of trusted sources or remove the request header
+	 * before it reaches tt-rss.
+	 */
+	private const DEFAULT_TRUSTED_SOURCES = 'REMOTE_USER,REDIRECT_REMOTE_USER,PHP_AUTH_USER,HTTP_REMOTE_USER';
+
+	/**
+	 * An ordered, comma-delimited list of $_SERVER keys trusted to potentially provide a username.
+	 * @see Auth_Remote::DEFAULT_TRUSTED_SOURCES
+	 */
+	const AUTH_REMOTE_TRUSTED_SOURCES = 'AUTH_REMOTE_TRUSTED_SOURCES';
 
 	/** redirect user to this URL after logout; .env:
 	 * TTRSS_AUTH_REMOTE_POST_LOGOUT_URL=http://127.0.0.1/logout-redirect
 	 */
 	const AUTH_REMOTE_POST_LOGOUT_URL = "AUTH_REMOTE_POST_LOGOUT_URL";
+
 
 	function about() {
 		return [null,
@@ -17,6 +33,7 @@ class Auth_Remote extends Auth_Base {
 		$host->add_hook($host::HOOK_AUTH_USER, $this);
 
 		Config::add(self::AUTH_REMOTE_POST_LOGOUT_URL, "", Config::T_STRING);
+		Config::add(self::AUTH_REMOTE_TRUSTED_SOURCES, self::DEFAULT_TRUSTED_SOURCES, Config::T_STRING);
 
 		if (Config::get(self::AUTH_REMOTE_POST_LOGOUT_URL) != "") {
 			$host->add_hook($host::HOOK_POST_LOGOUT, $this);
@@ -43,8 +60,13 @@ class Auth_Remote extends Auth_Base {
 	function authenticate($login, $password, $service = '') {
 		$try_login = "";
 
-		foreach (["REMOTE_USER", "HTTP_REMOTE_USER", "REDIRECT_REMOTE_USER", "PHP_AUTH_USER"] as $hdr) {
-			if (!empty($_SERVER[$hdr])) {
+		$sources = array_filter(
+			array_map(trim(...), explode(',', (string) Config::get(self::AUTH_REMOTE_TRUSTED_SOURCES))),
+			static fn(string $s): bool => $s !== '',
+		);
+
+		foreach ($sources as $hdr) {
+			if (!empty($_SERVER[$hdr]) && is_string($_SERVER[$hdr])) {
 				$try_login = strtolower($_SERVER[$hdr]);
 				break;
 			}
